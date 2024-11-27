@@ -1,5 +1,12 @@
 package view;
 
-public class PlayingGameScreen {
+import javax.swing.JPanel;
 
+import model.GameState;
+
+public class PlayingGameScreen extends JPanel {
+
+	public PlayingGameScreen(GameState gameState) {
+		
+	}
 }

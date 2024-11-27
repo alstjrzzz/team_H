@@ -1,5 +1,12 @@
 package view;
 
-public class SelectCharacterScreen {
+import javax.swing.JPanel;
 
+import model.GameState;
+
+public class SelectCharacterScreen extends JPanel {
+
+	public SelectCharacterScreen(GameState gameState) {
+		
+	}
 }
