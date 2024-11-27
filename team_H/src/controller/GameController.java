@@ -27,6 +27,7 @@ public class GameController {
 		gameState = new GameState();
 		mainFrame = new MainFrame();
 		showStartGameScreen();
+		mainFrame.setVisible(true);
 	}
 	
 	
