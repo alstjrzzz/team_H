@@ -32,7 +32,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.JList;
 import java.awt.Canvas;
 
-//import javazoom.jl.player.Player; 처리예정
+
 
 public class StartGameScreen extends JPanel{
     private ImageIcon backgroundGif;
