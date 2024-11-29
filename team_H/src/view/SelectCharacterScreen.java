@@ -57,7 +57,7 @@ public class SelectCharacterScreen extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // GameController를 통해 화면 전환
-                gameController.handleAction("BACK_TO_MENU");
+                gameController.handleAction("PLAY_GAME");
             }
         });
         revalidate();

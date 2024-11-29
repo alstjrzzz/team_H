@@ -26,8 +26,8 @@ public class GameController {
 	
 	// 프로그램 켰을 때 동작 !!
 	public void start() {
-		gameState = new GameState();
 		mainFrame = new MainFrame();
+		gameState = new GameState(mainFrame.getSize());
 		showStartGameScreen();
 		mainFrame.setVisible(true);
 	}
@@ -44,7 +44,7 @@ public class GameController {
 		mainFrame.setScreen(new PlayingGameScreen(gameState));
 	}
 	public void showSelectCardScreen() {
-		mainFrame.setScreen(new SelectCardScreen(gameState));
+		mainFrame.setScreen(new SelectCardScreen(gameState, this));
 	}
 	public void showEndGameScreen() {
 		mainFrame.setScreen(new EndGameScreen(gameState));
@@ -59,11 +59,11 @@ public class GameController {
             case "START_GAME":
             	showSelectCharacterScreen();
                 break;
-            case "SHOW_END_SCREEN":
-            	showPlayingGameScreen();
-                break;
-            case "BACK_TO_MENU":
+            case "PLAY_GAME":
             	showSelectCardScreen();
+                break;
+            case "FIGHT":
+            	showPlayingGameScreen();
                 break;
             default:
                 System.out.println("ㅈ비상");
