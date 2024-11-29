@@ -1,3 +1,5 @@
+// GameController.java
+
 package controller;
 
 import javax.swing.JPanel;
@@ -33,10 +35,10 @@ public class GameController {
 	
 	// 각 스크린을 mainFrame에 그리게 하는 동작 !!
 	public void showStartGameScreen() {
-        mainFrame.setScreen(new StartGameScreen(gameState));
+        mainFrame.setScreen(new StartGameScreen(gameState, this));
     }
 	public void showSelectCharacterScreen() {
-		mainFrame.setScreen(new SelectCharacterScreen(gameState));
+		mainFrame.setScreen(new SelectCharacterScreen(gameState, this));
 	}
 	public void showPlayingGameScreen() {
 		mainFrame.setScreen(new PlayingGameScreen(gameState));

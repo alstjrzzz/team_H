@@ -1,3 +1,5 @@
+// SelectCardScreen.java
+
 package view;
 
 import javax.swing.JPanel;
@@ -9,4 +11,5 @@ public class SelectCardScreen  extends JPanel {
 	public SelectCardScreen(GameState gameState) {
 		
 	}
+	
 }
