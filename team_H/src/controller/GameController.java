@@ -2,8 +2,11 @@
 
 package controller;
 
+import java.util.LinkedList;
+
 import javax.swing.JPanel;
 
+import model.Card;
 import model.GameState;
 import network.NetworkManager;
 import view.EndGameScreen;
@@ -18,7 +21,6 @@ public class GameController {
 	private MainFrame mainFrame = null;
 	private GameState gameState = null;
 	private NetworkManager networkManager = null;
-	
 	
 	public GameController() {
 		
@@ -44,7 +46,7 @@ public class GameController {
 		mainFrame.setScreen(new SelectCharacterScreen(gameState, this));
 	}
 	public void showPlayingGameScreen() {
-		mainFrame.setScreen(new PlayingGameScreen(gameState));
+		mainFrame.setScreen(new PlayingGameScreen(gameState, this));
 	}
 	public void showSelectCardScreen() {
 		mainFrame.setScreen(new SelectCardScreen(gameState, this));
@@ -54,10 +56,21 @@ public class GameController {
 	}
 	
 	
+	// 각 유저의 카드를 선택한 순서대로 사용합니다
+	// 순서는 유저1의 카드1사용 - 유저2의 카드1사용 - 서버에서 계산 후 반환 - 이후 카드 2 반복
+	public void useCard() {
+		
+		LinkedList<Card> selectedCardList = gameState.getSelectedCardList();
+		
+		// 졸려
+	}
+	
+	
 	
 	// 스크린에서 발생한 이벤트를 감지하여 처리합니다 !!
 	// 현재는 예시 코드
     public void handleAction(String action) {
+    	
         switch (action) {
             case "START_GAME":
             	showSelectCharacterScreen();

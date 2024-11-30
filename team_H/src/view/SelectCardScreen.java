@@ -70,7 +70,8 @@ public class SelectCardScreen extends JPanel {
 		selectCardPanel.setBackground(Color.gray); //나눈거 보려고 임시로 배경색넣음
 		selectCardPanel.add(new JLabel("<select cards>"));
 		selectCardPanel.setPreferredSize(new Dimension((int)gameState.getDimension().getWidth()
-														, (int)(gameState.getDimension().getHeight() * 6 / 10)));
+													, (int)(gameState.getDimension().getHeight() * 6 / 10)));
+		
 		
 	}
 	
@@ -87,7 +88,7 @@ public class SelectCardScreen extends JPanel {
 	public void drawButtonPanel() {
 		
 		buttonPanel.setBackground(Color.red);
-		Button continueButton = new Button("continue");
+		Button continueButton = new Button("ready");
 		continueButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
