@@ -5,6 +5,7 @@ package controller;
 import javax.swing.JPanel;
 
 import model.GameState;
+import network.NetworkManager;
 import view.EndGameScreen;
 import view.MainFrame;
 import view.PlayingGameScreen;
@@ -15,8 +16,9 @@ import view.StartGameScreen;
 public class GameController {
 	
 	private MainFrame mainFrame = null;
-	public GameState gameState = null;
-
+	private GameState gameState = null;
+	private NetworkManager networkManager = null;
+	
 	
 	public GameController() {
 		
@@ -30,6 +32,7 @@ public class GameController {
 		gameState = new GameState(mainFrame.getSize());
 		showStartGameScreen();
 		mainFrame.setVisible(true);
+		networkManager = new NetworkManager();
 	}
 	
 	
