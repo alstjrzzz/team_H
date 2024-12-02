@@ -1,7 +1,6 @@
-// Field.java
-
 package model;
 
-public interface Field {
+public abstract class Field {
 
+	
 }

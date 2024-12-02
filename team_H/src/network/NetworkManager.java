@@ -20,7 +20,7 @@ public class NetworkManager {
 	public NetworkManager() {
 		
 		connectToServer();
-		System.out.println(getServerResponse("Hello from Client")); // 테스트
+		connectTest("Hello Server"); // 테스트
 	}
 	
 	
@@ -37,7 +37,7 @@ public class NetworkManager {
 	
 	
 	// 테스트 메소드
-	public String getServerResponse(String message) {
+	public void connectTest(String message) {
 		
 		if (out != null) {
             out.println(message);
@@ -51,10 +51,8 @@ public class NetworkManager {
 				e.printStackTrace();
 			}
 		}
-		
-		return response;
+		System.out.println(response);
 	}
-	
 	
 	
 }

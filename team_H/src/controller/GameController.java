@@ -62,7 +62,7 @@ public class GameController {
 		
 		LinkedList<Card> selectedCardList = gameState.getSelectedCardList();
 		
-		// 졸려
+		
 	}
 	
 	
