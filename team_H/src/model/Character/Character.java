@@ -8,11 +8,15 @@ import model.Card;
 public abstract class Character {
 
 	protected String name;
+	protected String iconPath;
+	protected String spritePath;
 	protected List<Card> cardList;
 	protected int health;
 	
-	public Character(String name) {
+	public Character(String name, String iconPath, String spritePath) {
 		this.name = name;
+		this.iconPath = iconPath;
+		this.spritePath = spritePath;
 		this.cardList = new ArrayList<>();
 		addCommonCard();
 	}
@@ -65,6 +69,28 @@ public abstract class Character {
 	
 	
 	private void addUniqueCard() {
-		
+		// Override
 	}
+
+
+	public String getName() {
+		return name;
+	}
+
+
+	public String getIconPath() {
+		return iconPath;
+	}
+
+
+	public String getSpritePath() {
+		return spritePath;
+	}
+
+
+	public int getHealth() {
+		return health;
+	}
+	
+	
 }
