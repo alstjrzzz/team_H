@@ -1,46 +1,60 @@
 package view;
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
-public class FieldPanel extends JPanel {
-    private int characterX = 50;  // 캐릭터 X 좌표
-    private int characterY = 200; // 캐릭터 Y 좌표
-    private int characterWidth = 50; // 캐릭터 이미지 너비
-    private int characterHeight = 50; // 캐릭터 이미지 높이
-
+public class FieldPanel extends JPanel implements KeyListener {
+    private final int rows = 3; // 그리드 행 수
+    private final int cols = 6; // 그리드 열 수
+    private final int cellHeight = 50; // 각 셀의 높이
     private Timer timer;
 
     public FieldPanel() {
+    	 setOpaque(false);  // 패널의 배경을 투명하게 설정
         // 캐릭터 애니메이션을 위한 타이머 설정
-        timer = new Timer(100, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // 캐릭터의 위치 업데이트
-                characterX += 5;
-                if (characterX > getWidth()) { // 화면 밖으로 나가면 다시 왼쪽으로
-                    characterX = -characterWidth;
-                }
-
-                // 화면을 다시 그리기
-                repaint();
-            }
-        });
-
-        timer.start();  // 타이머 시작
+        timer = new Timer(100, e -> repaint());
+        timer.start(); // 타이머 시작
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        // 배경 그리기
-        g.setColor(Color.GREEN);
-        g.fillRect(0, 0, getWidth(), getHeight());
+        // Graphics2D로 캐스팅하여 점선, 선 두께 조절
+        Graphics2D g2d = (Graphics2D) g;
 
-        // 캐릭터 그리기 (예: 원으로 표시)
-        g.setColor(Color.RED);
-        g.fillRect(characterX, characterY, characterWidth, characterHeight);
+        // 점선 스타일 설정
+        float[] dashPattern = { 10f, 5f };  // 점선 패턴 (10px 선, 5px 간격)
+        g2d.setStroke(new BasicStroke(2, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, dashPattern, 0));
+
+        int cellWidth = (getWidth() / cols) - 2;  // 화면 너비를 6등분하여 셀의 너비 결정
+        // 화면의 하단 중앙으로 그리드 위치 계산
+        int startX = (getWidth() - cols * cellWidth) / 2; // 중앙 정렬을 위한 X 좌표
+        int startY = getHeight() - (rows * cellHeight) - 10; // 하단 정렬을 위한 Y 좌표 (10px 여백)
+
+        // 그리드 그리기
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < cols; col++) {
+                g2d.setColor(Color.WHITE); // 셀의 테두리 색
+                g2d.drawRect(startX + col * cellWidth, startY + row * cellHeight, cellWidth, cellHeight); // 셀 그리기
+            }
+        }
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+        // 필요 없음
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        // 필요 없음
     }
 }
