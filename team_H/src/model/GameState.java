@@ -5,6 +5,9 @@ package model;
 import java.awt.Dimension;
 import java.util.LinkedList;
 
+import model.Character.Character;
+import model.Character.ActionMan;
+
 public class GameState {
 
 	private Dimension dimension;
@@ -16,9 +19,21 @@ public class GameState {
 		
 		this.dimension = dimension;
 		selectedCardList = new LinkedList<>();
-		
 	}
 
+	
+	public Character createCharacter(String character) {
+		
+		switch (character) {
+			
+			case "ActionMan":
+				return new ActionMan();
+			default:
+				return null;
+		}
+		
+	}
+	
 	
 	public Dimension getDimension() {
 		return dimension;

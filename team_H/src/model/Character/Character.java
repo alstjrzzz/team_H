@@ -66,9 +66,7 @@ public abstract class Character {
 	
 	
 	
-	private void addUniqueCard() {
-		// Override
-	}
+	public abstract void addUniqueCard();
 
 
 	public String getIconPath() {
