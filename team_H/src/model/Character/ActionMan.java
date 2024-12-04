@@ -6,8 +6,8 @@ import model.Card;
 
 public class ActionMan extends Character {
 
-	public ActionMan(String name) {
-		super(name, null, null);
+	public ActionMan() {
+		super(null, null);
 		super.health = 100;
 		addUniqueCard();
 	}
