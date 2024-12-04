@@ -7,14 +7,12 @@ import model.Card;
 
 public abstract class Character {
 
-	protected String name;
 	protected String iconPath;
 	protected String spritePath;
 	protected List<Card> cardList;
 	protected int health;
 	
-	public Character(String name, String iconPath, String spritePath) {
-		this.name = name;
+	public Character(String iconPath, String spritePath) {
 		this.iconPath = iconPath;
 		this.spritePath = spritePath;
 		this.cardList = new ArrayList<>();
@@ -70,11 +68,6 @@ public abstract class Character {
 	
 	private void addUniqueCard() {
 		// Override
-	}
-
-
-	public String getName() {
-		return name;
 	}
 
 
