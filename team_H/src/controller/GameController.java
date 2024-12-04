@@ -18,9 +18,9 @@ import view.StartGameScreen;
 
 public class GameController {
 	
-	private MainFrame mainFrame = null;
-	private GameState gameState = null;
-	private NetworkManager networkManager = null;
+	private MainFrame mainFrame;
+	private GameState gameState;
+	private NetworkManager networkManager;
 	
 	public GameController() {
 		
