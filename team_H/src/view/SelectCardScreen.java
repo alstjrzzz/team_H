@@ -6,9 +6,12 @@ import java.awt.BorderLayout;
 import java.awt.Button;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.Timer;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -26,13 +29,19 @@ public class SelectCardScreen extends JPanel {
 	private JPanel fieldPanel = new JPanel();
 	private JPanel buttonPanel = new JPanel();
 	private JPanel selectedCardPanel = new JPanel();
-	
+	private Image backgroundImage; // 배경 이미지 객체
+	private int backgroundY; // 이미지의 y 좌표
+    private Timer animationTimer; // 애니메이션 타이머
 
 	public SelectCardScreen(GameState gameState, GameController gameController) {
 		
 		this.gameState = gameState;
 		this.gameController = gameController;
-		
+		// 배경 이미지 로드
+        backgroundImage = new ImageIcon("res/img/카드선택_배경화면.png").getImage();
+        backgroundY = 0; // 초기 Y 위치
+        startAnimation(); // 애니메이션 시작
+        
 		splitPanel();
 		drawHealthPanel();
 		drawSelectCardPanel();
@@ -63,17 +72,70 @@ public class SelectCardScreen extends JPanel {
 		healthPanel.setPreferredSize(new Dimension((int)gameState.getDimension().getWidth()
 				, (int)(gameState.getDimension().getHeight() * 1 / 10)));
 	}
+	// 애니메이션 시작 메서드
+    private void startAnimation() {
+	        animationTimer = new Timer(20, e -> {
+	            // y 좌표 업데이트
+	            backgroundY -= 1; // 위로 이동 (속도는 1 픽셀)
 	
-	// 중앙에 위치한 가로100% 세로 60% 비율의 카드선택칸
-	public void drawSelectCardPanel() {
-		
-		selectCardPanel.setBackground(Color.gray); //나눈거 보려고 임시로 배경색넣음
-		selectCardPanel.add(new JLabel("<select cards>"));
-		selectCardPanel.setPreferredSize(new Dimension((int)gameState.getDimension().getWidth()
-													, (int)(gameState.getDimension().getHeight() * 6 / 10)));
-		
-		
-	}
+	            // 화면 밖으로 나가면 다시 아래로 위치시킴
+	            if (backgroundY + getHeight() < 0) {
+	                backgroundY = getHeight();
+	            }
+	
+	            // 패널 다시 그리기
+	            repaint();
+	        });
+        animationTimer.start();
+    }
+    // 중앙에 위치한 가로100% 세로 60% 비율의 카드선택칸
+    public void drawSelectCardPanel() {
+        // 배경을 가진 새로운 패널 생성
+        JPanel backgroundPanel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+
+                // 패널의 높이와 너비를 가져옴
+                int panelWidth = getWidth();
+                int panelHeight = getHeight();
+
+                // 배경 이미지를 두 번 그려 빈 공간 방지
+                g.drawImage(backgroundImage, 0, backgroundY, panelWidth, panelHeight, this);
+                g.drawImage(backgroundImage, 0, backgroundY - panelHeight, panelWidth, panelHeight, this);
+            }
+        };
+
+        // 애니메이션 타이머에서 `selectCardPanel`의 크기 기반으로 처리
+        animationTimer = new Timer(40, e -> { // 속도 조정
+            // 패널 높이를 가져옴
+            int panelHeight = backgroundPanel.getHeight();
+
+            // y 좌표 업데이트
+            backgroundY -= 0.2; // 위로 1픽셀 이동
+
+            // 화면 밖으로 나가면 다시 아래로 위치시킴
+            if (backgroundY <= 0) {
+                backgroundY = panelHeight;
+            }
+
+            // 패널 다시 그리기
+            backgroundPanel.repaint();
+        });
+
+        animationTimer.start();
+
+        backgroundPanel.setLayout(new BorderLayout()); // 카드 선택용 레이아웃 설정
+        backgroundPanel.setPreferredSize(new Dimension(
+                (int) gameState.getDimension().getWidth(),
+                (int) (gameState.getDimension().getHeight() * 6 / 10)
+        ));
+
+        // 카드 선택 레이블 추가
+        backgroundPanel.add(new JLabel("<select cards>"), BorderLayout.CENTER);
+        selectCardPanel = backgroundPanel; // 기존 selectCardPanel 대체
+        add(selectCardPanel, BorderLayout.CENTER); // 중앙에 추가
+    }
 	
 	// 왼쪽하단에 위치한 가로40% 세로30% 비율의 필드확인칸
 	public void drawFieldPanel() {
