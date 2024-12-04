@@ -5,19 +5,26 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import org.json.JSONObject;
 
+import controller.GameController;
 import model.GameState;
 
 public class NetworkManager {
 
 	private static final String SERVER_IP = "127.0.0.1"; // 현재는 LocalHost
 	private static final int PORT = 8000;
+	private GameState gameState;
+	private GameController gameController;
 	
 	private static Socket clientSocket;
 	private static BufferedReader in;
     private static PrintWriter out;
 	
-	public NetworkManager() {
+	public NetworkManager(GameState gameState, GameController gameController) {
+		
+		this.gameState = gameState;
+		this.gameController = gameController;
 		
 		connectToServer();
 		connectTest("Hello Server"); // 테스트
@@ -55,4 +62,18 @@ public class NetworkManager {
 	}
 	
 	
+	public void sendCharacterSelection() {
+		
+		JSONObject json = new JSONObject();
+		json.put("command", "CHARACTER_SELECT_FINISH");
+		json.put("character", gameState.getMyCharacter());
+		
+		out.println(json);
+	}
+	
+	
+	public String receiveJson() throws IOException {
+		
+		return in.readLine();
+	}
 }
