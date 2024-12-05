@@ -14,7 +14,7 @@ public class ActionMan extends Character {
 
 
 	// 고유 카드 추가
-	private void addUniqueCard() {
+	public void addUniqueCard() {
 		
 		// 액션빔
 		cardList.add(new Card(

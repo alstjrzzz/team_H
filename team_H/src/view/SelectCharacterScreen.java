@@ -23,6 +23,7 @@ public class SelectCharacterScreen extends JPanel {
     private boolean isSliding; // 애니메이션 진행 중 여부
     private Timer slideTimer; // 애니메이션 타이머
     private GameController gameController; // GameController 참조
+    private String selectedCharacterName = null; // 선택된 캐릭터 이름 저장
 
     public SelectCharacterScreen(GameState gameState, GameController gameController) {
         setSize(new Dimension(850, 600));
@@ -117,11 +118,38 @@ public class SelectCharacterScreen extends JPanel {
         
         setLayout(null);
         
+        // 선택 버튼
         Button ready_button = new Button("선택");
         ready_button.setBounds(332, 465, 38, 23);
         add(ready_button);
         ready_button.setFont(new Font("HY견고딕", Font.BOLD, 12));
+        // 선택 버튼 클릭 이벤트
+        ready_button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	if(selectedCharacterName != null) {
+            		gameController.handleAction("PLAY_GAME");
+            	}
+            	else {
+            		System.out.println("캐릭터 선택해라");
+            	}
+            }
+        });
         
+        // 취소 버튼
+        Button cancel_button = new Button("취소");
+        cancel_button.setBounds(492, 465, 38, 23);
+        add(cancel_button);
+        // 취소 버튼 클릭 이벤트
+        cancel_button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                selectedCharacterName = null; // 선택된 캐릭터 초기화
+                System.out.println(selectedCharacterName);
+            }
+        });
+        
+        cancel_button.setFont(new Font("HY견고딕", Font.BOLD, 12));
         JButton Character_Choice_1 = new JButton(Character1);
         Character_Choice_1.setBounds(157, 229, 100, 100);
         add(Character_Choice_1);
@@ -142,65 +170,63 @@ public class SelectCharacterScreen extends JPanel {
         Character_Choice_5.setBounds(557, 229, 100, 100);
         add(Character_Choice_5);
         
-        // 선택 버튼 클릭 이벤트
-        ready_button.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // GameController를 통해 화면 전환
-                gameController.handleAction("PLAY_GAME");
-            }
-        });
-
-        Button cancel_button = new Button("취소");
-        cancel_button.setBounds(492, 465, 38, 23);
-        add(cancel_button);
-        cancel_button.setFont(new Font("HY견고딕", Font.BOLD, 12));
+        
         
         
         // 각 캐릭터 버튼에 클릭 이벤트 추가
         Character_Choice_1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+            	selectedCharacterName = "Superman"; // 선택된 캐릭터 이름 저장
                 // 선택된 캐릭터 이미지를 먼저 설정
                 selectedCharacterImage = Character1_background;
                 repaint(); // 즉시 변경 사항 반영
                 startSlideAnimation(Character1_background); // 슬라이드 애니메이션 시작
+                System.out.println(selectedCharacterName);
             }
         });
 
         Character_Choice_2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+            	selectedCharacterName = "Zed"; // 선택된 캐릭터 이름 저장
                 selectedCharacterImage = Character2_background;
                 repaint();
                 startSlideAnimation(Character2_background);
+                System.out.println(selectedCharacterName);
             }
         });
 
         Character_Choice_3.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+            	selectedCharacterName = "MasterYi"; // 선택된 캐릭터 이름 저장
                 selectedCharacterImage = Character3_background;
                 repaint();
                 startSlideAnimation(Character3_background);
+                System.out.println(selectedCharacterName);
             }
         });
         
         Character_Choice_4.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+            	selectedCharacterName = "Ginzo"; // 선택된 캐릭터 이름 저장
                 selectedCharacterImage = Character4_background;
                 repaint();
                 startSlideAnimation(Character4_background);
+                System.out.println(selectedCharacterName);
             }
         });
         
         Character_Choice_5.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+            	selectedCharacterName = "MartianManhunter"; // 선택된 캐릭터 이름 저장
                 selectedCharacterImage = Character5_background;
                 repaint();
                 startSlideAnimation(Character5_background);
+                System.out.println(selectedCharacterName);
             }
         });
 
@@ -209,5 +235,4 @@ public class SelectCharacterScreen extends JPanel {
         repaint();
     }
 }
-
 

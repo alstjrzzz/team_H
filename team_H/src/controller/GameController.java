@@ -2,9 +2,12 @@
 
 package controller;
 
+import java.io.IOException;
 import java.util.LinkedList;
 
 import javax.swing.JPanel;
+
+import org.json.JSONObject;
 
 import model.Card;
 import model.GameState;
@@ -24,17 +27,32 @@ public class GameController {
 	
 	public GameController() {
 		
-		start();
+		startProgram();
+		startGame();
 	}
 	
 	
 	// 프로그램 켰을 때 동작 !!
-	public void start() {
+	private void startProgram() {
 		mainFrame = new MainFrame();
 		gameState = new GameState(mainFrame.getSize());
 		showStartGameScreen();
 		mainFrame.setVisible(true);
-		networkManager = new NetworkManager();
+		networkManager = new NetworkManager(gameState, this);
+	}
+	
+	
+	// 게임 진행 로직 !!
+	private void startGame() {
+		
+		selectCharacter();
+		
+		while (true) {
+			
+			selectCard();
+			fight();
+			if (isGameOver()) gameOver();
+		}
 	}
 	
 	
@@ -56,19 +74,51 @@ public class GameController {
 	}
 	
 	
-	// 각 유저의 카드를 선택한 순서대로 사용합니다
-	// 순서는 유저1의 카드1사용 - 유저2의 카드1사용 - 서버에서 계산 후 반환 - 이후 카드 2 반복
-	public void useCard() {
+	// 캐릭터 선택 로직
+	private void selectCharacter() {
 		
-		LinkedList<Card> selectedCardList = gameState.getSelectedCardList();
+		showSelectCharacterScreen();
+		try {
+			// 상대 캐릭터를 받아서 GameState에 저장
+			JSONObject jsonResponse = new JSONObject(networkManager.receiveJson());
+			// CharacterList를 삭제하고 그냥 GameState에서 관리하도록 변경
+			// jsonResponse(String)을 GameState의 hashmap의 key값으로 이용해서 생성
+			// -> 이러면 서로 같은 캐릭터 골랐을때 동일한 클래스를 가리켜서 문제가 생기지않나?
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	// 카드 선택 로직
+	private void selectCard() {
 		
+		showSelectCardScreen();
+		
+	}
+	
+	
+	// 전투 로직
+	private void fight() {
+		
+	}
+	
+	
+	// 게임종료여부 확인
+	private boolean isGameOver() {
+		
+		return false;
+	}
+	
+	
+	// 게임 종료 로직
+	private void gameOver() {
 		
 	}
 	
 	
 	
 	// 스크린에서 발생한 이벤트를 감지하여 처리합니다 !!
-	// 현재는 예시 코드
     public void handleAction(String action) {
     	
         switch (action) {
@@ -81,6 +131,9 @@ public class GameController {
             case "FIGHT":
             	showPlayingGameScreen();
                 break;
+            case "CHARACTER_SELECT_FINISH":
+            	networkManager.sendCharacterSelection();
+            	break;
             default:
                 System.out.println("ㅈ비상");
         }
