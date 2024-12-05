@@ -7,6 +7,5 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/tjddh/Downloads/json-20230618.zip"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

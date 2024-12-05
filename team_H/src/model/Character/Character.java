@@ -18,8 +18,7 @@ public abstract class Character {
 		this.cardList = new ArrayList<>();
 		addCommonCard();
 	}
-	
-	
+
 	// 공용 카드 추가
 	private void addCommonCard() {
 		
