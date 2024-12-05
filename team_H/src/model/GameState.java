@@ -18,6 +18,7 @@ public class GameState {
 
 	private Dimension dimension;
 	private LinkedList<Card> selectedCardList;
+	private LinkedList<Card> enemySelectedCardList;
 	private Character myCharacter;
 	private Character enemyCharacter;
 	
@@ -60,20 +61,26 @@ public class GameState {
 		selectedCardList = new LinkedList<>();
 	}
 	
+	
 	public void setSelectedCardList(LinkedList<Card> selectedCardList) {
 		this.selectedCardList = selectedCardList;
 	}
-	
 	public LinkedList<Card> getSelectedCardList() {
 		return selectedCardList;
 	}
 
+	
+	public LinkedList<Card> getEnemySelectedCardList() {
+		return enemySelectedCardList;
+	}
+	public void setEnemySelectedCardList(LinkedList<Card> enemySelectedCardList) {
+		this.enemySelectedCardList = enemySelectedCardList;
+	}
 
+	
 	public Character getMyCharacter() {
 		return myCharacter;
 	}
-
-
 	public void setMyCharacter(Character myCharacter) {
 		this.myCharacter = myCharacter;
 	}
@@ -82,8 +89,6 @@ public class GameState {
 	public Character getEnemyCharacter() {
 		return enemyCharacter;
 	}
-
-
 	public void setEnemyCharacter(Character enemyCharacter) {
 		this.enemyCharacter = enemyCharacter;
 	}

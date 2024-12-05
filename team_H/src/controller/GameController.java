@@ -5,6 +5,9 @@ package controller;
 import java.io.IOException;
 import java.util.LinkedList;
 
+import model.Character.Character;
+import model.Character.ActionMan;
+
 import javax.swing.JPanel;
 
 import org.json.JSONObject;
@@ -81,9 +84,9 @@ public class GameController {
 		try {
 			// 상대 캐릭터를 받아서 GameState에 저장
 			JSONObject jsonResponse = new JSONObject(networkManager.receiveJson());
-			// CharacterList를 삭제하고 그냥 GameState에서 관리하도록 변경
-			// jsonResponse(String)을 GameState의 hashmap의 key값으로 이용해서 생성
-			// -> 이러면 서로 같은 캐릭터 골랐을때 동일한 클래스를 가리켜서 문제가 생기지않나?
+			String character = jsonResponse.getString("character");
+			Character enemyCharacter = gameState.createCharacter(character);
+			gameState.setEnemyCharacter(enemyCharacter);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -95,6 +98,21 @@ public class GameController {
 		
 		showSelectCardScreen();
 		
+		// 서버 타이머 시작
+		
+		try {
+			// 상대 선택 카드를 받아서 GameState에 저장
+			JSONObject jsonResponse = new JSONObject(networkManager.receiveJson());
+			LinkedList<Card> cardList = new LinkedList<>();
+			for (int i = 0; i < 3; i++) {
+				// 의문 1. 카드 3개를 보내면 key가 똑같은게 3개씩인데 어떡함?
+			}
+			//gameState.setEnemySelectedCardList();
+			
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	
@@ -133,6 +151,9 @@ public class GameController {
                 break;
             case "CHARACTER_SELECT_FINISH":
             	networkManager.sendCharacterSelection();
+            	break;
+            case "CARD_SELECT_FINISH":
+            	networkManager.sendCardSelection();
             	break;
             default:
                 System.out.println("ㅈ비상");

@@ -62,6 +62,18 @@ public class NetworkManager {
 	}
 	
 	
+	public void sendCardSelection() {
+		
+		JSONObject json = new JSONObject();
+		json.put("command", "CARD_SELECT_FINISH");
+		json.put("card1", gameState.getSelectedCardList().get(0).toJSON());
+		json.put("card2", gameState.getSelectedCardList().get(1).toJSON());
+		json.put("card3", gameState.getSelectedCardList().get(2).toJSON());
+		
+		out.println(json.toString());
+	}
+	
+	
 	public void sendCharacterSelection() {
 		
 		JSONObject json = new JSONObject();
