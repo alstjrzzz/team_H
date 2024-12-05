@@ -5,9 +5,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.LinkedList;
+
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import controller.GameController;
+import model.Card;
 import model.GameState;
 
 public class NetworkManager {
@@ -66,9 +70,13 @@ public class NetworkManager {
 		
 		JSONObject json = new JSONObject();
 		json.put("command", "CARD_SELECT_FINISH");
-		json.put("card1", gameState.getSelectedCardList().get(0).toJSON());
-		json.put("card2", gameState.getSelectedCardList().get(1).toJSON());
-		json.put("card3", gameState.getSelectedCardList().get(2).toJSON());
+		
+		JSONArray cardsArray = new JSONArray();
+		LinkedList<Card> cardList = gameState.getSelectedCardList();
+        for (Card card : cardList) {
+            cardsArray.put(card.toJSON());
+        }
+        json.put("cardList", cardsArray);
 		
 		out.println(json.toString());
 	}

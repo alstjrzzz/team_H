@@ -3,13 +3,16 @@
 package controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 import model.Character.Character;
 import model.Character.ActionMan;
 
 import javax.swing.JPanel;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import model.Card;
@@ -102,14 +105,26 @@ public class GameController {
 		
 		try {
 			// 상대 선택 카드를 받아서 GameState에 저장
-			JSONObject jsonResponse = new JSONObject(networkManager.receiveJson());
-			LinkedList<Card> cardList = new LinkedList<>();
-			for (int i = 0; i < 3; i++) {
-				// 의문 1. 카드 3개를 보내면 key가 똑같은게 3개씩인데 어떡함?
+			JSONArray jsonArray = new JSONArray(networkManager.receiveJson());
+			LinkedList<Card> enemyCardList = new LinkedList<>();
+			for (int i = 0; i < jsonArray.length(); i++) {
+				JSONObject cardJson = jsonArray.getJSONObject(i);
+				
+				JSONArray rangeArray = cardJson.getJSONArray("range");
+		        List<int[]> range = new ArrayList<>();
+		        for (int j = 0; j < rangeArray.length(); j++) {
+		            JSONArray r = rangeArray.getJSONArray(j);
+		            range.add(new int[]{r.getInt(0), r.getInt(1)});
+		        }
+				
+				enemyCardList.add(new Card(
+						cardJson.getString("name"),
+						cardJson.getString("effect"),
+						range,
+						cardJson.getInt("damage")
+						));
 			}
-			//gameState.setEnemySelectedCardList();
-			
-			
+			gameState.setEnemySelectedCardList(enemyCardList);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -118,6 +133,8 @@ public class GameController {
 	
 	// 전투 로직
 	private void fight() {
+		showPlayingGameScreen();
+		
 		
 	}
 	
