@@ -61,7 +61,7 @@ public class SelectCharacterScreen extends JPanel {
             } else if (selectedCharacterImage.getDescription().contains("project_yi_background.png")) {
                 width = 500;
                 height = 500;
-            } else if (selectedCharacterImage.getDescription().contains("supermen_background.png")) {
+            } else if (selectedCharacterImage.getDescription().contains("superman_background.png")) {
                 width = 500;
                 height = 500;
             }
@@ -110,7 +110,7 @@ public class SelectCharacterScreen extends JPanel {
         ImageIcon Character5 = new ImageIcon("res/character/MartianManhunter_face.png");
         	
         
-        ImageIcon Character1_background = new ImageIcon("res/character/supermen_background.png");
+        ImageIcon Character1_background = new ImageIcon("res/character/superman_background.png");
         ImageIcon Character2_background = new ImageIcon("res/character/zed_background.png");
         ImageIcon Character3_background = new ImageIcon("res/character/project_yi_background.png");
         ImageIcon Character4_background = new ImageIcon("res/character/Ginzo_background.jpg");
