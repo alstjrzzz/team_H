@@ -24,8 +24,10 @@ public class SelectCharacterScreen extends JPanel {
     private Timer slideTimer; // 애니메이션 타이머
     private GameController gameController; // GameController 참조
     private String selectedCharacterName = null; // 선택된 캐릭터 이름 저장
-
+    private GameState gameState; // GameState 참조
+    
     public SelectCharacterScreen(GameState gameState, GameController gameController) {
+    	this.gameState = gameState; // GameState 저장
         setSize(new Dimension(850, 600));
         this.gameController = gameController; // GameController 저장
         Character_backgroundImg = new ImageIcon("res/img/캐릭터 선택창 배경2.jpg");
@@ -177,18 +179,22 @@ public class SelectCharacterScreen extends JPanel {
         Character_Choice_1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+            	gameState.setMyCharacter(gameState.createCharacter("Superman"));
             	selectedCharacterName = "Superman"; // 선택된 캐릭터 이름 저장
                 // 선택된 캐릭터 이미지를 먼저 설정
                 selectedCharacterImage = Character1_background;
                 repaint(); // 즉시 변경 사항 반영
                 startSlideAnimation(Character1_background); // 슬라이드 애니메이션 시작
                 System.out.println(selectedCharacterName);
+                
+                
             }
         });
 
         Character_Choice_2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+            	gameState.setMyCharacter(gameState.createCharacter("Zed"));
             	selectedCharacterName = "Zed"; // 선택된 캐릭터 이름 저장
                 selectedCharacterImage = Character2_background;
                 repaint();
@@ -200,6 +206,7 @@ public class SelectCharacterScreen extends JPanel {
         Character_Choice_3.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+            	gameState.setMyCharacter(gameState.createCharacter("MasterYi"));
             	selectedCharacterName = "MasterYi"; // 선택된 캐릭터 이름 저장
                 selectedCharacterImage = Character3_background;
                 repaint();
@@ -211,6 +218,7 @@ public class SelectCharacterScreen extends JPanel {
         Character_Choice_4.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+            	gameState.setMyCharacter(gameState.createCharacter("Ginzo"));
             	selectedCharacterName = "Ginzo"; // 선택된 캐릭터 이름 저장
                 selectedCharacterImage = Character4_background;
                 repaint();
@@ -222,6 +230,7 @@ public class SelectCharacterScreen extends JPanel {
         Character_Choice_5.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+            	gameState.setMyCharacter(gameState.createCharacter("MartianManhunter"));
             	selectedCharacterName = "MartianManhunter"; // 선택된 캐릭터 이름 저장
                 selectedCharacterImage = Character5_background;
                 repaint();

@@ -8,7 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import model.Character.Character;
-import model.Character.ActionMan;
+
 
 import javax.swing.JPanel;
 
