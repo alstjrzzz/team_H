@@ -12,7 +12,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.Timer;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -138,13 +140,114 @@ public class SelectCardScreen extends JPanel {
     }
 	
 	// 왼쪽하단에 위치한 가로40% 세로30% 비율의 필드확인칸
-	public void drawFieldPanel() {
-		
-		fieldPanel.setBackground(Color.green);
-		fieldPanel.add(new JLabel("field state"));
-		fieldPanel.setPreferredSize(new Dimension((int)(gameState.getDimension().getWidth() * 4 / 10)
-														, (int)(gameState.getDimension().getHeight() * 3 / 10)));
-	}
+    public void drawFieldPanel() {
+        fieldPanel.setBackground(Color.green); // 전체 배경 설정
+        fieldPanel.setLayout(new BorderLayout()); // 레이아웃 설정
+        JPanel buttonContainer = new JPanel(); // 버튼을 배치할 컨테이너
+        buttonContainer.setOpaque(false); // 버튼 배경과 통일되도록 투명하게 설정
+        buttonContainer.setLayout(new java.awt.GridLayout(1, 3, 10, 0)); // 가로로 버튼 3개 배치
+        
+        // 상단 패딩 추가
+        buttonContainer.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        
+        // 버튼 배열 생성 (테두리 관리를 위해)
+        JButton[] buttons = new JButton[3];
+
+        // 첫 번째 버튼
+        JButton button1 = new JButton() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+
+                // 배경 색상
+                g.setColor(new Color(200, 200, 200, 150)); // 흐린 배경색 (투명도 적용)
+                g.fillRect(0, 0, getWidth(), getHeight());
+
+                // 텍스트 렌더링
+                g.setColor(new Color(100, 100, 100, 120)); // 흐릿한 텍스트 색상 (투명도 적용)
+                g.setFont(g.getFont().deriveFont(30f)); // 텍스트 크기 조정
+                String text = "01"; // 텍스트 설정
+                int textWidth = g.getFontMetrics().stringWidth(text);
+                int textHeight = g.getFontMetrics().getHeight();
+                g.drawString(text, (getWidth() - textWidth) / 2, (getHeight() + textHeight / 3) / 2);
+            }
+        };
+        buttons[0] = button1;
+
+        // 두 번째 버튼
+        JButton button2 = new JButton() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+
+                // 배경 색상
+                g.setColor(new Color(200, 200, 200, 150)); // 흐린 배경색 (투명도 적용)
+                g.fillRect(0, 0, getWidth(), getHeight());
+
+                // 텍스트 렌더링
+                g.setColor(new Color(100, 100, 100, 120)); // 흐릿한 텍스트 색상 (투명도 적용)
+                g.setFont(g.getFont().deriveFont(30f)); // 텍스트 크기 조정
+                String text = "02"; // 텍스트 설정
+                int textWidth = g.getFontMetrics().stringWidth(text);
+                int textHeight = g.getFontMetrics().getHeight();
+                g.drawString(text, (getWidth() - textWidth) / 2, (getHeight() + textHeight / 3) / 2);
+            }
+        };
+        buttons[1] = button2;
+
+        // 세 번째 버튼
+        JButton button3 = new JButton() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+
+                // 배경 색상
+                g.setColor(new Color(200, 200, 200, 150)); // 흐린 배경색 (투명도 적용)
+                g.fillRect(0, 0, getWidth(), getHeight());
+
+                // 텍스트 렌더링
+                g.setColor(new Color(100, 100, 100, 120)); // 흐릿한 텍스트 색상 (투명도 적용)
+                g.setFont(g.getFont().deriveFont(30f)); // 텍스트 크기 조정
+                String text = "03"; // 텍스트 설정
+                int textWidth = g.getFontMetrics().stringWidth(text);
+                int textHeight = g.getFontMetrics().getHeight();
+                g.drawString(text, (getWidth() - textWidth) / 2, (getHeight() + textHeight / 3) / 2);
+            }
+        };
+        buttons[2] = button3;
+
+        // 버튼 공통 설정 및 클릭 이벤트
+        for (int i = 0; i < buttons.length; i++) {
+            JButton button = buttons[i];
+            int index = i; // i 값을 고정
+            button.setOpaque(false);
+            button.setContentAreaFilled(false);
+            button.setBorderPainted(false); // 기본 테두리 비활성화
+            button.setFocusPainted(false); // 포커스 테두리 비활성화
+            button.setPreferredSize(new Dimension(80, 80));
+
+            // 클릭 이벤트: 테두리 동적 설정
+            button.addActionListener(e -> {
+                for (JButton btn : buttons) {
+                    btn.setBorderPainted(false); // 모든 버튼 테두리 제거
+                }
+                button.setBorderPainted(true); // 클릭된 버튼 테두리 활성화
+                button.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2)); // 테두리 스타일
+                System.out.println("Button " + (index + 1) + " clicked"); // 고정된 index 사용
+            });
+
+            buttonContainer.add(button); // 버튼 추가
+        }
+
+        // 버튼 컨테이너를 중앙에 추가
+        fieldPanel.add(buttonContainer, BorderLayout.CENTER);
+
+        // 필드 패널 크기 설정
+        fieldPanel.setPreferredSize(new Dimension(
+                (int) (gameState.getDimension().getWidth() * 4 / 10),
+                (int) (gameState.getDimension().getHeight() * 3 / 10)
+        ));
+    }
 	
 	// 중앙하단에 위치한 가로20% 세로30% 비율의 카드선택완료버튼, 도움말버튼, 카드초기화버튼 등
 	public void drawButtonPanel() {
