@@ -6,8 +6,6 @@ import java.util.LinkedList;
 import model.Character.Character;
 
 import model.Character.SuperMan;
-import model.Character.Zed;
-import model.Character.MasterYi;
 import model.Character.Ginzo;
 import model.Character.MartianManhunter;
 

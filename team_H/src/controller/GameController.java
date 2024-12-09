@@ -133,11 +133,56 @@ public class GameController {
 	
 	// 전투 로직
 	private void fight() {
-		showPlayingGameScreen();
-		
-		
+	    showPlayingGameScreen(); // 화면 전환
+
+	    // 비동기로 카드 동작 실행
+	    new Thread(() -> {
+	        // 플레이어 카드와 적 카드 큐 가져오기
+	        LinkedList<Card> playerCards = new LinkedList<>(gameState.getSelectedCardList());
+	        LinkedList<Card> enemyCards = new LinkedList<>(gameState.getEnemySelectedCardList());
+
+	        // 전투 실행 (동기화된 실행 흐름)
+	        while (!playerCards.isEmpty() || !enemyCards.isEmpty()) {
+	            // 플레이어 카드 실행
+	            if (!playerCards.isEmpty()) {
+	                Card playerCard = playerCards.poll();
+	                executeCardAction(playerCard, true); // 플레이어 동작 실행
+	            }
+
+	            // 적 카드 실행
+	            if (!enemyCards.isEmpty()) {
+	                Card enemyCard = enemyCards.poll();
+	                executeCardAction(enemyCard, false); // 적 동작 실행
+	            }
+
+	            // 게임 종료 조건 확인
+	            if (isGameOver()) {
+	                gameOver();
+	                return;
+	            }
+
+	            // 각 카드 간의 간격 (1초 지연)
+	            try {
+	                Thread.sleep(1000);
+	            } catch (InterruptedException e) {
+	                e.printStackTrace();
+	            }
+	        }
+	    }).start(); // 비동기 실행
 	}
-	
+
+	// 카드 동작 실행
+	private void executeCardAction(Card card, boolean isPlayer) {
+	    if (isPlayer) {
+	        // 플레이어 카드 동작
+	        System.out.println("Player executes: " + card.getName());
+	        gameState.getMyCharacter().useCard(card); // 캐릭터가 카드 동작 수행
+	    } else {
+	        // 적 카드 동작
+	        System.out.println("Enemy executes: " + card.getName());
+	        gameState.getEnemyCharacter().useCard(card); // 적 캐릭터 동작
+	    }
+	}
 	
 	// 게임종료여부 확인
 	private boolean isGameOver() {

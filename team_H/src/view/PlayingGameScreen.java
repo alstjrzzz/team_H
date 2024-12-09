@@ -2,8 +2,11 @@ package view;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.LinkedList;
+
 import javax.swing.border.EmptyBorder;
 import controller.GameController;
+import model.Card;
 import model.GameState;
 
 public class PlayingGameScreen extends JPanel {
@@ -23,10 +26,16 @@ public class PlayingGameScreen extends JPanel {
     private ImageIcon gameBack, character1Image, character2Image;
     private ImageIcon ZedIcon;
     private ImageIcon MasterYiIcon;
+    private Timer actionTimer; // 카드 동작 타이머
+    private LinkedList<Card> cardQueue; // 실행 대기 중인 카드 리스트
+    private int actionDelay = 1000; // 각 카드 동작 간의 지연 시간 (밀리초)
+
+    
     public PlayingGameScreen(GameState gameState, GameController gameController) {
         this.gameState = gameState;
         this.gameController = gameController;
-
+        this.cardQueue = new LinkedList<>(gameState.getSelectedCardList()); // 선택된 카드 로드
+        
         // 캐릭터 이미지 불러오기
         character1Image = new ImageIcon("res/character/zed.png");
         Image characterImage_Zed = character1Image.getImage();
@@ -42,6 +51,7 @@ public class PlayingGameScreen extends JPanel {
         splitPanel(); // 패널 분리
         drawHealthPanel();  // 체력바 및 관련 컴포넌트 그리기
         drawSelectedCardPanel();  // 카드 패널 그리기
+        startActionTimer(); // 카드 동작 실행
         startGameTimer();  // 게임 타이머 시작
     }
     
@@ -152,12 +162,57 @@ public class PlayingGameScreen extends JPanel {
     }
 
    @Override
-   protected void paintComponent(Graphics g) {
-      super.paintComponent(g);  // 부모 클래스의 paintComponent 호출하여 기본 설정 처리
+   public void paintComponent(Graphics g) {
+	    super.paintComponent(g);
 
-      // 배경 이미지 그리기
-      if (gameBack != null) {
-         g.drawImage(gameBack.getImage(), 0, 0, getWidth(), getHeight(), this);
-      }
-   }
+	    // 기존 배경 이미지 그리기
+	    if (gameBack != null) {
+	        g.drawImage(gameBack.getImage(), 0, 0, getWidth(), getHeight(), this);
+	    }
+
+	    // 체력, 카드 상태 등 갱신된 정보를 그리기
+	    drawHealthPanel();
+	    drawSelectedCardPanel();
+	}
+	// 카드 동작 타이머 설정
+	private void startActionTimer() {
+	    actionTimer = new Timer(actionDelay, e -> {
+	        if (!cardQueue.isEmpty()) {
+	            // 큐에서 카드 가져오기
+	            Card card = cardQueue.poll();
+	            executeCardAction(card); // 카드 동작 실행
+	        } else {
+	            // 모든 카드 실행 후 타이머 중지
+	            actionTimer.stop();
+	            System.out.println("All actions completed.");
+	        }
+	    });
+	    actionTimer.start(); // 타이머 시작
+	}
+	// 카드 동작 실행 메서드
+	private void executeCardAction(Card card) {
+	    switch (card.getEffect()) {
+	        case "MOVE":
+	            moveCharacter(card.getRange().get(0)); // 이동 범위의 첫 번째 값 사용
+	            break;
+	        case "ATTACK":
+	            attackAction(card.getDamage());
+	            break;
+	        default:
+	            System.out.println("Unknown card action: " + card.getEffect());
+	    }
+	}
+	// 캐릭터 이동 메서드
+	private void moveCharacter(int[] move) {
+	    if (fieldPanel instanceof FieldPanel) {
+	        FieldPanel field = (FieldPanel) fieldPanel;
+	        field.moveCharacter(move[0], move[1]); // 이동 명령 전달
+	    }
+	}
+
+	// 공격 동작 메서드
+	private void attackAction(int damage) {
+	    healthBar2.setValue(healthBar2.getValue() - damage); // 상대 체력 감소
+	    System.out.println("Attack dealt " + damage + " damage.");
+	}
 }

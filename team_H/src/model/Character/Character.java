@@ -28,6 +28,11 @@ public abstract class Character {
     // 고유 카드 추가 (추상 메서드)
     public abstract void addUniqueCard();
     
+    // 카드 동작을 처리하기 위한 추상 메서드
+    public abstract void useCard(Card card);
+    
+    public abstract void updateAnimation();
+    
     public abstract String getCardImagePath(String cardName);
     
     public List<Card> getCardList() {

@@ -57,11 +57,11 @@ public class SelectCharacterScreen extends JPanel {
             int height = 250;
 
             // 특정 이미지에 대해 크기 확대
-            if (selectedCharacterImage.getDescription().contains("zed_background.png")) {
-                width = 500;
+            if (selectedCharacterImage.getDescription().contains("Cygnus_background.png")) {
+                width = 550;
                 height = 500;
-            } else if (selectedCharacterImage.getDescription().contains("project_yi_background.png")) {
-                width = 500;
+            } else if (selectedCharacterImage.getDescription().contains("Iron_Man_background.png")) {
+                width = 450;
                 height = 500;
             } else if (selectedCharacterImage.getDescription().contains("superman_background.png")) {
                 width = 500;
@@ -106,15 +106,15 @@ public class SelectCharacterScreen extends JPanel {
 
     public void ready_penel() {
         ImageIcon Character1 = new ImageIcon("res/character/superman_face.png");
-        ImageIcon Character2 = new ImageIcon("res/character/zed.png");
-        ImageIcon Character3 = new ImageIcon("res/character/masterYi.jpg");
+        ImageIcon Character2 = new ImageIcon("res/character/Cygnus_face.png");
+        ImageIcon Character3 = new ImageIcon("res/character/Iron_Man_face.png");
         ImageIcon Character4 = new ImageIcon("res/character/Ginzo_face.png");
         ImageIcon Character5 = new ImageIcon("res/character/MartianManhunter_face.png");
         	
         
         ImageIcon Character1_background = new ImageIcon("res/character/superman_background.png");
-        ImageIcon Character2_background = new ImageIcon("res/character/zed_background.png");
-        ImageIcon Character3_background = new ImageIcon("res/character/project_yi_background.png");
+        ImageIcon Character2_background = new ImageIcon("res/character/Cygnus_background.png");
+        ImageIcon Character3_background = new ImageIcon("res/character/Iron_Man_background.png");
         ImageIcon Character4_background = new ImageIcon("res/character/Ginzo_background.jpg");
         ImageIcon Character5_background = new ImageIcon("res/character/MartianManhunter_background.png");
         
@@ -194,8 +194,8 @@ public class SelectCharacterScreen extends JPanel {
         Character_Choice_2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            	gameState.setMyCharacter(gameState.createCharacter("Zed"));
-            	selectedCharacterName = "Zed"; // 선택된 캐릭터 이름 저장
+            	gameState.setMyCharacter(gameState.createCharacter("Cygnus"));
+            	selectedCharacterName = "Cygnus"; // 선택된 캐릭터 이름 저장
                 selectedCharacterImage = Character2_background;
                 repaint();
                 startSlideAnimation(Character2_background);
@@ -206,8 +206,8 @@ public class SelectCharacterScreen extends JPanel {
         Character_Choice_3.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            	gameState.setMyCharacter(gameState.createCharacter("MasterYi"));
-            	selectedCharacterName = "MasterYi"; // 선택된 캐릭터 이름 저장
+            	gameState.setMyCharacter(gameState.createCharacter("Iron_Man"));
+            	selectedCharacterName = "Iron_Man"; // 선택된 캐릭터 이름 저장
                 selectedCharacterImage = Character3_background;
                 repaint();
                 startSlideAnimation(Character3_background);

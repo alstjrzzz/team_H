@@ -130,4 +130,18 @@ public class FieldPanel extends JPanel implements KeyListener {
         // 키를 떼면 가만히 있는 상태로 전환
         superman.setMotion(Motion.IDLE);
     }
+    
+    // 캐릭터 이동 메서드
+    public void moveCharacter(int dx, int dy) {
+        // 이동 가능한 범위 확인
+        if (x + dx >= 0 && x + dx < cols && y + dy >= 0 && y + dy < rows) {
+            x += dx;
+            y += dy;
+            repaint(); // 화면 갱신
+            System.out.println("Character moved to: (" + x + ", " + y + ")");
+        } else {
+            System.out.println("Movement out of bounds.");
+        }
+    }
+
 }

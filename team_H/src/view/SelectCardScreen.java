@@ -2,6 +2,7 @@
 
 package view;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import java.awt.BorderLayout;
@@ -316,20 +317,26 @@ public class SelectCardScreen extends JPanel {
 
 	
 	// 중앙하단에 위치한 가로20% 세로30% 비율의 카드선택완료버튼, 도움말버튼, 카드초기화버튼 등
-	public void drawButtonPanel() {
-		
-		buttonPanel.setBackground(Color.red);
-		Button continueButton = new Button("ready");
-		continueButton.addActionListener(new ActionListener() {
+
+    public void drawButtonPanel() {
+        buttonPanel.setBackground(Color.red);
+        
+        // ready 버튼 생성
+        JButton readyButton = new JButton("Ready");
+        readyButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                // 선택된 카드를 GameState에 저장하고 FIGHT 동작 전달
                 gameController.handleAction("FIGHT");
             }
         });
-		buttonPanel.add(continueButton);
-		buttonPanel.setPreferredSize(new Dimension((int)(gameState.getDimension().getWidth() * 2 / 10)
-														, (int)(gameState.getDimension().getHeight() * 3 / 10)));
-	}
+
+        buttonPanel.add(readyButton); // 패널에 추가
+        buttonPanel.setPreferredSize(new Dimension(
+            (int) (gameState.getDimension().getWidth() * 2 / 10),
+            (int) (gameState.getDimension().getHeight() * 3 / 10)
+        ));
+    }
 	
 	// 우측하단에 위치한 가로40% 세로30% 비율의 선택된카드보여주는칸
 	public void drawSelectedCardPanel() {

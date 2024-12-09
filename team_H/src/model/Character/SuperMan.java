@@ -36,6 +36,7 @@ public class SuperMan extends Character {
         addUniqueCard();   // 고유 카드 추가
         loadImage();       // 이미지 로드
         loadMotions();     // 모션 로드
+        
     }
     
     // 슈퍼맨의 공용 카드 추가
@@ -84,7 +85,22 @@ public class SuperMan extends Character {
             add(new int[]{0, -3});
         }}, 75));
     }
-
+    @Override
+    public void useCard(Card card) {
+        switch (card.getEffect()) {
+            case "MOVE":
+                int[] move = card.getRange().get(0); // 이동 범위의 첫 번째 값
+                System.out.println("SuperMan moves to: " + move[0] + ", " + move[1]);
+                // 실제 이동 로직 필요 (FieldPanel 연결 등)
+                break;
+            case "ATTACK":
+                System.out.println("SuperMan attacks with damage: " + card.getDamage());
+                // 실제 공격 로직 필요 (적 체력 감소 등)
+                break;
+            default:
+                System.out.println("Unknown card effect: " + card.getEffect());
+        }
+    }
     private void loadImage() {
         try {
             this.sprite = ImageIO.read(new File("res/character/Superman.png"));
