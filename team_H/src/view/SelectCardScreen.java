@@ -9,6 +9,7 @@ import java.awt.Button;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -20,6 +21,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 
 import controller.GameController;
 import model.Card;
@@ -124,6 +126,7 @@ public class SelectCardScreen extends JPanel {
 
         JPanel cardPanel = new JPanel();
         cardPanel.setLayout(new java.awt.GridLayout(1, 4, 10, 10));
+        cardPanel.setBorder(BorderFactory.createEmptyBorder(100, 100, 100, 100)); // 상단, 하단, 좌측, 우측 마진 설정
         cardPanel.setOpaque(false);
 
         if (gameState.getMyCharacter() != null) {
@@ -133,7 +136,17 @@ public class SelectCardScreen extends JPanel {
                 String imagePath = gameState.getMyCharacter().getCardImagePath(card.getName());
                 ImageIcon cardIcon = new ImageIcon(imagePath);
 
-                // 이미지 크기를 기준으로 버튼 설정
+                // 카드 이름, 버튼, 하단 정보를 포함하는 패널 생성
+                JPanel cardContainer = new JPanel();
+                cardContainer.setLayout(new BorderLayout());
+                cardContainer.setOpaque(false); // 배경 투명
+
+                // 카드 이름 레이블
+                JLabel cardLabel = new JLabel(card.getName(), JLabel.CENTER);
+                cardLabel.setForeground(Color.BLACK); // 텍스트 색상 설정
+                cardLabel.setFont(new Font("Arial", Font.BOLD, 14)); // 폰트 설정
+
+                // 카드 버튼 생성
                 JButton cardButton = new JButton(cardIcon) {
                     @Override
                     public Dimension getPreferredSize() {
@@ -142,7 +155,7 @@ public class SelectCardScreen extends JPanel {
                 };
                 cardButton.setContentAreaFilled(false);
                 cardButton.setFocusPainted(false);
-                cardButton.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+                cardButton.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
 
                 // 마우스 호버 시 테두리 효과
                 cardButton.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -153,15 +166,13 @@ public class SelectCardScreen extends JPanel {
 
                     @Override
                     public void mouseExited(java.awt.event.MouseEvent e) {
-                        cardButton.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1)); // 원래 테두리
+                        cardButton.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2)); // 원래 테두리
                     }
                 });
 
                 // 카드 클릭 시 슬롯에 추가
                 cardButton.addActionListener(e -> {
-                    // 카드 정보 출력
                     System.out.println(card.getName());
-
                     if (selectedSlotIndex != -1) {
                         JPanel slotContainer = (JPanel) fieldPanel.getComponent(0);
                         JButton slotButton = (JButton) slotContainer.getComponent(selectedSlotIndex);
@@ -196,7 +207,32 @@ public class SelectCardScreen extends JPanel {
                     }
                 });
 
-                cardPanel.add(cardButton);
+                // 하단 데미지 및 영역 정보 패널 생성
+                JPanel cardBottomPanel = new JPanel(new BorderLayout());
+                cardBottomPanel.setOpaque(false);
+
+                // 데미지 텍스트
+                String damageText = "DM " + (card.getDamage() > 0 ? card.getDamage() : "00");
+                JLabel damageLabel = new JLabel(damageText, JLabel.CENTER);
+                damageLabel.setForeground(Color.RED);
+                damageLabel.setFont(new Font("Arial", Font.BOLD, 12));
+
+                // 영역 이미지
+                String areaImagePath = "res/areas/area_icon.png"; // 예제: 영역 이미지 경로
+                ImageIcon areaIcon = new ImageIcon(areaImagePath);
+                JLabel areaLabel = new JLabel(areaIcon, JLabel.CENTER);
+
+                // 하단 패널에 추가
+                cardBottomPanel.add(damageLabel, BorderLayout.WEST); // 왼쪽에 데미지
+                cardBottomPanel.add(areaLabel, BorderLayout.CENTER); // 중앙에 영역 이미지
+
+                // 레이블, 버튼, 하단 정보를 카드 컨테이너에 추가
+                cardContainer.add(cardLabel, BorderLayout.NORTH); // 상단에 카드 이름
+                cardContainer.add(cardButton, BorderLayout.CENTER); // 중앙에 카드 버튼
+                cardContainer.add(cardBottomPanel, BorderLayout.SOUTH); // 하단에 데미지와 영역 이미지
+
+                // 카드 컨테이너를 cardPanel에 추가
+                cardPanel.add(cardContainer);
             }
         } else {
             cardPanel.add(new JLabel("슈퍼맨만 구현함."));
@@ -207,7 +243,6 @@ public class SelectCardScreen extends JPanel {
         selectCardPanel = backgroundPanel;
         add(selectCardPanel, BorderLayout.CENTER);
     }
-
 
 
 	
@@ -224,10 +259,15 @@ public class SelectCardScreen extends JPanel {
         for (int i = 0; i < slotButtons.length; i++) {
             int index = i;
 
-            JButton slotButton = new JButton();
+            // 버튼 생성
+            JButton slotButton = new JButton("<html><center>" +
+                    (i + 1) + "<br>PLACE CARD HERE</center></html>");
+            slotButton.setHorizontalTextPosition(SwingConstants.CENTER);
+            slotButton.setVerticalTextPosition(SwingConstants.CENTER);
+            slotButton.setFont(new Font("Arial", Font.PLAIN, 10));
             slotButton.setPreferredSize(new Dimension(100, 150));
             slotButton.setContentAreaFilled(false);
-            slotButton.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+            slotButton.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
 
             // 슬롯 클릭 이벤트
             slotButton.addActionListener(e -> {
@@ -237,10 +277,25 @@ public class SelectCardScreen extends JPanel {
                     gameState.getSelectedCardList().remove(slotCards[index]); // 상태에서 제거
                     slotCards[index] = null; // 슬롯 비우기
                     slotButton.setIcon(null); // 슬롯 이미지 제거
+                    slotButton.setText("<html><center>" +
+                            (index + 1) + "<br>PLACE CARD HERE</center></html>"); // 텍스트 복원
                 } else {
                     // 슬롯이 비어 있으면 선택 상태로 설정
                     selectedSlotIndex = index;
                     System.out.println("슬롯 " + (index + 1) + " 선택됨.");
+                }
+            });
+
+            // 마우스 호버 이벤트 추가
+            slotButton.addMouseListener(new java.awt.event.MouseAdapter() {
+                @Override
+                public void mouseEntered(java.awt.event.MouseEvent e) {
+                    slotButton.setBorder(BorderFactory.createLineBorder(Color.BLUE, 2)); // 호버 시 파란 테두리
+                }
+
+                @Override
+                public void mouseExited(java.awt.event.MouseEvent e) {
+                    slotButton.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2)); // 원래 테두리
                 }
             });
 
@@ -255,6 +310,7 @@ public class SelectCardScreen extends JPanel {
                 (int) (gameState.getDimension().getHeight() * 3 / 10)
         ));
     }
+
 
 
 
