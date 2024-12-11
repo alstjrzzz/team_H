@@ -5,6 +5,7 @@ import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.Map;
 import model.Card;
+import model.GameState;
 
 public abstract class Character {
 	
@@ -27,7 +28,7 @@ public abstract class Character {
     protected Card currentCard;
     
     
-    protected enum Motion {
+    public enum Motion {
     	IDLE,		// 가만히 있을 때
     	ATTACK,		// 공격
     	MOVE,		// 걷기
@@ -85,7 +86,33 @@ public abstract class Character {
 
     public abstract void addUniqueCard();
     
-    public void drawCharacter(Graphics g) {
+    public void drawCharacter(Graphics g, GameState gameState) {
+    	
+    	// 알아야하는 것: 위치한 배열의 인덱스, client number, flip 여부, 배열의 각 칸의 width height
+    	
+    	switch (currentMotion) {
+    	case Motion.IDLE:
+    		
+    		break;
+    	case Motion.ATTACK:
+    		
+    		break;
+    	case Motion.MOVE:
+    		
+    		break;
+    	case Motion.GUARD:
+    		
+    		break;
+    	case Motion.HIT:
+    		
+    		break;
+    	case Motion.DEAD:
+    		
+    		break;
+    	default:
+    		
+    	
+    	}
     	
     }
     
@@ -108,6 +135,14 @@ public abstract class Character {
 	
 	public void setCurrentCard(Card currentCard) {
 		this.currentCard = currentCard;
+	}
+	
+	public Map<Motion, int[]> getCharacterMotionTimes() {
+		return characterMotionTimes;
+	}
+
+	public Map<String, int[]> getCardMotionTimes() {
+		return cardMotionTimes;
 	}
 
 	public void setMotion(String motion) {

@@ -11,6 +11,7 @@ import model.Character.Character;
 
 
 import javax.swing.JPanel;
+import javax.swing.Timer;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -235,6 +236,13 @@ public class GameController {
 				character.setMotion("MOVE");
 				playingGameScreen.repaint();
 				
+				// 모션 끝날 때까지 대기
+				Timer timer = new Timer(character.getCharacterMotionTimes().get(Character.Motion.MOVE)[1], e -> {
+			        ((Timer) e.getSource()).stop();
+			    });
+			    timer.setRepeats(false);
+			    timer.start();
+				
 				// GameState 업데이트
 				if (character == gameState.getMyCharacter()) {
 					int[] newPosition = gameState.getMyPosition().clone();
@@ -257,6 +265,13 @@ public class GameController {
 				character.setMotion("ATTACK");
 				playingGameScreen.repaint();
 				
+				// 모션 끝날 때까지 대기
+				timer = new Timer(character.getCardMotionTimes().get(card.getName())[1], e -> {
+			        ((Timer) e.getSource()).stop();
+			    });
+			    timer.setRepeats(false);
+			    timer.start();
+				
 				if (character == gameState.getMyCharacter()) { // 내 캐릭터가 공격함
 					
 					for (int i = 0; i < card.getRange().size(); i++) {
@@ -274,6 +289,13 @@ public class GameController {
 							character.setMotion("IDLE");
 							gameState.getEnemyCharacter().setMotion("HIT");
 							playingGameScreen.repaint();
+							
+							// 모션 끝날 때까지 대기
+							timer = new Timer(character.getCharacterMotionTimes().get(Character.Motion.HIT)[1], e -> {
+						        ((Timer) e.getSource()).stop();
+						    });
+						    timer.setRepeats(false);
+						    timer.start();
 						}
 					}
 					gameState.getEnemyCharacter().setMotion("IDLE");
@@ -295,6 +317,13 @@ public class GameController {
 							character.setMotion("IDLE");
 							gameState.getMyCharacter().setMotion("HIT");
 							playingGameScreen.repaint();
+							
+							// 모션 끝날 때까지 대기
+							timer = new Timer(character.getCharacterMotionTimes().get(Character.Motion.HIT)[1], e -> {
+						        ((Timer) e.getSource()).stop();
+						    });
+						    timer.setRepeats(false);
+						    timer.start();
 						}
 					}
 					gameState.getMyCharacter().setMotion("IDLE");

@@ -128,5 +128,9 @@ public class PlayingGameScreen extends JPanel {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
+        
+        gameState.getMyCharacter().drawCharacter(g, gameState);
+        gameState.getEnemyCharacter().drawCharacter(g, gameState);
+        
     }
 }
