@@ -12,6 +12,7 @@ public class PlayingGameScreen extends JPanel {
     private GameState gameState;
     private GameController gameController;
     private NetworkManager networkManager;
+    
 
     private JPanel healthPanel;
     private JPanel fieldPanel;
@@ -123,4 +124,9 @@ public class PlayingGameScreen extends JPanel {
     }
     
     
+    
+    @Override
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+    }
 }

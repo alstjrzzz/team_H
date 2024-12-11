@@ -16,8 +16,10 @@ public class GameState {
     private Character enemyCharacter;
     private int myHealth;
     private int enemyHealth;
-    private int[] myPosition;
-    private int[] enemyPosition;
+    private int[] myPosition;		// 내 캐릭터 위치
+    private int[] enemyPosition;	// 상대 캐릭터 위치
+    private boolean myCharacterIsFlip;
+    private boolean enemyCharacterIsFlip;
     private int clientNumber;
     private LinkedList<String> characterList;
 
@@ -134,6 +136,24 @@ public class GameState {
 	public void setEnemyHealth(int enemyHealth) {
 		this.enemyHealth = enemyHealth;
 	}
+
+	public boolean isMyCharacterIsFlip() {
+		return myCharacterIsFlip;
+	}
+
+	public void setMyCharacterIsFlip(boolean myCharacterIsFlip) {
+		this.myCharacterIsFlip = myCharacterIsFlip;
+	}
+
+	public boolean isEnemyCharacterIsFlip() {
+		return enemyCharacterIsFlip;
+	}
+
+	public void setEnemyCharacterIsFlip(boolean enemyCharacterIsFlip) {
+		this.enemyCharacterIsFlip = enemyCharacterIsFlip;
+	}
+
+	
     
     
 }

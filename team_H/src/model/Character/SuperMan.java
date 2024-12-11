@@ -52,11 +52,4 @@ public class SuperMan extends Character {
     			/*priority:*/ 2));
     }
     
-    
-    
-    @Override
-    public void drawCharacter(Graphics g) {
-    	
-    	
-    }
 }

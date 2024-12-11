@@ -32,6 +32,8 @@ public class GameController {
 	private GameState gameState;
 	private NetworkManager networkManager;
 	
+	private PlayingGameScreen playingGameScreen;
+	
 	public GameController() {
 		
 		startProgram();
@@ -70,12 +72,6 @@ public class GameController {
 			
 			selectCard();
 			fight();
-			try {
-				networkManager.receiveJson();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 			if (isGameOver()) gameOver();
 		}
 	}
@@ -170,16 +166,6 @@ public class GameController {
 			}
 		}
 		
-		// 테스트, 여기서부터
-		System.out.println("start fight");
-		System.out.println("my character: " + gameState.getMyCharacter().getName());
-		System.out.println("enemy character: " + gameState.getEnemyCharacter().getName());
-		
-		System.out.println("my start location: " + gameState.getMyPosition()[0] + "," + gameState.getMyPosition()[1]);
-		System.out.println("enemy start location: " + gameState.getEnemyPosition()[0] + "," + gameState.getEnemyPosition()[1]);
-		System.out.println();
-		// 여기까지 지울것
-		
 		showPlayingGameScreen();
 		
 		for (int i = 0; i < 3; i++) {
@@ -188,38 +174,40 @@ public class GameController {
 					> gameState.getEnemySelectedCardList().get(i).getPriority()) {
 				
 				// 상대 i번째 카드 사용
-				useCard(gameState.getEnemySelectedCardList().get(i));
+				useCard(gameState.getEnemySelectedCardList().get(i), gameState.getEnemyCharacter());
 				// 내 i번째 카드 사용
-				useCard(gameState.getSelectedCardList().get(i));
+				useCard(gameState.getSelectedCardList().get(i), gameState.getMyCharacter());
 				
 			} else if (gameState.getSelectedCardList().get(i).getPriority()
 					< gameState.getEnemySelectedCardList().get(i).getPriority()) {
 				
 				// 내 i번째 카드 사용
-				useCard(gameState.getSelectedCardList().get(i));
+				useCard(gameState.getSelectedCardList().get(i), gameState.getMyCharacter());
 				// 상대 i번째 카드 사용
-				useCard(gameState.getEnemySelectedCardList().get(i));
+				useCard(gameState.getEnemySelectedCardList().get(i), gameState.getEnemyCharacter());
 				
 			} else {
 				
 				if (gameState.getClientNumber() == 1) {
 					
 					// 내 i번째 카드 사용
-					useCard(gameState.getSelectedCardList().get(i));
+					useCard(gameState.getSelectedCardList().get(i), gameState.getMyCharacter());
 					// 상대 i번째 카드 사용
-					useCard(gameState.getEnemySelectedCardList().get(i));
+					useCard(gameState.getEnemySelectedCardList().get(i), gameState.getEnemyCharacter());
 					
 				} else {
 					
 					// 상대 i번째 카드 사용
-					useCard(gameState.getEnemySelectedCardList().get(i));
+					useCard(gameState.getEnemySelectedCardList().get(i), gameState.getEnemyCharacter());
 					// 내 i번째 카드 사용
-					useCard(gameState.getSelectedCardList().get(i));
+					useCard(gameState.getSelectedCardList().get(i), gameState.getMyCharacter());
 					
 				}
 				
 			}
 		}
+		
+		// 카드 전부 사용하면 다음 카드 선택 페이지로 이동하는 버튼 setVisible = true, 서버와 연동해서 두 클라이언트가 동시에 카드 선택되도록 해야 함
 		
 	}
 	
@@ -238,51 +226,87 @@ public class GameController {
 	
 	
 	
-	private void useCard(Card card) {
+	private void useCard(Card card, Character character) {
 		
 		switch (card.getCategory()) {
-			/*
+			
 			case "MOVE":
+				// 모션 실행
+				character.setMotion("MOVE");
+				playingGameScreen.repaint();
 				
+				// GameState 업데이트
+				if (character == gameState.getMyCharacter()) {
+					int[] newPosition = gameState.getMyPosition().clone();
+					newPosition[0] += card.getRange().get(0)[0];
+					newPosition[1] += card.getRange().get(0)[1];
+					gameState.setMyPosition(newPosition.clone());
+				} else {
+					int[] newPosition = gameState.getEnemyPosition().clone();
+					newPosition[0] += card.getRange().get(0)[0];
+					newPosition[1] += card.getRange().get(0)[1];
+					gameState.setEnemyPosition(newPosition.clone());
+				}
+				
+				// 기본 자세로 변경
+				character.setMotion("IDLE");
+				character.setCurrentCard(card);
+				playingGameScreen.repaint();
 				break;
 			case "ATTACK":
+				character.setMotion("ATTACK");
+				playingGameScreen.repaint();
 				
-				break;*/
-			default:
-				// 테스트, 위에 주석 풀고 여기서부터
-				System.out.println("card name:" + card.getName());
-				System.out.println("card category: " + card.getCategory());
-				System.out.print("card range: ");
-				for (int i = 0; i < card.getRange().size(); i++) {
-					System.out.print("[" + card.getRange().get(i)[0] + "," + card.getRange().get(i)[1] + "] ");
+				if (character == gameState.getMyCharacter()) { // 내 캐릭터가 공격함
+					
+					for (int i = 0; i < card.getRange().size(); i++) {
+						int[] range = new int[2];
+						if (!gameState.isMyCharacterIsFlip()) {
+							range[0] = gameState.getMyPosition()[0] + card.getRange().get(i)[0];
+							range[1] = gameState.getMyPosition()[1] + card.getRange().get(i)[1];
+						} else {
+							range[0] = gameState.getMyPosition()[0] - card.getRange().get(i)[0];
+							range[1] = gameState.getMyPosition()[1] + card.getRange().get(i)[1];
+						}
+						
+						if (range.equals(gameState.getEnemyPosition())) {
+							gameState.setEnemyHealth(gameState.getEnemyHealth() - card.getValue());
+							character.setMotion("IDLE");
+							gameState.getEnemyCharacter().setMotion("HIT");
+							playingGameScreen.repaint();
+						}
+					}
+					gameState.getEnemyCharacter().setMotion("IDLE");
+					playingGameScreen.repaint();
+				} else {
+					
+					for (int i = 0; i < card.getRange().size(); i++) {
+						int[] range = new int[2];
+						if (!gameState.isEnemyCharacterIsFlip()) {
+							range[0] = gameState.getEnemyPosition()[0] + card.getRange().get(i)[0];
+							range[1] = gameState.getEnemyPosition()[1] + card.getRange().get(i)[1];
+						} else {
+							range[0] = gameState.getEnemyPosition()[0] - card.getRange().get(i)[0];
+							range[1] = gameState.getEnemyPosition()[1] + card.getRange().get(i)[1];
+						}
+						
+						if (range.equals(gameState.getEnemyPosition())) {
+							gameState.setMyHealth(gameState.getMyHealth() - card.getValue());
+							character.setMotion("IDLE");
+							gameState.getMyCharacter().setMotion("HIT");
+							playingGameScreen.repaint();
+						}
+					}
+					gameState.getMyCharacter().setMotion("IDLE");
+					playingGameScreen.repaint();
 				}
-				System.out.println("card value: " + card.getValue());
-				System.out.println("card priority: " + card.getPriority());
-				System.out.println();
-				// 여기까지 지워!!
+				break;
+			case "GUARD":
+				
+				break;
+			default:
+				
 		}
 	}
 	
-	// 스크린에서 발생한 이벤트를 감지하여 처리합니다 !!
-	/*
-    public void handleAction(String action) {
-    	
-        switch (action) {
-            case "PLAY_GAME":
-            	showSelectCardScreen();
-                break;
-            case "FIGHT":
-            	showPlayingGameScreen();
-                break;
-            case "CHARACTER_SELECT_FINISH":
-            	networkManager.sendCharacterSelection();
-            	break;
-            case "CARD_SELECT_FINISH":
-            	networkManager.sendCardSelection();
-            	break;
-            default:
-                System.out.println("ㅈ비상");
-        }
-    }
-    */
 }

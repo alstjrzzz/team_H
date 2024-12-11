@@ -24,13 +24,15 @@ public abstract class Character {
     
     protected Motion currentMotion;
     protected int currentSprite;
+    protected Card currentCard;
     
     
     protected enum Motion {
     	IDLE,		// 가만히 있을 때
     	ATTACK,		// 공격
-    	WALK,		// 걷기
+    	MOVE,		// 걷기
     	GUARD,		// 막기
+    	HIT,		// 피격
     	DEAD		// 죽음
     }
     
@@ -85,7 +87,6 @@ public abstract class Character {
     
     public void drawCharacter(Graphics g) {
     	
-    	
     }
     
     
@@ -104,6 +105,32 @@ public abstract class Character {
 	public String getLogo() {
 		return logo;
 	}
-
 	
+	public void setCurrentCard(Card currentCard) {
+		this.currentCard = currentCard;
+	}
+
+	public void setMotion(String motion) {
+		
+		switch (motion) {
+		case "IDLE":
+			this.currentMotion = Motion.IDLE;
+			break;
+		case "ATTACK":
+			this.currentMotion = Motion.ATTACK;
+			break;
+		case "MOVE":
+			this.currentMotion = Motion.MOVE;
+			break;
+		case "GUARD":
+			this.currentMotion = Motion.GUARD;
+			break;
+		case "HIT":
+			this.currentMotion = Motion.HIT;
+			break;
+		case "DEAD":
+			this.currentMotion = Motion.DEAD;
+			break;
+		}
+	}
 }
