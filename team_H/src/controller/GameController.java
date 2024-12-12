@@ -89,7 +89,7 @@ public class GameController {
 	}
 	public void showPlayingGameScreen() {
 		System.out.println("Show PlayingGameScreen");
-		mainFrame.setScreen(new PlayingGameScreen(gameState, this, networkManager));
+		mainFrame.setScreen(playingGameScreen = new PlayingGameScreen(gameState, this, networkManager));
 	}
 	public void showSelectCardScreen() {
 		System.out.println("Show SelectCardScreen");
