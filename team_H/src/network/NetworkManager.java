@@ -1,3 +1,5 @@
+// NetworkManager.java
+
 package network;
 
 import java.io.BufferedReader;
@@ -8,6 +10,7 @@ import java.net.Socket;
 import java.util.LinkedList;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import controller.GameController;
@@ -19,6 +22,7 @@ public class NetworkManager {
 	//private static final String SERVER_IP = "172.17.41.35"; // MNU_Guest
 	private static final String SERVER_IP = "localhost";
 	private static final int PORT = 8000;
+	
 	private static GameState gameState;
 	private GameController gameController;
 	
@@ -31,24 +35,29 @@ public class NetworkManager {
 		this.gameState = gameState;
 		this.gameController = gameController;
 		
-		connectToServer();
 	}
 	
 	
-	public static void connectToServer() {
-		try {
-			// 클라이언트 소켓 생성, 입출력 설정
-			clientSocket = new Socket(SERVER_IP, PORT);
-			in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-		    out = new PrintWriter(clientSocket.getOutputStream(), true);
-		    
-		    // 서버로부터 clientNum 입력 대기
-		    gameState.setClientNumber(Integer.parseInt(receiveJson()));
-		    System.out.println("My Client Number: " + gameState.getClientNumber());
-		} catch (NumberFormatException | IOException e) {
-			e.printStackTrace();
-		}
-	}
+	 // 서버에 연결
+    public void connectToServer() throws IOException {
+        if (clientSocket != null && !clientSocket.isClosed()) {
+            System.out.println("이미 서버에 연결되어 있습니다.");
+            return;
+        }
+
+        try {
+            clientSocket = new Socket(SERVER_IP, PORT);
+            in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+            out = new PrintWriter(clientSocket.getOutputStream(), true);
+
+            // 서버로부터 클라이언트 번호 수신
+            gameState.setClientNumber(Integer.parseInt(receiveJson()));
+            System.out.println("My Client Number: " + gameState.getClientNumber());
+        } catch (IOException e) {
+            throw new IOException("서버에 연결할 수 없습니다: " + e.getMessage());
+        }
+    }
+
 	
 	
 	
@@ -69,26 +78,38 @@ public class NetworkManager {
 	
 	
 	public void sendCharacterSelection() {
-		
-		JSONObject json = new JSONObject();
-		json.put("command", "CHARACTER_SELECT_FINISH");
-		json.put("character", gameState.getMyCharacter().getName());
-		
-		out.println(json);
-	}
-	
-	
-	public void sendConnectFinish() {
+	    if (clientSocket == null || clientSocket.isClosed()) {
+	        System.out.println("서버와 연결되지 않았습니다.");
+	        return;
+	    }
 
-		JSONObject json = new JSONObject();
-		json.put("command", "CONNECT_FINISH");
-		
-		out.println(json);
+	    JSONObject json = new JSONObject();
+	    json.put("command", "CHARACTER_SELECT_FINISH");
+	    json.put("character", gameState.getMyCharacter().getName());
+	    out.println(json.toString());
+	    System.out.println("캐릭터 데이터 서버로 전송: " + json.toString());
 	}
 	
+
+	// 메시지 송신
+    public void sendConnectFinish() {
+        if (clientSocket == null || clientSocket.isClosed()) {
+            System.out.println("서버에 연결되지 않았습니다. 연결 후 시도하세요.");
+            return;
+        }
+
+        JSONObject json = new JSONObject();
+        json.put("command", "CONNECT_FINISH");
+        out.println(json.toString());
+    }
 	
-	public static String receiveJson() throws IOException {
-		
-		return in.readLine();
-	}
+	
+    // 메시지 수신
+    public String receiveJson() throws IOException {
+        if (clientSocket == null || clientSocket.isClosed()) {
+            throw new IOException("서버에 연결되지 않았습니다.");
+        }
+
+        return in.readLine();
+    }
 }

@@ -49,15 +49,29 @@ public class StartGameScreen extends JPanel {
 	private GameState gameState;
     private GameController gameController;
     private NetworkManager networkManager;
-    
+    private boolean isConnected = false;
     
     public StartGameScreen(GameState gameState, GameController gameController, NetworkManager networkManager) {
     	
     	this.gameState = gameState;
         this.gameController = gameController;
         this.networkManager = networkManager;
+        
+        initUI();
     }
-    
+    private void initUI() {
+        setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+
+        JLabel waitingLabel = new JLabel("다른 플레이어를 기다리는 중...");
+        waitingLabel.setFont(new Font("맑은 고딕", Font.PLAIN, 18));
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        add(waitingLabel, gbc);
+
+        revalidate();
+        repaint();
+    }
     // 별다른 동작없이 모든 플레이어가 들어오면 자동으로 캐릭터 선택으로 넘어감
     
 }

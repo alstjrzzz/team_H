@@ -47,18 +47,16 @@ public class SelectCharacterScreen extends JPanel {
         // 선택 버튼
         Button ready_button = new Button("READY");
         ready_button.setBounds(332, 465, 38, 23);
-        ready_button.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-            	if(gameState.getMyCharacter() != null) {
-            		networkManager.sendCharacterSelection();
-            		ready_button.setEnabled(false);
-            	}
-            	else {
-            		System.out.println("Character is null");
-            	}
+        ready_button.addActionListener(e -> {
+            if (ready_button.isEnabled() && gameState.getMyCharacter() != null) {
+                networkManager.sendCharacterSelection();
+                System.out.println("캐릭터 선택 : " + gameState.getMyCharacter().getName());
+                ready_button.setEnabled(false);
+            } else {
+                System.out.println("캐릭터가 선택되지 않았거나 이미 준비 완료 상태입니다.");
             }
         });
+
         add(ready_button);
         
         
