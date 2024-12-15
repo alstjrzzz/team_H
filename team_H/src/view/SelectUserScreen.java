@@ -39,7 +39,7 @@ public class SelectUserScreen extends JPanel {
         this.gameController = gameController;
         this.networkManager = networkManager;
         
-        // playBgm(); //배경화면 음악
+        //playBgm(); //배경화면 음악
         
         initUI();
     }
@@ -57,13 +57,13 @@ public class SelectUserScreen extends JPanel {
         add(backgroundLabel, BorderLayout.CENTER);
         
         // 로고 gif 추가
-        ImageIcon logoGif = new ImageIcon("res/img/gamelogo.gif");
+        ImageIcon logoGif = new ImageIcon("res/img/logo_bg.gif");
         JLabel logoLabel = new JLabel(logoGif);
         
         // 로고 위치 설정
         gbc.gridx = 0;
         gbc.gridy = 0;
-        gbc.insets = new Insets(50, 0, 50, 0); // 위 20px, 아래 10px 간격
+        gbc.insets = new Insets(100, 0, 50, 0); // 위 20px, 아래 10px 간격
         gbc.anchor = GridBagConstraints.CENTER; // 화면 중앙 정렬
         backgroundLabel.add(logoLabel, gbc); // 로고를 배치
         
@@ -151,7 +151,7 @@ public class SelectUserScreen extends JPanel {
         });
     }
 
-    /*
+   
     public void playBgm() {
         Player bgmPlayer = null;
         String bgmFilePath = "res/sound/bgm/로그인창_브금2.mp3";
@@ -174,5 +174,5 @@ public class SelectUserScreen extends JPanel {
             }
         }.start();
     }
-    */
+   
 }

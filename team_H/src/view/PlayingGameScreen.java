@@ -2,8 +2,11 @@ package view;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+
 import javax.swing.border.EmptyBorder;
 import controller.GameController;
+import model.Card;
 import model.GameState;
 import network.NetworkManager;
 
@@ -50,90 +53,67 @@ public class PlayingGameScreen extends JPanel {
     }
 
 
-
-    // 상단 패널 구성 (체력바)
     public void drawHealthPanel() {
-    	
-        healthPanel.setLayout(new BorderLayout());
+        healthPanel.setLayout(null);
         healthPanel.setOpaque(false);
-        healthPanel.setPreferredSize(new Dimension(
-            (int) gameState.getDimension().getWidth(),
-            (int) (gameState.getDimension().getHeight() * 1 / 10)
-        ));
-        
-        int width = healthPanel.getWidth();
-        int height = healthPanel.getHeight();
 
+        int panelWidth = getWidth();
+        int panelHeight = 50;
 
-        // 캐릭터 초상화 그리기, 지금은 캐릭터 이름만 넣어둠, 캐릭터 이미지 넣을 것
-        JLabel characterLabel1;
-        JLabel characterLabel2;
-        if (gameState.getClientNumber() == 1) {
-        	characterLabel1 = new JLabel(gameState.getMyCharacter().getName());
-        	characterLabel1.setBounds(0, 0, height, height);
-        	characterLabel2 = new JLabel(gameState.getEnemyCharacter().getName());
-        	characterLabel2.setBounds(width - height, 0, height, height);
-        } else {
-        	characterLabel1 = new JLabel(gameState.getEnemyCharacter().getName());
-        	characterLabel1.setBounds(0, 0, height, height);
-        	characterLabel2 = new JLabel(gameState.getMyCharacter().getName());
-        	characterLabel2.setBounds(width - height, 0, height, height);
-        }
-        healthPanel.add(characterLabel1);
-        healthPanel.add(characterLabel2);
-        
-        
-        // 체력바
-        JProgressBar healthBar1;
-        JProgressBar healthBar2;
-        if (gameState.getClientNumber() == 1) {
-        	healthBar1 = new JProgressBar(0, gameState.getMyCharacter().getMaxHealth());
-        	healthBar1.setValue(gameState.getMyHealth());
-        	
-        	healthBar2 = new JProgressBar(0, gameState.getEnemyCharacter().getMaxHealth());
-        	healthBar2.setValue(gameState.getEnemyHealth());
-        } else {
-        	healthBar1 = new JProgressBar(0, gameState.getEnemyCharacter().getMaxHealth());
-        	healthBar1.setValue(gameState.getEnemyHealth());
-        	
-        	healthBar2 = new JProgressBar(0, gameState.getMyCharacter().getMaxHealth());
-        	healthBar2.setValue(gameState.getMyHealth());
-        }
-        
-        healthBar1.setBackground(Color.GRAY);
-        healthBar1.setForeground(Color.RED);
-        healthBar1.setBounds(getHeight(), 0, width/2 - height, height);
-        healthBar1.setStringPainted(true);
-        
-        healthBar2.setBackground(Color.GRAY);
-        healthBar2.setForeground(Color.RED);
-        healthBar2.setBounds(getWidth()/2, 0, width/2 - height, height);
-        healthBar2.setStringPainted(true);
-        
-        healthPanel.add(healthBar1);
-        healthPanel.add(healthBar2);
+        // Player 1의 캐릭터 로고
+        JLabel player1Logo = new JLabel(new ImageIcon(gameState.getMyCharacter().getLogo()));
+        player1Logo.setBounds(10, 0, panelHeight, panelHeight);
+        healthPanel.add(player1Logo);
 
+        // Player 1의 체력바
+        JProgressBar player1HealthBar = new JProgressBar(0, gameState.getMyCharacter().getMaxHealth());
+        player1HealthBar.setValue(gameState.getMyHealth());
+        player1HealthBar.setBounds(70, 10, panelWidth / 2 - 100, 30);
+        player1HealthBar.setForeground(Color.RED);
+        healthPanel.add(player1HealthBar);
+
+        // Player 2의 캐릭터 로고
+        JLabel player2Logo = new JLabel(new ImageIcon(gameState.getEnemyCharacter().getLogo()));
+        player2Logo.setBounds(panelWidth - panelHeight - 10, 0, panelHeight, panelHeight);
+        healthPanel.add(player2Logo);
+
+        // Player 2의 체력바
+        JProgressBar player2HealthBar = new JProgressBar(0, gameState.getEnemyCharacter().getMaxHealth());
+        player2HealthBar.setValue(gameState.getEnemyHealth());
+        player2HealthBar.setBounds(panelWidth / 2 + 20, 10, panelWidth / 2 - 100, 30);
+        player2HealthBar.setForeground(Color.RED);
+        healthPanel.add(player2HealthBar);
     }
 
-    
-    // 카드 선택 패널 (예시)
+
     public void drawSelectedCardPanel() {
-    	cardPanel.setOpaque(false); // 투명하게 만들기
-        cardPanel.add(new JLabel("<player1 selected card 1, 2, 3>      <player2 selected card 3, 2, 1>"));
-        cardPanel.setPreferredSize(new Dimension(
-            (int) gameState.getDimension().getWidth(),
-            (int) (gameState.getDimension().getHeight() * 2 / 10)
-        ));
+        cardPanel.removeAll();
+        cardPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
+
+        // Player 1의 카드 이미지 추가
+        for (Card card : gameState.getSelectedCardList()) {
+            BufferedImage cardImage = gameState.getMyCharacter().getCardImage().get(card.getName());
+            if (cardImage != null) {
+                cardPanel.add(new JLabel(new ImageIcon(cardImage)));
+            }
+        }
+
+        // Player 2의 카드 이미지 추가
+        for (Card card : gameState.getEnemySelectedCardList()) {
+            BufferedImage cardImage = gameState.getEnemyCharacter().getCardImage().get(card.getName());
+            if (cardImage != null) {
+                cardPanel.add(new JLabel(new ImageIcon(cardImage)));
+            }
+        }
+        cardPanel.revalidate();
+        cardPanel.repaint();
     }
-    
-    
     
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        
+
         gameState.getMyCharacter().drawCharacter(g, gameState, this);
         gameState.getEnemyCharacter().drawCharacter(g, gameState, this);
-        
     }
 }

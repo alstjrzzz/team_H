@@ -32,7 +32,7 @@ public abstract class Character {
     protected Map<String, BufferedImage[]> cardEffects;
     protected Map<String, int[]> cardEffectTimes;
     
-    protected Motion currentMotion;
+    protected Motion currentMotion = Motion.IDLE;
     protected int currentSprite;
     protected Card currentCard;
     
@@ -55,8 +55,8 @@ public abstract class Character {
         
         addCommonCard();
         addUniqueCard();
-        
-        
+		initCardMotionTimes();
+		initCharacterMotionTimes();
     }
     
     
@@ -115,84 +115,53 @@ public abstract class Character {
     public abstract void initCardEffectTimes();
     
     public void drawCharacter(Graphics g, GameState gameState, JPanel playingGameScreen) {
-    	
-    	switch (currentMotion) {
-    	
-    	case Motion.IDLE:
-    		
-    		break;
-    	case Motion.ATTACK:
-    		
-    		motionTimer.scheduleAtFixedRate(new TimerTask() {
-    			Character thisCharacter = Character.this;
-                int currentFrame = 0;
-                long startTime = System.currentTimeMillis();
+        if (currentMotion == null || currentCard == null || cardMotions == null) {
+            System.err.println("Animation draw failed: currentMotion or currentCard is null.");
+            System.err.println("currentMotion: " + currentMotion);
+            System.err.println("currentCard: " + currentCard);
+            return;
+        }
 
-                @Override
-                public void run() {
-                    long elapsedTime = System.currentTimeMillis() - startTime;
-                    int interval = cardMotionTimes.get(currentCard.getName())[0];
-                    int duration = cardMotionTimes.get(currentCard.getName())[1];
+        BufferedImage[] motionImages = cardMotions.get(currentCard.getName());
+        if (motionImages == null) {
+            System.err.println("No motion images found for card: " + currentCard.getName());
+            return;
+        }
 
-                    // 모션이 끝났으면 타이머를 취소
-                    if (elapsedTime > duration) {
-                        motionTimer.cancel();
-                        return;
-                    }
-                    
-                    int x, y;
-                    if (thisCharacter == gameState.getMyCharacter()) {
-                    	
-                    	if (gameState.getClientNumber() == 1) {
-                    		x = gameState.getMyPosition()[0] * FieldPanel.gridClient1X + FieldPanel.gridStartX;
-                    		y = gameState.getMyPosition()[1] * FieldPanel.gridClient1Y + FieldPanel.gridStartY;
-                    	} else {
-                    		x = gameState.getMyPosition()[0] * FieldPanel.gridClient2X + FieldPanel.gridStartX;
-                    		y= gameState.getMyPosition()[1] * FieldPanel.gridClient2Y + FieldPanel.gridStartY;
-                    	}
-                    } else {
-                    	if (gameState.getClientNumber() == 1) {
-                    		x = gameState.getEnemyPosition()[0] * FieldPanel.gridClient1X + FieldPanel.gridStartX;
-                    		y = gameState.getEnemyPosition()[1] * FieldPanel.gridClient1Y + FieldPanel.gridStartY;
-                    	} else {
-                    		x = gameState.getEnemyPosition()[0] * FieldPanel.gridClient2X + FieldPanel.gridStartX;
-                    		y= gameState.getEnemyPosition()[1] * FieldPanel.gridClient2Y + FieldPanel.gridStartY;
-                    	}
-                    }
-                    
-                    // 모션 프레임 갱신
-                    if (elapsedTime % interval == 0) {
-                        currentFrame = (currentFrame + 1) % cardMotions.get(currentCard.getName()).length;
-                        playingGameScreen.repaint(x, y
-                        		, cardMotions.get(currentCard.getName())[currentFrame].getWidth()
-                        		, cardMotions.get(currentCard.getName())[currentFrame].getHeight());
-                    }
-                }
-            }, 0, cardMotionTimes.get(currentCard.getName())[1]);
-    		
-    		
-    		// 이펙트는 override 해서 추가
-    		
-    		break;
-    	case Motion.MOVE:
-    		
-    		break;
-    	case Motion.GUARD:
-    		
-    		break;
-    	case Motion.HIT:
-    		
-    		break;
-    	case Motion.DEAD:
-    		
-    		break;
-    	default:
-    		
-    	
-    	}
-    	
+        int x, y;
+        if (this == gameState.getMyCharacter()) {
+            x = gameState.getMyPosition()[0] * FieldPanel.gridWidth + FieldPanel.gridStartX;
+            y = gameState.getMyPosition()[1] * FieldPanel.gridHeight + FieldPanel.gridStartY;
+        } else {
+            x = gameState.getEnemyPosition()[0] * FieldPanel.gridWidth + FieldPanel.gridStartX;
+            y = gameState.getEnemyPosition()[1] * FieldPanel.gridHeight + FieldPanel.gridStartY;
+        }
+
+        switch (currentMotion) {
+            case ATTACK:
+            case MOVE:
+            case GUARD:
+            case HIT:
+            case DEAD:
+                animateMotion(g, motionImages, x, y, playingGameScreen, cardMotionTimes.get(currentCard.getName()));
+                break;
+
+            case IDLE:
+            default:
+                // 기본 상태: 첫 번째 이미지 그리기
+                g.drawImage(motionImages[0], x, y, null);
+                break;
+        }
     }
-    
+
+    public BufferedImage getLogo() {
+        return this.logo;
+    }
+
+    public Map<String, BufferedImage> getCardImage() {
+        return this.cardImage;
+    }
+
     
     public String getName() {
 		return name;
@@ -241,4 +210,41 @@ public abstract class Character {
 			break;
 		}
 	}
+	private void animateMotion(Graphics g, BufferedImage[] images, int x, int y, JPanel playingGameScreen, int[] motionTimes) {
+	    if (motionTimes == null || motionTimes.length != 2) {
+	        System.err.println("Invalid motion times for animation.");
+	        return;
+	    }
+
+	    int interval = motionTimes[0]; // 모션 간격
+	    int duration = motionTimes[1]; // 모션 전체 지속 시간
+	    final long startTime = System.currentTimeMillis(); // 애니메이션 시작 시간
+	    final int[] frameIndex = {0}; // 현재 프레임 인덱스
+
+	    if (motionTimer != null) {
+	        motionTimer.cancel(); // 기존 타이머 중지
+	    }
+	    motionTimer = new Timer();
+
+	    motionTimer.scheduleAtFixedRate(new TimerTask() {
+	        @Override
+	        public void run() {
+	            long elapsedTime = System.currentTimeMillis() - startTime;
+
+	            if (elapsedTime > duration) {
+	                motionTimer.cancel(); // 지속 시간이 끝나면 타이머 종료
+	                currentMotion = Motion.IDLE; // 기본 상태로 변경
+	                playingGameScreen.repaint(x, y, images[frameIndex[0]].getWidth(), images[frameIndex[0]].getHeight());
+	                return;
+	            }
+
+	            // 프레임 업데이트
+	            frameIndex[0] = (frameIndex[0] + 1) % images.length;
+
+	            // 이미지 그리기
+	            playingGameScreen.repaint(x, y, images[frameIndex[0]].getWidth(), images[frameIndex[0]].getHeight());
+	        }
+	    }, 0, interval); // interval에 따라 프레임 갱신
+	}
+
 }

@@ -361,6 +361,11 @@ public class GameController {
 	
 	private void useCard(Card card, Character character) {
 		
+	    if (card == null || character == null) {
+	        System.err.println("Card or character is null in useCard!");
+	        return;
+	    }
+	    
 		switch (card.getCategory()) {
 			
 			case "MOVE":
@@ -465,7 +470,9 @@ public class GameController {
 			case "GUARD":
 				
 				break;
-			default:
+	        default:
+	            System.err.println("Unknown card category: " + card.getCategory());
+				
 				
 		}
 	}
