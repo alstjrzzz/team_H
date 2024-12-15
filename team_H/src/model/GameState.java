@@ -4,7 +4,7 @@ import java.awt.Dimension;
 import java.util.LinkedList;
 
 import model.Character.Character;
-
+import model.Character.Doraemon;
 import model.Character.SuperMan;
 
 public class GameState {
@@ -37,6 +37,7 @@ public class GameState {
     	characterList = new LinkedList<>();
     	
     	characterList.add("SuperMan");
+    	characterList.add("Doraemon");
     	// ...
     }
     
@@ -44,6 +45,8 @@ public class GameState {
         switch (character) {
             case "SuperMan":
                 return new SuperMan();
+            case "Doraemon":
+                return new Doraemon();
             default:
             	return null;
         }

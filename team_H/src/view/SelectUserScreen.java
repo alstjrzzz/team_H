@@ -1,6 +1,5 @@
 // SelectuserScreen.java
 
-
 package view;
 
 import javax.swing.JButton;
@@ -14,6 +13,7 @@ import java.awt.GridBagConstraints;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.Insets;
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
@@ -39,7 +39,7 @@ public class SelectUserScreen extends JPanel {
         this.gameController = gameController;
         this.networkManager = networkManager;
         
-        // playBgm(); //배경화면 음악 (넘 시끄러워서 잠깐 뺌)
+        // playBgm(); //배경화면 음악
         
         initUI();
     }
@@ -51,7 +51,7 @@ public class SelectUserScreen extends JPanel {
         GridBagConstraints gbc = new GridBagConstraints();
         
         // 배경 gif 추가
-        ImageIcon gifIcon = new ImageIcon("res/img/오프닝배경1.gif");
+        ImageIcon gifIcon = new ImageIcon("res/img/오프닝배경2.gif");
         JLabel backgroundLabel = new JLabel();
         backgroundLabel.setLayout(new GridBagLayout()); // GridBagLayout 설정
         add(backgroundLabel, BorderLayout.CENTER);
@@ -59,65 +59,65 @@ public class SelectUserScreen extends JPanel {
         // 로고 gif 추가
         ImageIcon logoGif = new ImageIcon("res/img/gamelogo.gif");
         JLabel logoLabel = new JLabel(logoGif);
+        
         // 로고 위치 설정
         gbc.gridx = 0;
         gbc.gridy = 0;
-        gbc.insets = new Insets(20, 0, 10, 0); // 위 20px, 아래 10px 간격
+        gbc.insets = new Insets(50, 0, 50, 0); // 위 20px, 아래 10px 간격
         gbc.anchor = GridBagConstraints.CENTER; // 화면 중앙 정렬
         backgroundLabel.add(logoLabel, gbc); // 로고를 배치
         
         // 버튼 추가
-        JButton multiplayerButton = new JButton("멀티플레이어 찾기");
-        multiplayerButton.setFont(new Font("맑은 고딕", Font.BOLD, 22)); // 큰 폰트
-        multiplayerButton.setForeground(Color.WHITE); // 흰색 텍스트
-        multiplayerButton.setBackground(new Color(34, 139, 34)); // 어두운 초록색 기본 배경
-        multiplayerButton.setFocusPainted(false); // 포커스 효과 제거
-        multiplayerButton.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(new Color(0, 100, 0), 2), // 어두운 초록색 테두리
-            BorderFactory.createEmptyBorder(10, 20, 10, 20) // 내부 여백
-        ));
-        multiplayerButton.setOpaque(true);
-
-        // 입체감 추가
-        multiplayerButton.setUI(new javax.swing.plaf.basic.BasicButtonUI());
-        multiplayerButton.setBorderPainted(true);
-
-        // 마우스 Hover 및 클릭 효과 추가
+        JButton multiplayerButton = new JButton("멀티플레이어 찾기") {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                if (getModel().isRollover()) { // 마우스가 올라간 상태
+                    g.setColor(Color.WHITE); // 밑줄 색상
+                    int y = getHeight() - 3; // 버튼의 아래쪽에서 3px 위에 밑줄 위치
+                    g.fillRect(0, y, getWidth(), 2); // 밑줄 그리기: (x, y, width, height)
+                }
+            }
+        };
+        multiplayerButton.setFont(new Font("궁서", Font.BOLD, 18));
+        multiplayerButton.setForeground(Color.WHITE); // 텍스트 색상
+        multiplayerButton.setFocusPainted(false);     // 포커스 테두리 제거
+        multiplayerButton.setContentAreaFilled(false); // 버튼 배경 제거
+        multiplayerButton.setBorderPainted(false);     // 버튼 테두리 제거
+        multiplayerButton.setOpaque(false);            // 완전히 투명
+        
+        // 스포트라이트 효과를 위한 라벨
+        JLabel spotlightLabel = new JLabel();
+        spotlightLabel.setBackground(Color.WHITE);
+        spotlightLabel.setOpaque(true);
+        spotlightLabel.setVisible(false); // 기본 상태에서는 숨김
+        
+     	// 마우스 Hover 및 클릭 효과 추가
         multiplayerButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                multiplayerButton.setBackground(new Color(46, 160, 46)); // Hover 시 밝은 초록색
-                multiplayerButton.setBorder(BorderFactory.createCompoundBorder(
-                    BorderFactory.createLineBorder(new Color(0, 128, 0), 3), // Hover 시 더 밝은 테두리
-                    BorderFactory.createEmptyBorder(10, 20, 10, 20)
-                ));
+                spotlightLabel.setVisible(true);
             }
 
+            @Override
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                multiplayerButton.setBackground(new Color(34, 139, 34)); // 기본 초록색 복원
-                multiplayerButton.setBorder(BorderFactory.createCompoundBorder(
-                    BorderFactory.createLineBorder(new Color(0, 100, 0), 2), // 기본 테두리 복원
-                    BorderFactory.createEmptyBorder(10, 20, 10, 20)
-                ));
-            }
-
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                multiplayerButton.setBackground(new Color(0, 102, 0)); // 클릭 시 더 어두운 초록색
-                multiplayerButton.setBorder(BorderFactory.createCompoundBorder(
-                    BorderFactory.createLineBorder(new Color(0, 70, 0), 4), // 클릭 시 두꺼운 테두리
-                    BorderFactory.createEmptyBorder(10, 20, 10, 20)
-                ));
-            }
-
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                multiplayerButton.setBackground(new Color(46, 160, 46)); // Hover 상태 복원
+                spotlightLabel.setVisible(false);
             }
         });
 
-        // 버튼 위치 설정
+        // 버튼 및 스포트라이트 위치 설정
         gbc.gridx = 0;
         gbc.gridy = 1;
-        gbc.insets = new Insets(50, 0, 20, 0);
+        gbc.insets = new Insets(30, 0, 100, 0);
         backgroundLabel.add(multiplayerButton, gbc);
+
+        // 스포트라이트 위치 설정
+        gbc.gridy = 2; // 버튼 바로 아래 위치
+        gbc.insets = new Insets(-5, 0, 0, 0); // 버튼과의 거리 조정
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.ipadx = 80; // 밑줄 길이
+        backgroundLabel.add(spotlightLabel, gbc);
+        
         // 버튼 클릭 이벤트
         multiplayerButton.addActionListener(e -> {
             System.out.println("멀티플레이어 찾기 버튼 클릭");
@@ -154,7 +154,7 @@ public class SelectUserScreen extends JPanel {
     /*
     public void playBgm() {
         Player bgmPlayer = null;
-        String bgmFilePath = "res/sound/bgm/로그인창_브금.mp3";
+        String bgmFilePath = "res/sound/bgm/로그인창_브금2.mp3";
         try {
             FileInputStream fis = new FileInputStream(bgmFilePath);
             BufferedInputStream bis = new BufferedInputStream(fis);

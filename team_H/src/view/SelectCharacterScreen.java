@@ -5,6 +5,7 @@ package view;
 import java.awt.Button;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.ImageIcon;
@@ -25,6 +26,8 @@ public class SelectCharacterScreen extends JPanel {
     private NetworkManager networkManager;
     
     private JPanel selectCharacterPanel;
+    // 배경 이미지 추가
+    private Image backgroundImage;
     
     public SelectCharacterScreen(GameState gameState, GameController gameController, NetworkManager networkManager) {
     	
@@ -36,10 +39,20 @@ public class SelectCharacterScreen extends JPanel {
 
         selectCharacterPanel = new JPanel();
         
+        // 배경 이미지 로드
+        backgroundImage = new ImageIcon("res/img/캐릭터 선택창 배경.png").getImage();
+        
         drawSelectCharacterPanel();
     }
 
-
+    // 배경 이미지를 그리기 위한 paintComponent 오버라이드
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        // 배경 이미지 크기를 패널 크기에 맞게 조정
+        g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+    }
+    
     public void drawSelectCharacterPanel() {
     	
         setLayout(null);

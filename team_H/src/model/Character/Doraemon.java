@@ -21,12 +21,23 @@ public class Doraemon extends Character {
 		name = "Doraemon";
 		maxHealth = 100;
 		try {
-			sprite = ImageIO.read(new File("file:///C:/Users/PC/git/team_H/team_H/res/character/Doraemon.png"));
-			skillEffect = ImageIO.read(new File(""));
-			logo = ImageIO.read(new File("file:///C:/Users/PC/git/team_H/team_H/res/character/doraemon_logo.jpg"));
+			sprite = ImageIO.read(getClass().getResource("/res/character/Doraemon.png"));
+			if (sprite == null) {
+		        System.err.println("sprite가 초기화되지 않았습니다. initCardMotions를 실행할 수 없습니다.");
+		        return;
+		    }
+			
+			// skillEffect = ImageIO.read(new File(""));
+			logo = ImageIO.read(getClass().getResource("/res/character/doraemon_logo.jpg"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+		initCardImage();
+		initCharacterMotions();
+		initCharacterMotionTimes();
+		initCardMotions();
+		initCardMotionTimes();
 		
 	}
 
@@ -67,8 +78,8 @@ public class Doraemon extends Character {
 		cardImage = new HashMap<String, BufferedImage>();
 		
 		try {
-			cardImage.put("Air Cannon!", ImageIO.read(new File("file:///C:/Users/PC/git/team_H/team_H/res/card/air_cannon.png")));
-			cardImage.put("Bamboo Helicopter!", ImageIO.read(new File("file:///C:/Users/PC/git/team_H/team_H/res/card/bambooHelicopter.png")));
+			cardImage.put("Air Cannon!", ImageIO.read(getClass().getResource("/res/card/air_cannon.png")));
+			cardImage.put("Bamboo Helicopter!", ImageIO.read(getClass().getResource("/res/card/bamboo_helicopter.png")));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

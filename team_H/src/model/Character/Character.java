@@ -56,11 +56,7 @@ public abstract class Character {
         addCommonCard();
         addUniqueCard();
         
-        initCardImage();
-		initCharacterMotions();
-		initCharacterMotionTimes();
-		initCardMotions();
-		initCardMotionTimes();
+        
     }
     
     

@@ -23,6 +23,7 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -52,6 +53,8 @@ public class StartGameScreen extends JPanel {
     private GameController gameController;
     private NetworkManager networkManager;
     private boolean isConnected = false;
+    private JLabel loadingLabel; // 로딩 텍스트 레이블
+    private int dotCount = 0;    // 점 개수를 추적하는 변수
     
     public StartGameScreen(GameState gameState, GameController gameController, NetworkManager networkManager) {
     	
@@ -60,6 +63,7 @@ public class StartGameScreen extends JPanel {
         this.networkManager = networkManager;
         
         initUI();
+        startLoadingAnimation(); // 애니메이션 시작
     }
     private void initUI() {
         setLayout(new BorderLayout()); // 전체 레이아웃을 BorderLayout으로 설정
@@ -68,27 +72,19 @@ public class StartGameScreen extends JPanel {
         GridBagConstraints gbc = new GridBagConstraints();
 
         // 배경 gif 추가
-        ImageIcon gifIcon = new ImageIcon("res/img/오프닝배경1.gif");
+        ImageIcon gifIcon = new ImageIcon("res/img/오프닝배경2.gif");
         JLabel backgroundLabel = new JLabel();
         backgroundLabel.setLayout(new GridBagLayout()); // GridBagLayout 설정
         add(backgroundLabel, BorderLayout.CENTER);
 
-        // "로딩 ..." 텍스트와 GIF를 함께 표시
-        ImageIcon loadingGif = new ImageIcon("res/img/로딩.gif"); // 로딩 GIF
-        JLabel loadingLabel = new JLabel();
-        loadingLabel.setText("<html>다른 플레이어를 기다리는 중&nbsp;&nbsp;</html>"); // 텍스트 추가 (HTML로 띄어쓰기)
-        loadingLabel.setFont(new Font("맑은 고딕", Font.BOLD, 20)); // 텍스트 스타일
+        // "로딩 ..." 텍스트 레이블
+        loadingLabel = new JLabel();
+        loadingLabel.setText("다른 플레이어를 기다리는 중 "); // 초기 텍스트
+        loadingLabel.setFont(new Font("궁서", Font.BOLD, 18)); // 텍스트 스타일
         loadingLabel.setForeground(Color.WHITE); // 텍스트 색상
-        loadingLabel.setIcon(loadingGif); // 로딩 GIF 추가
-        loadingLabel.setHorizontalTextPosition(JLabel.LEFT); // 텍스트를 왼쪽에 배치
-        loadingLabel.setVerticalTextPosition(JLabel.CENTER); // 텍스트와 이미지 수직 정렬
+        
+        backgroundLabel.add(loadingLabel); // 화면 중앙에 배치
 
-        // 로고 위치 설정
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.insets = new Insets(20, 0, 10, 0); // 위 20px, 아래 10px 간격
-        gbc.anchor = GridBagConstraints.CENTER; // 화면 중앙 정렬
-        backgroundLabel.add(loadingLabel, gbc); // 로고를 배치
 
         // 크기 계산 및 GIF 설정
         addComponentListener(new java.awt.event.ComponentAdapter() {
@@ -114,6 +110,18 @@ public class StartGameScreen extends JPanel {
                 backgroundLabel.setIcon(new ImageIcon(resizedImage));
             }
         });
+    }
+    private void startLoadingAnimation() {
+        // Timer를 사용해 일정 시간마다 텍스트 갱신
+        Timer timer = new Timer(500, e -> { // 500ms(0.5초)마다 실행
+            dotCount = (dotCount + 1) % 4; // 점 개수는 0, 1, 2, 3 순환
+            String dots = "";
+            for (int i = 0; i < dotCount; i++) {
+                dots += "."; // 점 추가
+            }
+            loadingLabel.setText("다른 플레이어를 기다리는 중 " + dots);
+        });
+        timer.start(); // 타이머 시작
     }
 
     

@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 import model.Character.Character;
 
@@ -38,6 +39,9 @@ public class GameController {
 	private boolean isConnected = false; // 서버 연결 상태 확인
 	
 	private PlayingGameScreen playingGameScreen;
+	private CountDownLatch characterLatch = new CountDownLatch(1); // 동기화 도구 추가
+	private boolean isCardSelectionComplete = false;
+	private CountDownLatch cardLatch;
 	
 	public GameController() {
 		
@@ -79,8 +83,8 @@ public class GameController {
 
 		                // SelectCharacterScreen으로 전환
 		                SwingUtilities.invokeLater(() -> {
-		                    showSelectCharacterScreen();
-		                    new Thread(this::runGame).start(); // 게임 진행 시작
+		                	selectCharacter();
+		                    
 		                });
 
 		            } catch (IOException | JSONException e) {
@@ -94,19 +98,33 @@ public class GameController {
 
 	 // 게임 진행
 	 private void runGame() {
-	        selectCharacter();
-	        
-	        if(gameState.getMyCharacter() != null) {
+		    System.out.println("runGame() 호출됨");
+
+		    if (gameState.getMyCharacter() != null) {
+		        System.out.println("내 캐릭터가 설정되었습니다: " + gameState.getMyCharacter().getName());
 		        while (true) {
+		            System.out.println("selectCard() 호출 시작");
+
 		            selectCard();
+		            try {
+		                cardLatch.await(); // 작업 완료 대기
+		            } catch (InterruptedException e) {
+		                Thread.currentThread().interrupt();
+		                System.err.println("스레드 대기 중 인터럽트 발생: " + e.getMessage());
+		            }
+
+		            System.out.println("selectCard() 호출 완료");
+
 		            fight();
 		            if (isGameOver()) {
 		                gameOver();
 		                break;
 		            }
 		        }
-	        }
-	    }
+		    } else {
+		        System.out.println("내 캐릭터가 설정되지 않았습니다.");
+		    }
+		}
 	
 	public void showSelectUserScreen() {
         System.out.println("Show SelectUserScreen");
@@ -139,49 +157,53 @@ public class GameController {
 	
 	
 
+	
 	// 캐릭터 선택 로직
-		private void selectCharacter() {
-		    showSelectCharacterScreen();
+	private void selectCharacter() {
+	    showSelectCharacterScreen();
 
-		    new Thread(() -> {
-		        try {
-		            while (true) {
-		                // 서버로부터 메시지 수신
-		                String response = networkManager.receiveJson();
-		                if (response == null) {
-		                    System.out.println("서버 메시지를 수신하지 못했습니다. 다시 시도합니다...");
-		                    Thread.sleep(500); // 잠시 대기 후 다시 시도
-		                    continue;
-		                }
+	    new Thread(() -> {
+	        try {
+	            while (true) {
+	                String response = networkManager.receiveJson();
+	                if (response == null) {
+	                    System.out.println("서버 메시지를 수신하지 못했습니다. 다시 시도합니다...");
+	                    Thread.sleep(500); // 잠시 대기 후 다시 시도
+	                    continue;
+	                }
 
-		                JSONObject jsonResponse = new JSONObject(response);
-		                String command = jsonResponse.getString("command");
+	                JSONObject jsonResponse = new JSONObject(response);
+	                String command = jsonResponse.getString("command");
 
-		                if ("SEND_CHARACTER".equals(command)) {
-		                    // 상대방 캐릭터 정보 설정
-		                    String character = jsonResponse.getString("character");
-		                    Character enemyCharacter = gameState.createCharacter(character);
-		                    gameState.setEnemyCharacter(enemyCharacter);
+	                // 내 캐릭터 설정
+	                if ("CHARACTER_SELECT_FINISH".equals(command)) {
+	                    String myCharacter = jsonResponse.getString("character");
+	                    gameState.setMyCharacter(gameState.createCharacter(myCharacter));
+	                    System.out.println("내 캐릭터가 설정되었습니다: " + myCharacter);
 
-		                    System.out.println("상대방 캐릭터 : " + character);
+	                    characterLatch.countDown(); // 캐릭터 설정 완료 알림
+	                }
 
-		                    // UI 스레드에서 카드 선택 화면으로 이동
-		                    SwingUtilities.invokeLater(() -> {
-		                        System.out.println("Show SelectCardScreen");
-		                        showSelectCardScreen();
-		                    });
-		                    break; // 메시지 처리 완료 후 루프 종료
-		                }
-		            }
-		        } catch (IOException | JSONException e) {
-		            System.err.println("selectCharacter에서 예외 발생: " + e.getMessage());
-		            e.printStackTrace();
-		        } catch (InterruptedException e) {
-		            Thread.currentThread().interrupt();
-		            System.err.println("스레드가 인터럽트되었습니다: " + e.getMessage());
-		        }
-		    }).start();
-		}
+	                // 상대방 캐릭터 설정
+	                if ("SEND_CHARACTER".equals(command)) {
+	                    String character = jsonResponse.getString("character");
+	                    Character enemyCharacter = gameState.createCharacter(character);
+	                    gameState.setEnemyCharacter(enemyCharacter);
+
+	                    System.out.println("상대방 캐릭터 : " + character);
+
+	                    SwingUtilities.invokeLater(() -> {
+	                    	new Thread(this::runGame).start(); // 게임 진행 시작
+	                    });
+	                    break; // 상대방 캐릭터 설정 완료 후 종료
+	                }
+	            }
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+	    }).start();
+	}
+
 
 
 	
@@ -190,6 +212,8 @@ public class GameController {
 	private void selectCard() {
 	    System.out.println("카드 선택 화면으로 이동");
 	    showSelectCardScreen();
+
+	    cardLatch = new CountDownLatch(1); // 동기화 도구 생성
 
 	    new Thread(() -> {
 	        try {
@@ -203,27 +227,61 @@ public class GameController {
 
 	                System.out.println("수신된 메시지: " + response);
 
-	                JSONObject jsonResponse = new JSONObject(response);
-	                String command = jsonResponse.getString("command");
-	                System.out.println("서버 명령 수신: " + command);
+	                // JSON 데이터가 배열 형식임을 고려하여 JSONArray로 처리
+	                JSONArray cardDataArray = new JSONArray(response); // 수정된 부분
+	                LinkedList<Card> enemySelectedCards = new LinkedList<>();
 
-	                if ("SEND_CHARACTER".equals(command)) {
-	                    String character = jsonResponse.getString("character");
-	                    Character enemyCharacter = gameState.createCharacter(character);
-	                    gameState.setEnemyCharacter(enemyCharacter);
+	                for (int i = 0; i < cardDataArray.length(); i++) {
+	                    JSONObject cardData = cardDataArray.getJSONObject(i);
 
-	                    SwingUtilities.invokeLater(() -> {
-	                        System.out.println("Show SelectCardScreen");
-	                        showSelectCardScreen();
-	                    });
-	                    break;
+	                    // JSON에서 range를 LinkedList<int[]>로 변환
+	                    LinkedList<int[]> range = new LinkedList<>();
+	                    JSONArray rangeArray = cardData.getJSONArray("range");
+	                    for (int j = 0; j < rangeArray.length(); j++) {
+	                        JSONArray singleRange = rangeArray.getJSONArray(j);
+	                        int[] rangeCoords = { singleRange.getInt(0), singleRange.getInt(1) };
+	                        range.add(rangeCoords);
+	                    }
+
+	                    // Card 객체 생성
+	                    Card card = new Card(
+	                        cardData.getString("name"),
+	                        cardData.getString("category"),
+	                        range,
+	                        cardData.getInt("value"),
+	                        cardData.getInt("priority")
+	                    );
+	                    enemySelectedCards.add(card);
 	                }
+
+	                // GameState의 enemySelectedCardList 업데이트
+	                gameState.setEnemySelectedCardList(enemySelectedCards);
+	                System.out.println("상대방 선택 카드 리스트 업데이트 완료:");
+
+	                // 콘솔에 상대방 카드 리스트 출력
+	                for (Card card : enemySelectedCards) {
+	                    System.out.println("카드 이름: " + card.getName());
+	                    System.out.println("카드 카테고리: " + card.getCategory());
+	                    System.out.println("카드 우선순위: " + card.getPriority());
+	                    System.out.println("카드 값: " + card.getValue());
+	                    System.out.print("카드 범위: ");
+	                    for (int[] range : card.getRange()) {
+	                        System.out.print("[" + range[0] + ", " + range[1] + "] ");
+	                    }
+	                    System.out.println("\n------------------------");
+	                }
+
+	                cardLatch.countDown(); // 작업 완료 알림
+	                break;
 	            }
 	        } catch (Exception e) {
 	            e.printStackTrace();
 	        }
 	    }).start();
 	}
+
+
+
 
 	
 	
