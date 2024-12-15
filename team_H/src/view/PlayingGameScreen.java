@@ -32,6 +32,9 @@ public class PlayingGameScreen extends JPanel {
         splitPanel();
         drawHealthPanel();
         drawSelectedCardPanel();
+        
+        revalidate();
+        repaint();
     }
     
     
@@ -129,8 +132,8 @@ public class PlayingGameScreen extends JPanel {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         
-        gameState.getMyCharacter().drawCharacter(g, gameState);
-        gameState.getEnemyCharacter().drawCharacter(g, gameState);
+        gameState.getMyCharacter().drawCharacter(g, gameState, this);
+        gameState.getEnemyCharacter().drawCharacter(g, gameState, this);
         
     }
 }
