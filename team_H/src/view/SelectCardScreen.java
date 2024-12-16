@@ -124,18 +124,25 @@ public class SelectCardScreen extends JPanel {
    // 중앙에 위치한 가로100% 세로 60% 비율의 카드 선택 칸
    public void drawSelectCardPanel() {
        JPanel backgroundPanel = new JPanel() {
-          @Override
-          protected void paintComponent(Graphics g) {
-              super.paintComponent(g);
-              if (backgroundImage != null) {
-                  int panelWidth = getWidth();
-                  int panelHeight = getHeight();
+    	   @Override
+    	   protected void paintComponent(Graphics g) {
+    	       super.paintComponent(g);
+    	       if (backgroundImage != null) {
+    	           int panelWidth = getWidth();
+    	           int panelHeight = getHeight();
 
-                  g.drawImage(backgroundImage, 0, backgroundY, panelWidth, panelHeight, this);
-                  g.drawImage(backgroundImage, 0, backgroundY + panelHeight, panelWidth, panelHeight, this);
-                  g.drawImage(backgroundImage, 0, backgroundY - panelHeight, panelWidth, panelHeight, this);
-              }
-          }
+    	           // 이미지 반복을 위한 Y 좌표 계산
+    	           int currentY = backgroundY % panelHeight; // 패널 높이로 나눈 나머지
+
+    	           if (currentY > 0) {
+    	               currentY -= panelHeight; // 자연스럽게 이어지도록 조정
+    	           }
+
+    	           // 이미지를 두 번 그려서 끊김 없는 반복
+    	           g.drawImage(backgroundImage, 0, currentY, panelWidth, panelHeight, this);
+    	           g.drawImage(backgroundImage, 0, currentY + panelHeight, panelWidth, panelHeight, this);
+    	       }
+    	   }
        };
        
        backgroundPanel.setLayout(new BorderLayout());
@@ -145,13 +152,17 @@ public class SelectCardScreen extends JPanel {
 
        JPanel cardPanel = new JPanel();
        cardPanel.setLayout(new java.awt.GridLayout(1, cardList.size(), 10, 10));
-       cardPanel.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
+       cardPanel.setBorder(BorderFactory.createEmptyBorder(125, 140, 125, 140));
        cardPanel.setOpaque(false);
 
        for (Card card : cardList) {
            BufferedImage cardImage = gameState.getMyCharacter().getCardImage().get(card.getName());
            ImageIcon cardIcon = cardImage != null ? new ImageIcon(cardImage) : null;
 
+           // 카드 패널을 만들고 레이아웃을 설정
+           JPanel cardContainer = new JPanel(new BorderLayout());
+           cardContainer.setOpaque(false); // 투명 배경 유지
+           
            JButton cardButton = new JButton(cardIcon);
            cardButton.setContentAreaFilled(false);
            cardButton.setFocusPainted(false);
@@ -204,13 +215,26 @@ public class SelectCardScreen extends JPanel {
                    }
                }
            });
+           // 카드 데미지 라벨 추가
+           int damageValue = card.getValue(); // 카드 데미지를 가져옴
+           String damageText = damageValue > 0 ? "DM " + damageValue : "DM 00"; // 데미지가 없으면 "DM 00"
+           JLabel damageLabel = new JLabel(damageText);
+           damageLabel.setFont(new Font("Arial", Font.BOLD, 12));
+           damageLabel.setForeground(Color.RED);
+           damageLabel.setHorizontalAlignment(SwingConstants.CENTER); // 중앙 정렬
 
-           cardPanel.add(cardButton);
+           // 카드 버튼과 데미지 라벨을 컨테이너에 추가
+           cardContainer.add(cardButton, BorderLayout.CENTER);
+           cardContainer.add(damageLabel, BorderLayout.SOUTH);
+
+
+           cardPanel.add(cardContainer); // 카드 패널에 컨테이너 추가
        }
 
        backgroundPanel.add(cardPanel, BorderLayout.CENTER);
        selectCardPanel.setLayout(new BorderLayout());
        selectCardPanel.add(backgroundPanel, BorderLayout.CENTER);
+       selectCardPanel.setBorder(BorderFactory.createLineBorder(new Color(85, 0, 0), 4)); // 테두리 추가
        add(selectCardPanel, BorderLayout.CENTER);
 
        selectCardPanel.revalidate();
@@ -223,9 +247,10 @@ public class SelectCardScreen extends JPanel {
    
    // 왼쪽 하단에 위치한 가로40% 세로30% 비율의 필드 확인 칸
    public void drawFieldPanel() {
-       fieldPanel.setBackground(Color.green);
+       fieldPanel.setBackground(new Color(236, 237, 215));
        fieldPanel.setLayout(new BorderLayout());
-
+       fieldPanel.setBorder(BorderFactory.createMatteBorder(0, 4, 4, 0, new Color(85, 0, 0))); // 테두리 추가
+       
        JPanel slotContainer = new JPanel();
        slotContainer.setOpaque(false);
        slotContainer.setLayout(new java.awt.GridLayout(1, 3, 10, 10));
@@ -288,6 +313,8 @@ public class SelectCardScreen extends JPanel {
                (int) (gameState.getDimension().getWidth() * 4 / 10),
                (int) (gameState.getDimension().getHeight() * 3 / 10)
        ));
+       
+       
    }
 
 
@@ -301,10 +328,51 @@ public class SelectCardScreen extends JPanel {
    
    // 중앙하단에 위치한 가로20% 세로30% 비율의 카드선택완료버튼, 도움말버튼, 카드초기화버튼 등
    public void drawButtonPanel() {
-       buttonPanel.setBackground(Color.red);
+       buttonPanel.setBackground(new Color(236, 237, 215));
+       buttonPanel.setBorder(BorderFactory.createMatteBorder(0, 0, 4, 0, new Color(85, 0, 0))); // 테두리 추가
+       
+       // 버튼 위에 들어갈 라벨 생성 (줄바꿈 처리)
+       JLabel instructionLabel = new JLabel("<html><center>SELECT THREE CARDS<br>TO CREATE A COMBO!</center></html>");
+       instructionLabel.setFont(new Font("Arial", Font.BOLD, 12)); // 폰트 설정
+       instructionLabel.setForeground(new Color(0, 0, 0, 150)); // 글씨 색상 (투명도 설정)
+       instructionLabel.setHorizontalAlignment(SwingConstants.CENTER); // 중앙 정렬
+       instructionLabel.setOpaque(false); // 투명 배경 유지
+       
+       // 라벨에 위쪽 마진 추가
+       instructionLabel.setBorder(BorderFactory.createEmptyBorder(55, 0, 0, 0)); // 위쪽 마진 10px
+       
+       // READY 버튼
+       JButton readyButton = new JButton("READY");
+       readyButton.setFont(new Font("Arial", Font.BOLD, 14)); // 텍스트 폰트 설정
+       readyButton.setForeground(Color.WHITE); // 글씨 색상 (흰색)
 
-       // READY 버튼 생성
-       Button readyButton = new Button("READY");
+       // 배경 색상 적용
+       readyButton.setBackground(new Color(90, 90, 75)); // 버튼 배경색 설정
+       readyButton.setOpaque(true); // 배경색이 보이게 설정
+
+       // 테두리 설정 (검은색 테두리)
+       readyButton.setBorder(BorderFactory.createCompoundBorder(
+           BorderFactory.createLineBorder(new Color(40, 40, 30), 3), // 외곽 테두리
+           BorderFactory.createEmptyBorder(5, 10, 5, 10) // 내부 여백
+       ));
+
+       // 마우스 호버 효과
+       readyButton.addMouseListener(new java.awt.event.MouseAdapter() {
+           @Override
+           public void mouseEntered(java.awt.event.MouseEvent e) {
+               readyButton.setBackground(new Color(70, 70, 60)); // 호버 시 더 어두운 배경색
+           }
+
+           @Override
+           public void mouseExited(java.awt.event.MouseEvent e) {
+               readyButton.setBackground(new Color(90, 90, 75)); // 원래 색상 복원
+           }
+       });
+
+       // 버튼의 기본 스타일 제거
+       readyButton.setFocusPainted(false); // 포커스 테두리 제거
+       readyButton.setContentAreaFilled(true); // 내용 채우기 활성화
+       readyButton.setBorderPainted(true); // 테두리 활성화
        readyButton.addActionListener(new ActionListener() {
            @Override
            public void actionPerformed(ActionEvent e) {
@@ -330,13 +398,19 @@ public class SelectCardScreen extends JPanel {
                readyButton.setEnabled(false);
            }
        });
-
+       
+       
+       
        // READY 버튼 추가
+       buttonPanel.add(instructionLabel);
        buttonPanel.add(readyButton);
+       
        buttonPanel.setPreferredSize(new Dimension(
                (int) (gameState.getDimension().getWidth() * 2 / 10),
                (int) (gameState.getDimension().getHeight() * 3 / 10)
        ));
+      
+
    }
    
    
@@ -344,7 +418,8 @@ public class SelectCardScreen extends JPanel {
    // 우측하단에 위치한 가로40% 세로30% 비율의 선택된 카드 보여주는칸
    public void drawSelectedCardPanel() {
       
-      selectedCardPanel.setBackground(Color.white);
+      selectedCardPanel.setBackground(new Color(236, 237, 215));
+      selectedCardPanel.setBorder(BorderFactory.createMatteBorder(0, 0, 4, 4, new Color(85, 0, 0))); // 하단과 오른쪽 테두리 추가
       selectedCardPanel.add(new JLabel("<selected card 1, 2, 3>"));
       selectedCardPanel.setPreferredSize(new Dimension((int)(gameState.getDimension().getWidth() * 4 / 10)
                                           , (int)(gameState.getDimension().getHeight() * 3 / 10)));
