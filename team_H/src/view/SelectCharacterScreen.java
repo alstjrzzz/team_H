@@ -18,6 +18,8 @@ import javax.swing.Timer;
 import controller.GameController;
 import model.Card;
 import model.GameState;
+import model.Character.Doraemon;
+import model.Character.SuperMan;
 import network.NetworkManager;
 
 import java.awt.Dimension;
@@ -124,6 +126,7 @@ public class SelectCharacterScreen extends JPanel {
         supermanButton.addActionListener(e -> {
             startAnimation("SuperMan"); // 애니메이션 시작
             gameState.setMyCharacter(gameState.createCharacter("SuperMan"));
+            gameState.setMyHealth(SuperMan.maxHealth);
             System.out.println("선택된 캐릭터: SuperMan");
         });
         add(supermanButton);
@@ -134,6 +137,7 @@ public class SelectCharacterScreen extends JPanel {
         doraemonButton.addActionListener(e -> {
             startAnimation("Doraemon"); // 애니메이션 시작
             gameState.setMyCharacter(gameState.createCharacter("Doraemon"));
+            gameState.setMyHealth(Doraemon.maxHealth);
             System.out.println("선택된 캐릭터: Doraemon");
         });
         add(doraemonButton);

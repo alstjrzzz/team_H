@@ -4,9 +4,8 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
 
+import javax.swing.Timer;
 import javax.swing.JPanel;
 
 import model.Card;
@@ -14,9 +13,9 @@ import model.GameState;
 import view.PlayingGameScreen;
 
 public abstract class Character {
-	
-	protected String name;
-	protected int maxHealth;
+   
+   protected String name;
+   public static int maxHealth;
     protected LinkedList<Card> cardList;
     protected BufferedImage sprite;
     protected BufferedImage skillEffect;
@@ -40,59 +39,59 @@ public abstract class Character {
     
     
     public enum Motion {
-    	IDLE,		// 가만히 있을 때
-    	ATTACK,		// 공격
-    	MOVE,		// 걷기
-    	GUARD,		// 막기
-    	HIT,		// 피격
-    	DEAD		// 죽음
+       IDLE,      // 가만히 있을 때
+       ATTACK,      // 공격
+       MOVE,      // 걷기
+       GUARD,      // 막기
+       HIT,      // 피격
+       DEAD      // 죽음
     }
     
     public Character() {
-    	
+       
         this.cardList = new LinkedList<>();
         
         addCommonCard();
         addUniqueCard();
-		initCardMotionTimes();
-		initCharacterMotionTimes();
+      initCardMotionTimes();
+      initCharacterMotionTimes();
     }
     
     
     
     public void addCommonCard() {
-    	
-    	cardList.add(new Card(
-    			/*name:*/ "Move Up", 
-    			/*category:*/ "MOVE", 
-    			/*range:*/ new LinkedList<>() {{
-    						add(new int[]{0, -1});}}, 
-    			/*value:*/ 0, 
-    			/*priority:*/ 1));
-    	
-    	cardList.add(new Card(
-    			/*name:*/ "Move Down", 
-    			/*category:*/ "MOVE",
-    			/*range:*/ new LinkedList<>() {{
-    						add(new int[]{0, 1});}}, 
-    			/*value:*/ 0, 
-    			/*priority:*/ 1));
-    	
-    	cardList.add(new Card(
-    			/*name:*/ "Move Left", 
-    			/*category:*/ "MOVE", 
-    			/*range:*/ new LinkedList<>() {{
-    						add(new int[]{-1, 0});}}, 
-    			/*value:*/ 0, 
-    			/*priority:*/ 1));
-    	
-    	cardList.add(new Card(
-    			/*name:*/ "Move Right", 
-    			/*category:*/ "MOVE", 
-    			/*range:*/ new LinkedList<>() {{
-    						add(new int[]{1, 0});}}, 
-    			/*value:*/ 0, 
-    			/*priority:*/ 1));
+       
+       cardList.add(new Card(
+             /*name:*/ "Move Up", 
+             /*category:*/ "MOVE", 
+             /*range:*/ new LinkedList<>() {{
+                      add(new int[]{0, -1});}}, 
+             /*value:*/ 0, 
+             /*priority:*/ 1));
+       
+       cardList.add(new Card(
+             /*name:*/ "Move Down", 
+             /*category:*/ "MOVE",
+             /*range:*/ new LinkedList<>() {{
+                      add(new int[]{0, 1});}}, 
+             /*value:*/ 0, 
+             /*priority:*/ 1));
+       
+       cardList.add(new Card(
+             /*name:*/ "Move Left", 
+             /*category:*/ "MOVE", 
+             /*range:*/ new LinkedList<>() {{
+                      add(new int[]{-1, 0});}}, 
+             /*value:*/ 0, 
+             /*priority:*/ 1));
+       
+       cardList.add(new Card(
+             /*name:*/ "Move Right", 
+             /*category:*/ "MOVE", 
+             /*range:*/ new LinkedList<>() {{
+                      add(new int[]{1, 0});}}, 
+             /*value:*/ 0, 
+             /*priority:*/ 1));
     }
 
 
@@ -114,17 +113,7 @@ public abstract class Character {
     public abstract void initCardEffectTimes();
     
     public void drawCharacter(Graphics g, GameState gameState, JPanel playingGameScreen) {
-    	
-    	/*
-        if (currentMotion == null || currentCard == null || cardMotions == null) {
-            System.err.println("Animation draw failed: currentMotion or currentCard is null.");
-            System.err.println("currentMotion: " + currentMotion);
-            System.err.println("currentCard: " + currentCard);
-            return;
-        }
-		*/
-    	
-
+       
         int x, y;
         if (this == gameState.getMyCharacter()) {
             x = gameState.getMyPosition()[0] * PlayingGameScreen.gridWidth + PlayingGameScreen.gridStartX;
@@ -136,20 +125,28 @@ public abstract class Character {
 
         switch (currentMotion) {
             case ATTACK:
+               System.out.println("start animateMotion: ATTACK");
+               break;
             case MOVE:
-            	BufferedImage[] motionImages = cardMotions.get(currentCard.getName());
-            	System.out.println("start animateMotion: MOVE");
+               BufferedImage[] motionImages = cardMotions.get(currentCard.getName());
+               System.out.println("start animateMotion: MOVE");
                 animateMotion(g, motionImages, x, y, playingGameScreen, cardMotionTimes.get(currentCard.getName()));
                 break;
             case GUARD:
+               System.out.println("start animateMotion: GUARD");
+               break;
             case HIT:
+               System.out.println("start animateMotion: HIT");
+               break;
             case DEAD:
                 animateMotion(g, characterMotions.get(Motion.DEAD), x, y, playingGameScreen, cardMotionTimes.get(currentCard.getName()));
-                break;
-
+                System.out.println("start animateMotion: DEAD");
+               break;
             case IDLE:
+               System.out.println("start animateMotion: IDLE");
+               break;
             default:
-            	System.out.println("start animateMotion: default");
+               System.out.println("start animateMotion: default");
                 break;
         }
     }
@@ -164,91 +161,99 @@ public abstract class Character {
 
     
     public String getName() {
-		return name;
-	}
+      return name;
+   }
     
     public int getMaxHealth() {
-		return maxHealth;
-	}
+      return maxHealth;
+   }
 
-	public LinkedList<Card> getCardList() {
+   public LinkedList<Card> getCardList() {
         return cardList;
     }
 
-	public void setCurrentCard(Card currentCard) {
-		this.currentCard = currentCard;
-	}
-	
-	public Card getCurrentCard() {
-		return currentCard;
-	}
+   public void setCurrentCard(Card currentCard) {
+      this.currentCard = currentCard;
+   }
+   
+   public Card getCurrentCard() {
+      return currentCard;
+   }
 
-	public Map<Motion, int[]> getCharacterMotionTimes() {
-		return characterMotionTimes;
-	}
+   public Map<Motion, int[]> getCharacterMotionTimes() {
+      return characterMotionTimes;
+   }
 
-	public Map<String, int[]> getCardMotionTimes() {
-		return cardMotionTimes;
-	}
+   public Map<String, int[]> getCardMotionTimes() {
+      return cardMotionTimes;
+   }
 
-	public void setMotion(String motion) {
-		
-		switch (motion) {
-		case "IDLE":
-			this.currentMotion = Motion.IDLE;
-			break;
-		case "ATTACK":
-			this.currentMotion = Motion.ATTACK;
-			break;
-		case "MOVE":
-			this.currentMotion = Motion.MOVE;
-			break;
-		case "GUARD":
-			this.currentMotion = Motion.GUARD;
-			break;
-		case "HIT":
-			this.currentMotion = Motion.HIT;
-			break;
-		case "DEAD":
-			this.currentMotion = Motion.DEAD;
-			break;
-		}
-	}
-	private void animateMotion(Graphics g, BufferedImage[] images, int x, int y, JPanel playingGameScreen, int[] motionTimes) {
-	    if (motionTimes == null || motionTimes.length != 2) {
-	        System.err.println("Invalid motion times for animation.");
-	        return;
-	    }
+   public void setCurrentMotion(String motion) {
+      
+      switch (motion) {
+      case "IDLE":
+         this.currentMotion = Motion.IDLE;
+         break;
+      case "ATTACK":
+         this.currentMotion = Motion.ATTACK;
+         break;
+      case "MOVE":
+         this.currentMotion = Motion.MOVE;
+         break;
+      case "GUARD":
+         this.currentMotion = Motion.GUARD;
+         break;
+      case "HIT":
+         this.currentMotion = Motion.HIT;
+         break;
+      case "DEAD":
+         this.currentMotion = Motion.DEAD;
+         break;
+      }
+   }
+   
+   
+   
+   private void animateMotion(Graphics g, BufferedImage[] images, int x, int y, JPanel playingGameScreen, int[] motionTimes) {
+       if (motionTimes == null || motionTimes.length != 2) {
+           System.err.println("Invalid motion times for animation.");
+           return;
+       }
 
-	    int interval = motionTimes[0]; // 모션 간격
-	    int duration = motionTimes[1]; // 모션 전체 지속 시간
-	    final long startTime = System.currentTimeMillis(); // 애니메이션 시작 시간
-	    final int[] frameIndex = {0}; // 현재 프레임 인덱스
+       System.out.println(x +" "+y);
+       
+       int interval = motionTimes[0]; // 모션 간격 (ms)
+       int duration = motionTimes[1]; // 전체 애니메이션 지속 시간 (ms)
+       final long startTime = System.currentTimeMillis(); // 애니메이션 시작 시간
+       final int[] frameIndex = {0}; // 현재 프레임 인덱스
 
-	    if (motionTimer != null) {
-	        motionTimer.cancel(); // 기존 타이머 중지
-	    }
-	    motionTimer = new Timer();
+       // 이전 타이머가 존재하면 종료
+       if (motionTimer != null) {
+           motionTimer.stop();
+       }
 
-	    motionTimer.scheduleAtFixedRate(new TimerTask() {
-	        @Override
-	        public void run() {
-	            long elapsedTime = System.currentTimeMillis() - startTime;
+       // 새로운 Swing 타이머 생성
+       motionTimer = new javax.swing.Timer(interval, e -> {
+           long elapsedTime = System.currentTimeMillis() - startTime;
 
-	            System.out.println("Elapsed Time: " + elapsedTime + " / Duration: " + duration);
-	            if (elapsedTime > duration) {
-	                motionTimer.cancel(); // 지속 시간이 끝나면 타이머 종료
-	                System.out.println("Timer cancelled");
-	                return;
-	            }
+           System.out.println("Elapsed Time: " + elapsedTime + " / Duration: " + duration);
 
-	            // 프레임 업데이트
-	            frameIndex[0] = (frameIndex[0] + 1) % images.length;
+           // 애니메이션 종료 조건
+           if (elapsedTime > duration) {
+               motionTimer.stop(); // 타이머 종료
+               System.out.println("Timer stopped");
+               return;
+           }
 
-	            // 이미지 그리기
-	            playingGameScreen.repaint(x, y, images[frameIndex[0]].getWidth(), images[frameIndex[0]].getHeight());
-	        }
-	    }, interval, duration); // interval에 따라 프레임 갱신
-	}
+           // 프레임 인덱스 업데이트
+           frameIndex[0] = (frameIndex[0] + 1) % images.length;
+
+           // JPanel의 repaint 호출
+           playingGameScreen.repaint(); // JPanel 전체를 다시 그림
+       });
+
+       motionTimer.start(); // 타이머 시작
+   }
+
 }
 

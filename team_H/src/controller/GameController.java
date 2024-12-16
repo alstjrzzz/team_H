@@ -189,6 +189,7 @@ public class GameController {
 	                    String character = jsonResponse.getString("character");
 	                    Character enemyCharacter = gameState.createCharacter(character);
 	                    gameState.setEnemyCharacter(enemyCharacter);
+	                    gameState.setEnemyHealth(enemyCharacter.getMaxHealth());
 
 	                    System.out.println("상대방 캐릭터 : " + character);
 
@@ -369,7 +370,7 @@ public class GameController {
 			
 			case "MOVE":
 				// 모션 실행
-				character.setMotion("MOVE");
+				character.setCurrentMotion(null);
 				if (card == null) System.out.println("카드가 null이네요~");
 				else System.out.println("null 아닌디");
 				character.setCurrentCard(card);
@@ -415,13 +416,13 @@ public class GameController {
 				}
 				
 				// 기본 자세로 변경
-				character.setMotion("IDLE");
+				character.setCurrentMotion("IDLE");
 				character.setCurrentCard(card);
 				playingGameScreen.repaint();
 				System.out.println("playing game screen repaint start 2");
 				break;
 			case "ATTACK":
-				character.setMotion("ATTACK");
+				character.setCurrentMotion("ATTACK");
 				character.setCurrentCard(card);
 				playingGameScreen.repaint();
 				
@@ -446,8 +447,8 @@ public class GameController {
 						
 						if (range.equals(gameState.getEnemyPosition())) {
 							gameState.setEnemyHealth(gameState.getEnemyHealth() - card.getValue());
-							character.setMotion("IDLE");
-							gameState.getEnemyCharacter().setMotion("HIT");
+							character.setCurrentMotion("IDLE");
+							gameState.getEnemyCharacter().setCurrentMotion("HIT");
 							playingGameScreen.repaint();
 							
 							// 모션 끝날 때까지 대기
@@ -458,7 +459,7 @@ public class GameController {
 						    timer.start();
 						}
 					}
-					gameState.getEnemyCharacter().setMotion("IDLE");
+					gameState.getEnemyCharacter().setCurrentMotion("IDLE");
 					character.setCurrentCard(card);
 					playingGameScreen.repaint();
 				} else {
@@ -475,8 +476,8 @@ public class GameController {
 						
 						if (range.equals(gameState.getEnemyPosition())) {
 							gameState.setMyHealth(gameState.getMyHealth() - card.getValue());
-							character.setMotion("IDLE");
-							gameState.getMyCharacter().setMotion("HIT");
+							character.setCurrentMotion("IDLE");
+							gameState.getMyCharacter().setCurrentMotion("HIT");
 							playingGameScreen.repaint();
 							
 							// 모션 끝날 때까지 대기
@@ -487,7 +488,7 @@ public class GameController {
 						    timer.start();
 						}
 					}
-					gameState.getMyCharacter().setMotion("IDLE");
+					gameState.getMyCharacter().setCurrentMotion("IDLE");
 					character.setCurrentCard(card);
 					playingGameScreen.repaint();
 				}
