@@ -22,20 +22,9 @@ public abstract class Character {
     protected BufferedImage logo;
     protected Map<String, BufferedImage> cardImage;
     
-    protected Map<Motion, BufferedImage[]> characterMotions;
-    protected Map<Motion, int[]> characterMotionTimes; // int[0]: 모션 간격, int[1]: 모션 지속 시간
-    
-    protected Map<String, BufferedImage[]> cardMotions;
-    protected Map<String, int[]> cardMotionTimes;
-    protected Map<String, BufferedImage[]> cardEffects;
-    protected Map<String, int[]> cardEffectTimes;
-    
     protected Motion currentMotion = Motion.IDLE;
     protected int currentSprite;
     protected Card currentCard;
-    
-    protected Timer motionTimer;
-    protected Timer effectTimer;
     
     
     public enum Motion {
@@ -53,8 +42,6 @@ public abstract class Character {
         
         addCommonCard();
         addUniqueCard();
-      initCardMotionTimes();
-      initCharacterMotionTimes();
     }
     
     
@@ -100,57 +87,6 @@ public abstract class Character {
     
     public abstract void initCardImage();
     
-    public abstract void initCharacterMotions();
-    
-    public abstract void initCharacterMotionTimes();
-    
-    public abstract void initCardMotions();
-    
-    public abstract void initCardMotionTimes();
-    
-    public abstract void initCardEffects();
-    
-    public abstract void initCardEffectTimes();
-    
-    public void drawCharacter(Graphics g, GameState gameState, JPanel playingGameScreen) {
-       
-        int x, y;
-        if (this == gameState.getMyCharacter()) {
-            x = gameState.getMyPosition()[0] * PlayingGameScreen.gridWidth + PlayingGameScreen.gridStartX;
-            y = gameState.getMyPosition()[1] * PlayingGameScreen.gridHeight + PlayingGameScreen.gridStartY;
-        } else {
-            x = gameState.getEnemyPosition()[0] * PlayingGameScreen.gridWidth + PlayingGameScreen.gridStartX;
-            y = gameState.getEnemyPosition()[1] * PlayingGameScreen.gridHeight + PlayingGameScreen.gridStartY;
-        }
-
-        switch (currentMotion) {
-            case ATTACK:
-               System.out.println("start animateMotion: ATTACK");
-               break;
-            case MOVE:
-               BufferedImage[] motionImages = cardMotions.get(currentCard.getName());
-               System.out.println("start animateMotion: MOVE");
-                animateMotion(g, motionImages, x, y, playingGameScreen, cardMotionTimes.get(currentCard.getName()));
-                break;
-            case GUARD:
-               System.out.println("start animateMotion: GUARD");
-               break;
-            case HIT:
-               System.out.println("start animateMotion: HIT");
-               break;
-            case DEAD:
-                animateMotion(g, characterMotions.get(Motion.DEAD), x, y, playingGameScreen, cardMotionTimes.get(currentCard.getName()));
-                System.out.println("start animateMotion: DEAD");
-               break;
-            case IDLE:
-               System.out.println("start animateMotion: IDLE");
-               break;
-            default:
-               System.out.println("start animateMotion: default");
-                break;
-        }
-    }
-
     public BufferedImage getLogo() {
         return this.logo;
     }
@@ -180,13 +116,6 @@ public abstract class Character {
       return currentCard;
    }
 
-   public Map<Motion, int[]> getCharacterMotionTimes() {
-      return characterMotionTimes;
-   }
-
-   public Map<String, int[]> getCardMotionTimes() {
-      return cardMotionTimes;
-   }
 
    public void setCurrentMotion(String motion) {
       
@@ -211,49 +140,14 @@ public abstract class Character {
          break;
       }
    }
+
+
+	
+	public Motion getCurrentMotion() {
+		return currentMotion;
+	}
+	   
    
-   
-   
-   private void animateMotion(Graphics g, BufferedImage[] images, int x, int y, JPanel playingGameScreen, int[] motionTimes) {
-       if (motionTimes == null || motionTimes.length != 2) {
-           System.err.println("Invalid motion times for animation.");
-           return;
-       }
-
-       System.out.println(x +" "+y);
-       
-       int interval = motionTimes[0]; // 모션 간격 (ms)
-       int duration = motionTimes[1]; // 전체 애니메이션 지속 시간 (ms)
-       final long startTime = System.currentTimeMillis(); // 애니메이션 시작 시간
-       final int[] frameIndex = {0}; // 현재 프레임 인덱스
-
-       // 이전 타이머가 존재하면 종료
-       if (motionTimer != null) {
-           motionTimer.stop();
-       }
-
-       // 새로운 Swing 타이머 생성
-       motionTimer = new javax.swing.Timer(interval, e -> {
-           long elapsedTime = System.currentTimeMillis() - startTime;
-
-           System.out.println("Elapsed Time: " + elapsedTime + " / Duration: " + duration);
-
-           // 애니메이션 종료 조건
-           if (elapsedTime > duration) {
-               motionTimer.stop(); // 타이머 종료
-               System.out.println("Timer stopped");
-               return;
-           }
-
-           // 프레임 인덱스 업데이트
-           frameIndex[0] = (frameIndex[0] + 1) % images.length;
-
-           // JPanel의 repaint 호출
-           playingGameScreen.repaint(); // JPanel 전체를 다시 그림
-       });
-
-       motionTimer.start(); // 타이머 시작
-   }
 
 }
 

@@ -76,52 +76,5 @@ public class Zoro extends Character {
             e.printStackTrace();
         }
     }
-
-
-	@Override
-	public void initCharacterMotions() {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-
-	@Override
-	public void initCharacterMotionTimes() {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-
-	@Override
-	public void initCardMotions() {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-
-	@Override
-	public void initCardMotionTimes() {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-
-	@Override
-	public void initCardEffects() {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-
-	@Override
-	public void initCardEffectTimes() {
-		// TODO Auto-generated method stub
-		
-	}
     
 }

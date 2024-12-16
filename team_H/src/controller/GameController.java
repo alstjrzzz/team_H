@@ -427,7 +427,7 @@ public class GameController {
 				playingGameScreen.repaint();
 				
 				// 모션 끝날 때까지 대기
-				Timer timer = new Timer(character.getCardMotionTimes().get(card.getName())[1], e -> {
+				Timer timer = new Timer(5000, e -> {
 			        ((Timer) e.getSource()).stop();
 			    });
 			    timer.setRepeats(false);
@@ -452,7 +452,7 @@ public class GameController {
 							playingGameScreen.repaint();
 							
 							// 모션 끝날 때까지 대기
-							timer = new Timer(character.getCharacterMotionTimes().get(Character.Motion.HIT)[1], e -> {
+							timer = new Timer(5000, e -> {
 						        ((Timer) e.getSource()).stop();
 						    });
 						    timer.setRepeats(false);
@@ -481,7 +481,7 @@ public class GameController {
 							playingGameScreen.repaint();
 							
 							// 모션 끝날 때까지 대기
-							timer = new Timer(character.getCharacterMotionTimes().get(Character.Motion.HIT)[1], e -> {
+							timer = new Timer(5000, e -> {
 						        ((Timer) e.getSource()).stop();
 						    });
 						    timer.setRepeats(false);

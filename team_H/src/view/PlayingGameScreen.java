@@ -69,6 +69,9 @@ public class PlayingGameScreen extends JPanel {
         add(cardPanel, BorderLayout.SOUTH); // 하단: 카드 패널
     }
 
+    
+    
+    
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -81,13 +84,357 @@ public class PlayingGameScreen extends JPanel {
             System.out.println("Background image is null.");
         }
         
-        // 그리드 및 캐릭터 그리기
+        // 그리드 그리기
         drawDashedGrid(g2d, 3, 6, 150, 60);
-        System.out.println("Playing game screen repaint() !!!");
-        gameState.getMyCharacter().drawCharacter(g, gameState, this);
-        gameState.getEnemyCharacter().drawCharacter(g, gameState, this);
+        
+        
+        // 내 캐릭터 그리기
+        switch (gameState.getMyCharacter().getName()) {
+        
+        // SuperMan ------------------------------------------------------------
+        case "SuperMan":
+        	switch (gameState.getMyCharacter().getCurrentMotion()) {
+        	case MOVE:
+        		
+        		break;
+        	case ATTACK:
+        		
+        		break;
+        	case GUARD:
+        		
+        		break;
+        	case HIT:
+        		
+        		break;
+        	case DEAD:
+        		
+        		break;
+    		default:
+    			System.out.println("엄준식");
+        	}
+        	
+        	break;
+        	
+        // Doraemon ------------------------------------------------------------	
+        case "Doraemon":
+        	switch (gameState.getMyCharacter().getCurrentMotion()) {
+        	case MOVE:
+        		
+        		break;
+        	case ATTACK:
+        		
+        		break;
+        	case GUARD:
+        		
+        		break;
+        	case HIT:
+        		
+        		break;
+        	case DEAD:
+        		
+        		break;
+    		default:
+    			System.out.println("엄준식");
+        	}
+        	
+        	break;
+        	
+        // Zoro ------------------------------------------------------------		
+        case "Zoro":
+        	switch (gameState.getMyCharacter().getCurrentMotion()) {
+        	case MOVE:
+        		
+        		break;
+        	case ATTACK:
+        		
+        		break;
+        	case GUARD:
+        		
+        		break;
+        	case HIT:
+        		
+        		break;
+        	case DEAD:
+        		
+        		break;
+    		default:
+    			System.out.println("엄준식");
+        	}
+        	break;
+        	
+        // Cygnus ------------------------------------------------------------	
+        case "Cygnus":
+        	switch (gameState.getMyCharacter().getCurrentMotion()) {
+        	case MOVE:
+        		
+        		break;
+        	case ATTACK:
+        		
+        		break;
+        	case GUARD:
+        		
+        		break;
+        	case HIT:
+        		
+        		break;
+        	case DEAD:
+        		
+        		break;
+    		default:
+    			System.out.println("엄준식");
+        	}
+        	break;
+        	
+        // Ace ------------------------------------------------------------	
+        case "Ace":
+        	switch (gameState.getMyCharacter().getCurrentMotion()) {
+        	case MOVE:
+        		
+        		break;
+        	case ATTACK:
+        		
+        		break;
+        	case GUARD:
+        		
+        		break;
+        	case HIT:
+        		
+        		break;
+        	case DEAD:
+        		
+        		break;
+    		default:
+    			System.out.println("엄준식");
+        	}
+        	break;
+        	
+        // Finn ------------------------------------------------------------	
+        case "Finn":
+        	switch (gameState.getMyCharacter().getCurrentMotion()) {
+        	case MOVE:
+        		
+        		break;
+        	case ATTACK:
+        		
+        		break;
+        	case GUARD:
+        		
+        		break;
+        	case HIT:
+        		
+        		break;
+        	case DEAD:
+        		
+        		break;
+    		default:
+    			System.out.println("엄준식");
+        	}
+        	break;
+        	
+        // Luffy ------------------------------------------------------------	
+        case "Luffy":
+        	switch (gameState.getMyCharacter().getCurrentMotion()) {
+        	case MOVE:
+        		
+        		break;
+        	case ATTACK:
+        		
+        		break;
+        	case GUARD:
+        		
+        		break;
+        	case HIT:
+        		
+        		break;
+        	case DEAD:
+        		
+        		break;
+    		default:
+    			System.out.println("엄준식");
+        	}
+        	break;
+        	
+        default:
+        	System.out.println("엄준식");
+        }
+        
+        
+        // 상대 캐릭터 그리기
+        switch (gameState.getMyCharacter().getName()) {
+        
+        // SuperMan ------------------------------------------------------------
+        case "SuperMan":
+        	switch (gameState.getMyCharacter().getCurrentMotion()) {
+        	case MOVE:
+        		
+        		break;
+        	case ATTACK:
+        		
+        		break;
+        	case GUARD:
+        		
+        		break;
+        	case HIT:
+        		
+        		break;
+        	case DEAD:
+        		
+        		break;
+    		default:
+    			System.out.println("엄준식");
+        	}
+        	
+        	break;
+        	
+        // Doraemon ------------------------------------------------------------	
+        case "Doraemon":
+        	switch (gameState.getMyCharacter().getCurrentMotion()) {
+        	case MOVE:
+        		
+        		break;
+        	case ATTACK:
+        		
+        		break;
+        	case GUARD:
+        		
+        		break;
+        	case HIT:
+        		
+        		break;
+        	case DEAD:
+        		
+        		break;
+    		default:
+    			System.out.println("엄준식");
+        	}
+        	
+        	break;
+        	
+        // Zoro ------------------------------------------------------------		
+        case "Zoro":
+        	switch (gameState.getMyCharacter().getCurrentMotion()) {
+        	case MOVE:
+        		
+        		break;
+        	case ATTACK:
+        		
+        		break;
+        	case GUARD:
+        		
+        		break;
+        	case HIT:
+        		
+        		break;
+        	case DEAD:
+        		
+        		break;
+    		default:
+    			System.out.println("엄준식");
+        	}
+        	break;
+        	
+        // Cygnus ------------------------------------------------------------	
+        case "Cygnus":
+        	switch (gameState.getMyCharacter().getCurrentMotion()) {
+        	case MOVE:
+        		
+        		break;
+        	case ATTACK:
+        		
+        		break;
+        	case GUARD:
+        		
+        		break;
+        	case HIT:
+        		
+        		break;
+        	case DEAD:
+        		
+        		break;
+    		default:
+    			System.out.println("엄준식");
+        	}
+        	break;
+        	
+        // Ace ------------------------------------------------------------	
+        case "Ace":
+        	switch (gameState.getMyCharacter().getCurrentMotion()) {
+        	case MOVE:
+        		
+        		break;
+        	case ATTACK:
+        		
+        		break;
+        	case GUARD:
+        		
+        		break;
+        	case HIT:
+        		
+        		break;
+        	case DEAD:
+        		
+        		break;
+    		default:
+    			System.out.println("엄준식");
+        	}
+        	break;
+        	
+        // Finn ------------------------------------------------------------	
+        case "Finn":
+        	switch (gameState.getMyCharacter().getCurrentMotion()) {
+        	case MOVE:
+        		
+        		break;
+        	case ATTACK:
+        		
+        		break;
+        	case GUARD:
+        		
+        		break;
+        	case HIT:
+        		
+        		break;
+        	case DEAD:
+        		
+        		break;
+    		default:
+    			System.out.println("엄준식");
+        	}
+        	break;
+        	
+        // Luffy ------------------------------------------------------------	
+        case "Luffy":
+        	switch (gameState.getMyCharacter().getCurrentMotion()) {
+        	case MOVE:
+        		
+        		break;
+        	case ATTACK:
+        		
+        		break;
+        	case GUARD:
+        		
+        		break;
+        	case HIT:
+        		
+        		break;
+        	case DEAD:
+        		
+        		break;
+    		default:
+    			System.out.println("엄준식");
+        	}
+        	break;
+        	
+        default:
+        	System.out.println("엄준식");
+        }
+        
+        
     }
 
+    
+    
+    
     public void drawHealthPanel() {
         healthPanel.setLayout(null);
         healthPanel.setPreferredSize(new Dimension(0, 70)); // 고정 높이를 늘림
