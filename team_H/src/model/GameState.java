@@ -16,8 +16,8 @@ public class GameState {
     private Character enemyCharacter;
     private int myHealth;
     private int enemyHealth;
-    private int[] myPosition;		// 내 캐릭터 위치
-    private int[] enemyPosition;	// 상대 캐릭터 위치
+    private int[] myPosition;      // 내 캐릭터 위치
+    private int[] enemyPosition;   // 상대 캐릭터 위치
     private boolean myCharacterIsFlip;
     private boolean enemyCharacterIsFlip;
     private int clientNumber;
@@ -25,7 +25,7 @@ public class GameState {
 
     
     public GameState(Dimension dimension) {
-    	
+       
         this.dimension = dimension;
         selectedCardList = new LinkedList<>();
         
@@ -33,24 +33,29 @@ public class GameState {
     }
 
     public void fillCharacterList() {
-    	
-    	characterList = new LinkedList<>();
-    	
-    	characterList.add("SuperMan");
-    	characterList.add("Doraemon");
-    	// ...
+       
+       characterList = new LinkedList<>();
+       
+       characterList.add("SuperMan");
+       characterList.add("Doraemon");
+       // ...
     }
     
     public Character createCharacter(String character) {
         switch (character) {
             case "SuperMan":
-                return new SuperMan();
+                SuperMan superMan = new SuperMan();
+                superMan.initCardImage(); // 카드 이미지 초기화
+                return superMan;
             case "Doraemon":
-                return new Doraemon();
+                Doraemon doraemon = new Doraemon();
+                doraemon.initCardImage(); // 카드 이미지 초기화
+                return doraemon;
             default:
-            	return null;
+                return null;
         }
     }
+
 
     public Dimension getDimension() {
         return dimension;
@@ -92,71 +97,71 @@ public class GameState {
         this.enemyCharacter = enemyCharacter;
     }
 
-	public int getClientNumber() {
-		return clientNumber;
-	}
+   public int getClientNumber() {
+      return clientNumber;
+   }
 
-	public void setClientNumber(int clientNumber) {
-		this.clientNumber = clientNumber;
-	}
-
-
-	public int[] getMyPosition() {
-		return myPosition;
-	}
+   public void setClientNumber(int clientNumber) {
+      this.clientNumber = clientNumber;
+   }
 
 
-	public void setMyPosition(int[] myPosition) {
-		this.myPosition = myPosition;
-	}
+   public int[] getMyPosition() {
+      return myPosition;
+   }
 
 
-	public int[] getEnemyPosition() {
-		return enemyPosition;
-	}
+   public void setMyPosition(int[] myPosition) {
+      this.myPosition = myPosition;
+   }
 
 
-	public void setEnemyPosition(int[] enemyPosition) {
-		this.enemyPosition = enemyPosition;
-	}
+   public int[] getEnemyPosition() {
+      return enemyPosition;
+   }
 
-	public LinkedList<String> getCharacterList() {
-		return characterList;
-	}
 
-	public int getMyHealth() {
-		return myHealth;
-	}
+   public void setEnemyPosition(int[] enemyPosition) {
+      this.enemyPosition = enemyPosition;
+   }
 
-	public void setMyHealth(int myHealth) {
-		this.myHealth = myHealth;
-	}
+   public LinkedList<String> getCharacterList() {
+      return characterList;
+   }
 
-	public int getEnemyHealth() {
-		return enemyHealth;
-	}
+   public int getMyHealth() {
+      return myHealth;
+   }
 
-	public void setEnemyHealth(int enemyHealth) {
-		this.enemyHealth = enemyHealth;
-	}
+   public void setMyHealth(int myHealth) {
+      this.myHealth = myHealth;
+   }
 
-	public boolean isMyCharacterIsFlip() {
-		return myCharacterIsFlip;
-	}
+   public int getEnemyHealth() {
+      return enemyHealth;
+   }
 
-	public void setMyCharacterIsFlip(boolean myCharacterIsFlip) {
-		this.myCharacterIsFlip = myCharacterIsFlip;
-	}
+   public void setEnemyHealth(int enemyHealth) {
+      this.enemyHealth = enemyHealth;
+   }
 
-	public boolean isEnemyCharacterIsFlip() {
-		return enemyCharacterIsFlip;
-	}
+   public boolean isMyCharacterIsFlip() {
+      return myCharacterIsFlip;
+   }
 
-	public void setEnemyCharacterIsFlip(boolean enemyCharacterIsFlip) {
-		this.enemyCharacterIsFlip = enemyCharacterIsFlip;
-	}
+   public void setMyCharacterIsFlip(boolean myCharacterIsFlip) {
+      this.myCharacterIsFlip = myCharacterIsFlip;
+   }
 
-	
+   public boolean isEnemyCharacterIsFlip() {
+      return enemyCharacterIsFlip;
+   }
+
+   public void setEnemyCharacterIsFlip(boolean enemyCharacterIsFlip) {
+      this.enemyCharacterIsFlip = enemyCharacterIsFlip;
+   }
+
+   
     
     
 }
