@@ -11,7 +11,6 @@ import javax.swing.JPanel;
 
 import model.Card;
 import model.GameState;
-import view.FieldPanel;
 import view.PlayingGameScreen;
 
 public abstract class Character {
@@ -128,11 +127,11 @@ public abstract class Character {
 
         int x, y;
         if (this == gameState.getMyCharacter()) {
-            x = gameState.getMyPosition()[0] * FieldPanel.gridWidth + FieldPanel.gridStartX;
-            y = gameState.getMyPosition()[1] * FieldPanel.gridHeight + FieldPanel.gridStartY;
+            x = gameState.getMyPosition()[0] * PlayingGameScreen.gridWidth + PlayingGameScreen.gridStartX;
+            y = gameState.getMyPosition()[1] * PlayingGameScreen.gridHeight + PlayingGameScreen.gridStartY;
         } else {
-            x = gameState.getEnemyPosition()[0] * FieldPanel.gridWidth + FieldPanel.gridStartX;
-            y = gameState.getEnemyPosition()[1] * FieldPanel.gridHeight + FieldPanel.gridStartY;
+            x = gameState.getEnemyPosition()[0] * PlayingGameScreen.gridWidth + PlayingGameScreen.gridStartX;
+            y = gameState.getEnemyPosition()[1] * PlayingGameScreen.gridHeight + PlayingGameScreen.gridStartY;
         }
 
         switch (currentMotion) {
@@ -251,5 +250,5 @@ public abstract class Character {
 	        }
 	    }, interval, duration); // interval에 따라 프레임 갱신
 	}
-
 }
+

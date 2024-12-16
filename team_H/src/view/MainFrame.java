@@ -14,9 +14,10 @@ public class MainFrame extends JFrame {
 	public MainFrame() {
 		
 		setTitle("청계전설");
-		setSize(850,600);
+		setSize(1000,700);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setResizable(false); // 창 크기 조절 불가능 설정
 	}
 	
 	public void setScreen(JPanel newScreen) {

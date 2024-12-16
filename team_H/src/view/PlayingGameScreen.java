@@ -1,8 +1,11 @@
 package view;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 import javax.swing.border.EmptyBorder;
 import controller.GameController;
@@ -15,8 +18,23 @@ public class PlayingGameScreen extends JPanel {
     private GameState gameState;
     private GameController gameController;
     private NetworkManager networkManager;
+    private BufferedImage backgroundImage;
     
+	public final static int gridRows = 3;  // 그리드 행 수
+    public final static int gridCols = 5;  // 그리드 열 수
+    
+    public final static int gridStartX = 100;	// 그리드의 왼쪽 상단 모서리 좌표 x
+    public final static int gridStartY = 100;	// y
 
+    public final static int gridWidth = 100;	// 그리드의 각 셀 너비
+    public final static int gridHeight = 100;	// 높이
+    
+    public final static int gridClient1X = 0;	// 셀 내에서 Client1(왼쪽)의 캐릭터가 서 있을 위치(왼쪽 아래를 가리킴)
+    public final static int gridClient1Y = 0;
+    
+    public final static int gridClient2X = 80;	// Client2(오른쪽) 수정필요
+    public final static int gridClient2Y = 0;
+    
     private JPanel healthPanel;
     private JPanel fieldPanel;
     private JPanel cardPanel;
@@ -28,9 +46,15 @@ public class PlayingGameScreen extends JPanel {
         this.gameController = gameController;
         this.networkManager = networkManager;
         
+        try {
+            // Load the background image
+            backgroundImage = ImageIO.read(new File("res/img/게임배경화면.png")); // Replace with your image path
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         healthPanel = new JPanel();
-        fieldPanel = new FieldPanel();
-        cardPanel = new JPanel();
+        fieldPanel = new JPanel();
+        cardPanel = new JPanel(null);
 
         splitPanel();
         drawHealthPanel();
@@ -38,26 +62,48 @@ public class PlayingGameScreen extends JPanel {
         
         revalidate();
         repaint();
+        
+        System.out.println("PlayingGameScreen initialized successfully");
     }
     
     
     
-    // 전체 패널 레이아웃을 분리하여 구성
     public void splitPanel() {
-    	
         setLayout(new BorderLayout());
+
+        healthPanel.setPreferredSize(new Dimension(0, 50)); // 고정 높이
+        cardPanel.setPreferredSize(new Dimension(0, 100)); // 고정 높이
 
         add(healthPanel, BorderLayout.NORTH);  // 상단: 체력바
         add(fieldPanel, BorderLayout.CENTER);  // 중간: 게임 필드
         add(cardPanel, BorderLayout.SOUTH);  // 하단: 카드 패널
     }
 
+    
+    @Override
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        Graphics2D g2d = (Graphics2D) g;
+        
+        if (backgroundImage != null) {
+            g.drawImage(backgroundImage, 0, 0, 1000, 700, this);
+        }
 
+        drawDashedGrid(g2d, 3, 6, 100, 100);
+        System.out.println("playing game screen repaint() !!!");
+        gameState.getMyCharacter().drawCharacter(g, gameState, this);
+        gameState.getEnemyCharacter().drawCharacter(g, gameState, this);
+        
+        
+    }
+    
+    
     public void drawHealthPanel() {
         healthPanel.setLayout(null);
+        healthPanel.setPreferredSize(new Dimension(0, 50)); // 고정 높이 설정
         healthPanel.setOpaque(false);
 
-        int panelWidth = getWidth();
+        int panelWidth = 800; // 패널의 예상 너비를 설정
         int panelHeight = 50;
 
         // Player 1의 캐릭터 로고
@@ -85,7 +131,6 @@ public class PlayingGameScreen extends JPanel {
         healthPanel.add(player2HealthBar);
     }
 
-
     public void drawSelectedCardPanel() {
         cardPanel.removeAll();
         cardPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
@@ -109,22 +154,23 @@ public class PlayingGameScreen extends JPanel {
         cardPanel.repaint();
     }
     
-    @Override
-    public void paintComponent(Graphics g) {
-    	super.paintComponent(g); // 기본 페인트 작업 수행
+    private void drawDashedGrid(Graphics2D g2d, int rows, int cols, int cellWidth, int cellHeight) {
+        // Configure dashed line and color
+        float[] dash = {5.0f, 5.0f}; // Dashed pattern
+        BasicStroke dottedLine = new BasicStroke(2.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, dash, 0.0f);
+        g2d.setStroke(dottedLine);
+        g2d.setColor(Color.WHITE);
 
-        System.out.println("playing game screen repaint() !!!");
-        if (gameState.getMyCharacter().getCurrentCard() == null) System.out.println("내 캐릭 현재 카드 null");
-        else System.out.println("내 캐릭 현재 카드 null아님");
-        if (gameState.getEnemyCharacter().getCurrentCard() == null) System.out.println("상대 캐릭 현재 카드 null");
-        else System.out.println("상대 캐릭 현재 카드 null아님");
-        
-        drawHealthPanel();
-        drawSelectedCardPanel();
-        gameState.getMyCharacter().drawCharacter(g, gameState, this);
-        gameState.getEnemyCharacter().drawCharacter(g, gameState, this);
-        invalidate();
-        revalidate();
-        repaint();
+        for (int i = 0; i <= rows; i++) {
+            int y = i * cellHeight;
+            g2d.drawLine(0, y, cols * cellWidth, y); // Horizontal lines
+        }
+
+        for (int j = 0; j <= cols; j++) {
+            int x = j * cellWidth;
+            g2d.drawLine(x, 0, x, rows * cellHeight); // Vertical lines
+        }
     }
+    
+    
 }
