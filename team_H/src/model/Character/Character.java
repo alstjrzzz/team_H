@@ -116,18 +116,15 @@ public abstract class Character {
     
     public void drawCharacter(Graphics g, GameState gameState, JPanel playingGameScreen) {
     	
+    	/*
         if (currentMotion == null || currentCard == null || cardMotions == null) {
             System.err.println("Animation draw failed: currentMotion or currentCard is null.");
             System.err.println("currentMotion: " + currentMotion);
             System.err.println("currentCard: " + currentCard);
             return;
         }
-
-        BufferedImage[] motionImages = cardMotions.get(currentCard.getName());
-        if (motionImages == null) {
-            System.err.println("No motion images found for card: " + currentCard.getName());
-            return;
-        }
+		*/
+    	
 
         int x, y;
         if (this == gameState.getMyCharacter()) {
@@ -141,18 +138,19 @@ public abstract class Character {
         switch (currentMotion) {
             case ATTACK:
             case MOVE:
+            	BufferedImage[] motionImages = cardMotions.get(currentCard.getName());
+            	System.out.println("start animateMotion: MOVE");
                 animateMotion(g, motionImages, x, y, playingGameScreen, cardMotionTimes.get(currentCard.getName()));
                 break;
             case GUARD:
             case HIT:
             case DEAD:
-                animateMotion(g, motionImages, x, y, playingGameScreen, cardMotionTimes.get(currentCard.getName()));
+                animateMotion(g, characterMotions.get(Motion.DEAD), x, y, playingGameScreen, cardMotionTimes.get(currentCard.getName()));
                 break;
 
             case IDLE:
             default:
-                // 기본 상태: 첫 번째 이미지 그리기
-                g.drawImage(motionImages[0], x, y, null);
+            	System.out.println("start animateMotion: default");
                 break;
         }
     }
@@ -182,6 +180,10 @@ public abstract class Character {
 		this.currentCard = currentCard;
 	}
 	
+	public Card getCurrentCard() {
+		return currentCard;
+	}
+
 	public Map<Motion, int[]> getCharacterMotionTimes() {
 		return characterMotionTimes;
 	}

@@ -119,7 +119,7 @@ public class Doraemon extends Character {
 		characterMotionTimes = new HashMap<Character.Motion, int[]>();
 		
 		characterMotionTimes.put(Motion.IDLE, new int[] {1000, 1000});
-		characterMotionTimes.put(Motion.MOVE, new int[] {2000, 2000});
+		characterMotionTimes.put(Motion.MOVE, new int[] {1500, 1500});
 		characterMotionTimes.put(Motion.HIT, new int[] {1000, 1000});
 		characterMotionTimes.put(Motion.DEAD, new int[] {1000, 1000});
 	}

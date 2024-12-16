@@ -370,18 +370,36 @@ public class GameController {
 			case "MOVE":
 				// 모션 실행
 				character.setMotion("MOVE");
+				if (card == null) System.out.println("카드가 null이네요~");
+				else System.out.println("null 아닌디");
 				character.setCurrentCard(card);
+				System.out.println("playing game screen repaint start 1");
 				playingGameScreen.repaint();
 				
-				System.out.println("gameController timer start !!");
-				// 모션 끝날 때까지 대기
-				Timer timer = new Timer(character.getCharacterMotionTimes().get(Character.Motion.MOVE)[1], e -> {
-			        ((Timer) e.getSource()).stop();
-			    });
-			    timer.setRepeats(false);
-			    timer.start();
+				// Timer 대신 CountDownLatch로 대기 구현
+	            CountDownLatch latch = new CountDownLatch(1);
+
+	            SwingUtilities.invokeLater(() -> {
+	                try {
+	                    Timer timer = new Timer(5000, e -> {
+	                        ((Timer) e.getSource()).stop();
+	                        latch.countDown(); // 작업 완료 신호
+	                    });
+	                    timer.setRepeats(false);
+	                    timer.start();
+	                } catch (Exception ex) {
+	                    ex.printStackTrace();
+	                    latch.countDown(); // 에러 발생 시에도 계속 진행
+	                }
+	            });
+
+	            try {
+	                latch.await(); // Timer 종료까지 대기
+	            } catch (InterruptedException e) {
+	                Thread.currentThread().interrupt();
+	                System.err.println("Thread interrupted: " + e.getMessage());
+	            }
 			    
-			    System.out.println("gameController timer stop..");
 			    
 				// GameState 업데이트
 				if (character == gameState.getMyCharacter()) {
@@ -400,6 +418,7 @@ public class GameController {
 				character.setMotion("IDLE");
 				character.setCurrentCard(card);
 				playingGameScreen.repaint();
+				System.out.println("playing game screen repaint start 2");
 				break;
 			case "ATTACK":
 				character.setMotion("ATTACK");
@@ -407,7 +426,7 @@ public class GameController {
 				playingGameScreen.repaint();
 				
 				// 모션 끝날 때까지 대기
-				timer = new Timer(character.getCardMotionTimes().get(card.getName())[1], e -> {
+				Timer timer = new Timer(character.getCardMotionTimes().get(card.getName())[1], e -> {
 			        ((Timer) e.getSource()).stop();
 			    });
 			    timer.setRepeats(false);

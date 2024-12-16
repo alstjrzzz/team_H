@@ -111,10 +111,20 @@ public class PlayingGameScreen extends JPanel {
     
     @Override
     public void paintComponent(Graphics g) {
-        super.paintComponent(g);
+    	super.paintComponent(g); // 기본 페인트 작업 수행
 
         System.out.println("playing game screen repaint() !!!");
+        if (gameState.getMyCharacter().getCurrentCard() == null) System.out.println("내 캐릭 현재 카드 null");
+        else System.out.println("내 캐릭 현재 카드 null아님");
+        if (gameState.getEnemyCharacter().getCurrentCard() == null) System.out.println("상대 캐릭 현재 카드 null");
+        else System.out.println("상대 캐릭 현재 카드 null아님");
+        
+        drawHealthPanel();
+        drawSelectedCardPanel();
         gameState.getMyCharacter().drawCharacter(g, gameState, this);
         gameState.getEnemyCharacter().drawCharacter(g, gameState, this);
+        invalidate();
+        revalidate();
+        repaint();
     }
 }
