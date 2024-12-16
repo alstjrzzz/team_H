@@ -115,6 +115,7 @@ public abstract class Character {
     public abstract void initCardEffectTimes();
     
     public void drawCharacter(Graphics g, GameState gameState, JPanel playingGameScreen) {
+    	
         if (currentMotion == null || currentCard == null || cardMotions == null) {
             System.err.println("Animation draw failed: currentMotion or currentCard is null.");
             System.err.println("currentMotion: " + currentMotion);
@@ -140,6 +141,8 @@ public abstract class Character {
         switch (currentMotion) {
             case ATTACK:
             case MOVE:
+                animateMotion(g, motionImages, x, y, playingGameScreen, cardMotionTimes.get(currentCard.getName()));
+                break;
             case GUARD:
             case HIT:
             case DEAD:
@@ -231,10 +234,10 @@ public abstract class Character {
 	        public void run() {
 	            long elapsedTime = System.currentTimeMillis() - startTime;
 
+	            System.out.println("Elapsed Time: " + elapsedTime + " / Duration: " + duration);
 	            if (elapsedTime > duration) {
 	                motionTimer.cancel(); // 지속 시간이 끝나면 타이머 종료
-	                currentMotion = Motion.IDLE; // 기본 상태로 변경
-	                playingGameScreen.repaint(x, y, images[frameIndex[0]].getWidth(), images[frameIndex[0]].getHeight());
+	                System.out.println("Timer cancelled");
 	                return;
 	            }
 
@@ -244,7 +247,7 @@ public abstract class Character {
 	            // 이미지 그리기
 	            playingGameScreen.repaint(x, y, images[frameIndex[0]].getWidth(), images[frameIndex[0]].getHeight());
 	        }
-	    }, 0, interval); // interval에 따라 프레임 갱신
+	    }, interval, duration); // interval에 따라 프레임 갱신
 	}
 
 }

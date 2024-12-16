@@ -106,6 +106,7 @@ public class Doraemon extends Character {
 		characterMotions = new HashMap<Character.Motion, BufferedImage[]>();
 		
 		characterMotions.put(Motion.IDLE, null);
+		characterMotions.put(Motion.MOVE, null);
 		characterMotions.put(Motion.HIT, null);
 		characterMotions.put(Motion.DEAD, null);
 	}
@@ -117,9 +118,10 @@ public class Doraemon extends Character {
 
 		characterMotionTimes = new HashMap<Character.Motion, int[]>();
 		
-		characterMotionTimes.put(Motion.IDLE, new int[] {});
-		characterMotionTimes.put(Motion.HIT, new int[] {});
-		characterMotionTimes.put(Motion.DEAD, new int[] {});
+		characterMotionTimes.put(Motion.IDLE, new int[] {1000, 1000});
+		characterMotionTimes.put(Motion.MOVE, new int[] {2000, 2000});
+		characterMotionTimes.put(Motion.HIT, new int[] {1000, 1000});
+		characterMotionTimes.put(Motion.DEAD, new int[] {1000, 1000});
 	}
 
 

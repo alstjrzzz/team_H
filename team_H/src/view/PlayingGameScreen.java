@@ -113,6 +113,7 @@ public class PlayingGameScreen extends JPanel {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
+        System.out.println("playing game screen repaint() !!!");
         gameState.getMyCharacter().drawCharacter(g, gameState, this);
         gameState.getEnemyCharacter().drawCharacter(g, gameState, this);
     }

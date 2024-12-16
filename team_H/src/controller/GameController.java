@@ -334,7 +334,6 @@ public class GameController {
 					useCard(gameState.getEnemySelectedCardList().get(i), gameState.getEnemyCharacter());
 					// 내 i번째 카드 사용
 					useCard(gameState.getSelectedCardList().get(i), gameState.getMyCharacter());
-					
 				}
 				
 			}
@@ -371,15 +370,19 @@ public class GameController {
 			case "MOVE":
 				// 모션 실행
 				character.setMotion("MOVE");
+				character.setCurrentCard(card);
 				playingGameScreen.repaint();
 				
+				System.out.println("gameController timer start !!");
 				// 모션 끝날 때까지 대기
 				Timer timer = new Timer(character.getCharacterMotionTimes().get(Character.Motion.MOVE)[1], e -> {
 			        ((Timer) e.getSource()).stop();
 			    });
 			    timer.setRepeats(false);
 			    timer.start();
-				
+			    
+			    System.out.println("gameController timer stop..");
+			    
 				// GameState 업데이트
 				if (character == gameState.getMyCharacter()) {
 					int[] newPosition = gameState.getMyPosition().clone();
@@ -400,6 +403,7 @@ public class GameController {
 				break;
 			case "ATTACK":
 				character.setMotion("ATTACK");
+				character.setCurrentCard(card);
 				playingGameScreen.repaint();
 				
 				// 모션 끝날 때까지 대기
@@ -436,6 +440,7 @@ public class GameController {
 						}
 					}
 					gameState.getEnemyCharacter().setMotion("IDLE");
+					character.setCurrentCard(card);
 					playingGameScreen.repaint();
 				} else {
 					
@@ -464,6 +469,7 @@ public class GameController {
 						}
 					}
 					gameState.getMyCharacter().setMotion("IDLE");
+					character.setCurrentCard(card);
 					playingGameScreen.repaint();
 				}
 				break;
