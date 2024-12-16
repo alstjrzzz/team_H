@@ -103,8 +103,6 @@ public class GameController {
 		    if (gameState.getMyCharacter() != null) {
 		        System.out.println("내 캐릭터가 설정되었습니다: " + gameState.getMyCharacter().getName());
 		        while (true) {
-		            System.out.println("selectCard() 호출 시작");
-
 		            selectCard();
 		            try {
 		                cardLatch.await(); // 작업 완료 대기
@@ -112,8 +110,6 @@ public class GameController {
 		                Thread.currentThread().interrupt();
 		                System.err.println("스레드 대기 중 인터럽트 발생: " + e.getMessage());
 		            }
-
-		            System.out.println("selectCard() 호출 완료");
 
 		            fight();
 		            if (isGameOver()) {
@@ -225,8 +221,6 @@ public class GameController {
 	                    continue;
 	                }
 
-	                System.out.println("수신된 메시지: " + response);
-
 	                // JSON 데이터가 배열 형식임을 고려하여 JSONArray로 처리
 	                JSONArray cardDataArray = new JSONArray(response); // 수정된 부분
 	                LinkedList<Card> enemySelectedCards = new LinkedList<>();
@@ -256,7 +250,7 @@ public class GameController {
 
 	                // GameState의 enemySelectedCardList 업데이트
 	                gameState.setEnemySelectedCardList(enemySelectedCards);
-	                System.out.println("상대방 선택 카드 리스트 업데이트 완료:");
+	                System.out.println("상대방 선택 카드 리스트:");
 
 	                // 콘솔에 상대방 카드 리스트 출력
 	                for (Card card : enemySelectedCards) {
@@ -288,6 +282,8 @@ public class GameController {
 	// 전투 로직
 	private void fight() {
 		
+		showPlayingGameScreen();
+		
 		if (gameState.getMyPosition() == null) {
 			if (gameState.getClientNumber() == 1) {
 				gameState.setMyPosition(new int[] {0, 1});
@@ -299,7 +295,7 @@ public class GameController {
 			}
 		}
 		
-		showPlayingGameScreen();
+		
 		
 		for (int i = 0; i < 3; i++) {
 			

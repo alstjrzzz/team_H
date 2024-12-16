@@ -39,7 +39,6 @@ public abstract class Character {
     protected Timer motionTimer;
     protected Timer effectTimer;
     
-    
     public enum Motion {
     	IDLE,		// 가만히 있을 때
     	ATTACK,		// 공격
@@ -48,6 +47,7 @@ public abstract class Character {
     	HIT,		// 피격
     	DEAD		// 죽음
     }
+   
     
     public Character() {
     	
@@ -216,6 +216,10 @@ public abstract class Character {
 
 	public Map<String, int[]> getCardMotionTimes() {
 		return cardMotionTimes;
+	}
+	
+	public Map<String, BufferedImage> getCardImage() {
+	    return cardImage;
 	}
 
 	public void setMotion(String motion) {

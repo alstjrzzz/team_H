@@ -21,14 +21,14 @@ public class Doraemon extends Character {
 		name = "Doraemon";
 		maxHealth = 100;
 		try {
-			sprite = ImageIO.read(getClass().getResource("/res/character/Doraemon.png"));
+			sprite = ImageIO.read(new File("res/character/Doraemon.png"));
 			if (sprite == null) {
 		        System.err.println("sprite가 초기화되지 않았습니다. initCardMotions를 실행할 수 없습니다.");
 		        return;
 		    }
 			
 			// skillEffect = ImageIO.read(new File(""));
-			logo = ImageIO.read(getClass().getResource("/res/character/doraemon_logo.jpg"));
+			logo = ImageIO.read(new File("res/character/doraemon_logo.jpg"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -74,15 +74,25 @@ public class Doraemon extends Character {
 
 	@Override
 	public void initCardImage() {
-		
-		cardImage = new HashMap<String, BufferedImage>();
-		
-		try {
-			cardImage.put("Air Cannon!", ImageIO.read(getClass().getResource("/res/card/air_cannon.png")));
-			cardImage.put("Bamboo Helicopter!", ImageIO.read(getClass().getResource("/res/card/bamboo_helicopter.png")));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+
+		cardImage = new HashMap<>();
+
+        try {
+            // 카드 이미지 파일 경로를 절대 경로로 지정
+            File moveImage = new File("res/card/doraemon_move.jpg");
+            File Air_CannonImage = new File("res/card/air_cannon.png");
+            File Bamboo_HelicopterImage = new File("res/card/bamboo_helicopter.png");
+
+            cardImage.put("Move Up", ImageIO.read(moveImage));
+            cardImage.put("Move Down", ImageIO.read(moveImage));
+            cardImage.put("Move Left", ImageIO.read(moveImage));
+            cardImage.put("Move Right", ImageIO.read(moveImage));
+            cardImage.put("Air Cannon!", ImageIO.read(Air_CannonImage));
+            cardImage.put("Bamboo Helicopter!", ImageIO.read(Bamboo_HelicopterImage));
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 	}
 
 

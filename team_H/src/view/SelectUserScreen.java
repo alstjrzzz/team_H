@@ -57,7 +57,7 @@ public class SelectUserScreen extends JPanel {
         add(backgroundLabel, BorderLayout.CENTER);
         
         // 로고 gif 추가
-        ImageIcon logoGif = new ImageIcon("res/img/gamelogo.gif");
+        ImageIcon logoGif = new ImageIcon("res/img/gamelogo2.gif");
         JLabel logoLabel = new JLabel(logoGif);
         
         // 로고 위치 설정

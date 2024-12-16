@@ -44,13 +44,18 @@ public class GameState {
     public Character createCharacter(String character) {
         switch (character) {
             case "SuperMan":
-                return new SuperMan();
+                SuperMan superMan = new SuperMan();
+                superMan.initCardImage(); // 카드 이미지 초기화
+                return superMan;
             case "Doraemon":
-                return new Doraemon();
+                Doraemon doraemon = new Doraemon();
+                doraemon.initCardImage(); // 카드 이미지 초기화
+                return doraemon;
             default:
-            	return null;
+                return null;
         }
     }
+
 
     public Dimension getDimension() {
         return dimension;
