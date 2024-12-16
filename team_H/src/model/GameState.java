@@ -7,6 +7,8 @@ import model.Character.Ace;
 import model.Character.Character;
 import model.Character.Cygnus;
 import model.Character.Doraemon;
+import model.Character.Finn;
+import model.Character.Luffy;
 import model.Character.SuperMan;
 import model.Character.Zoro;
 
@@ -69,6 +71,14 @@ public class GameState {
             	Ace ace = new Ace();
             	ace.initCardImage(); // 카드 이미지 초기화
                 return ace;
+            case "Luffy":
+            	Luffy luffy = new Luffy();
+            	luffy.initCardImage(); // 카드 이미지 초기화
+                return luffy;
+            case "Finn":
+            	Finn finn = new Finn();
+            	finn.initCardImage(); // 카드 이미지 초기화
+                return finn;
             default:
                 return null;
         }

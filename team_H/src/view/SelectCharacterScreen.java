@@ -40,6 +40,8 @@ public class SelectCharacterScreen extends JPanel {
     private ImageIcon zoroIcon;
     private ImageIcon CygnusIcon;
     private ImageIcon AceIcon;
+    private ImageIcon LuffyIcon;
+    private ImageIcon FinnIcon;
     
     // 캐릭터 배경 이미지 관련 변수
     private Map<String, Image> characterBackgrounds = new HashMap<>();
@@ -109,6 +111,17 @@ public class SelectCharacterScreen extends JPanel {
                         height = 520;
                         y = (getHeight() - height); // 세로 가운데 정렬
                         break;
+                    case "Luffy":
+                        width = 475;
+                        height = 525;
+                        y = (getHeight() - height); // 세로 가운데 정렬
+                        break;
+                    case "Finn":
+                        width = 475;
+                        height = 475;
+                        y = (getHeight() - height); // 세로 가운데 정렬
+                        break;
+                    
                     // 다른 캐릭터 추가 시 여기에 case를 추가
                 }
 
@@ -128,6 +141,8 @@ public class SelectCharacterScreen extends JPanel {
         zoroIcon = new ImageIcon("res/character/Zoro_face.png");
         CygnusIcon = new ImageIcon("res/character/Cygnus_face.png");
         AceIcon = new ImageIcon("res/character/Ace_face.png");
+        LuffyIcon = new ImageIcon("res/character/Luffy_face.png");
+        FinnIcon = new ImageIcon("res/character/Finn_face.png");
         
         // 캐릭터별 배경 이미지 로드
         characterBackgrounds.put("SuperMan", new ImageIcon("res/character/superman_background.png").getImage());
@@ -135,6 +150,8 @@ public class SelectCharacterScreen extends JPanel {
         characterBackgrounds.put("Zoro", new ImageIcon("res/character/Zoro_background2.png").getImage());
         characterBackgrounds.put("Cygnus", new ImageIcon("res/character/Cygnus_background.png").getImage());
         characterBackgrounds.put("Ace", new ImageIcon("res/character/Ace_background.png").getImage());
+        characterBackgrounds.put("Luffy", new ImageIcon("res/character/Luffy_background.png").getImage());
+        characterBackgrounds.put("Finn", new ImageIcon("res/character/Finn_background.png").getImage());
         
         // 수동으로 캐릭터 버튼 추가
         int buttonWidth = 100;
@@ -190,6 +207,26 @@ public class SelectCharacterScreen extends JPanel {
             System.out.println("선택된 캐릭터: Ace");
         });
         add(AceButton);
+        
+        // Luffy 버튼
+        JButton LuffyButton = new JButton(LuffyIcon);
+        LuffyButton.setBounds(100, 250, buttonWidth, buttonHeight);
+        LuffyButton.addActionListener(e -> {
+            startAnimation("Luffy"); // 애니메이션 시작
+            gameState.setMyCharacter(gameState.createCharacter("Luffy"));
+            System.out.println("선택된 캐릭터: Luffy");
+        });
+        add(LuffyButton);
+        
+        // Finn 버튼
+        JButton FinnButton = new JButton(FinnIcon);
+        FinnButton.setBounds(250, 250, buttonWidth, buttonHeight);
+        FinnButton.addActionListener(e -> {
+            startAnimation("Finn"); // 애니메이션 시작
+            gameState.setMyCharacter(gameState.createCharacter("Finn"));
+            System.out.println("선택된 캐릭터: Finn");
+        });
+        add(FinnButton);
         // 새로운 캐릭터 버튼 추가 시 아래와 같은 형식으로 추가 가능
         // JButton newCharacterButton = new JButton("NewCharacter");
         // newCharacterButton.setBounds(400, 100, buttonWidth, buttonHeight);
