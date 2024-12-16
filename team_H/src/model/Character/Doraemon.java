@@ -7,9 +7,16 @@ import javax.imageio.ImageIO;
 
 import model.Card;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.awt.image.FilteredImageSource;
+import java.awt.image.ImageFilter;
+import java.awt.image.ImageProducer;
+import java.awt.image.RGBImageFilter;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -20,25 +27,31 @@ public class Doraemon extends Character {
 		
 		name = "Doraemon";
 		maxHealth = 100;
+		
+		loadImage();
+		
+	    initCardImage();
+	    initCharacterMotions();
+	    initCharacterMotionTimes(); // 초기화 확인
+	    initCardMotions();
+	    initCardMotionTimes();
+		
+	}
+	
+	private void loadImage() {
 		try {
-			sprite = ImageIO.read(getClass().getResource("/res/character/Doraemon.png"));
+			sprite = ImageIO.read(new File("res/character/Doraemon.png"));
 			if (sprite == null) {
 		        System.err.println("sprite가 초기화되지 않았습니다. initCardMotions를 실행할 수 없습니다.");
 		        return;
 		    }
-			
+			sprite = TransformColorToTransparency(sprite, new Color(173, 217, 186));
 			// skillEffect = ImageIO.read(new File(""));
-			logo = ImageIO.read(getClass().getResource("/res/character/doraemon_logo.jpg"));
+			this.logo = ImageIO.read(new File("res/character/doraemon_logo.jpg"));
 		} catch (IOException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		initCardImage();
-		initCharacterMotions();
-		initCharacterMotionTimes();
-		initCardMotions();
-		initCardMotionTimes();
-		
 	}
 
 	
@@ -78,8 +91,8 @@ public class Doraemon extends Character {
 		cardImage = new HashMap<String, BufferedImage>();
 		
 		try {
-			cardImage.put("Air Cannon!", ImageIO.read(getClass().getResource("/res/card/air_cannon.png")));
-			cardImage.put("Bamboo Helicopter!", ImageIO.read(getClass().getResource("/res/card/bamboo_helicopter.png")));
+			cardImage.put("Air Cannon!", ImageIO.read(new File("res/card/air_cannon.png")));
+			cardImage.put("Bamboo Helicopter!", ImageIO.read(new File("res/card/bamboo_helicopter.png")));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -93,6 +106,7 @@ public class Doraemon extends Character {
 		characterMotions = new HashMap<Character.Motion, BufferedImage[]>();
 		
 		characterMotions.put(Motion.IDLE, null);
+		characterMotions.put(Motion.MOVE, null);
 		characterMotions.put(Motion.HIT, null);
 		characterMotions.put(Motion.DEAD, null);
 	}
@@ -104,9 +118,10 @@ public class Doraemon extends Character {
 
 		characterMotionTimes = new HashMap<Character.Motion, int[]>();
 		
-		characterMotionTimes.put(Motion.IDLE, new int[] {});
-		characterMotionTimes.put(Motion.HIT, new int[] {});
-		characterMotionTimes.put(Motion.DEAD, new int[] {});
+		characterMotionTimes.put(Motion.IDLE, new int[] {1000, 1000});
+		characterMotionTimes.put(Motion.MOVE, new int[] {1500, 1500});
+		characterMotionTimes.put(Motion.HIT, new int[] {1000, 1000});
+		characterMotionTimes.put(Motion.DEAD, new int[] {1000, 1000});
 	}
 
 
@@ -208,4 +223,31 @@ public class Doraemon extends Character {
         
         return flippedImage; // 뒤집힌 이미지 반환
     }
+    
+    protected BufferedImage TransformColorToTransparency(BufferedImage image, Color c1) {
+  	  final int r1 = c1.getRed();
+  	  final int g1 = c1.getGreen();
+  	  final int b1 = c1.getBlue();
+  	 
+  	  ImageFilter filter = new RGBImageFilter() {
+  			public int filterRGB(int x, int y, int rgb) {
+  				int r = ( rgb & 0xFF0000 ) >> 16;
+  				int g = ( rgb & 0xFF00 ) >> 8;
+  				int b = ( rgb & 0xFF );
+  				if( r == r1 && g == g1 && b == b1) {
+  					return rgb & 0xFFFFFF;
+  				}
+  				return rgb;
+  			}
+  		};
+  	 
+  		ImageProducer ip = new FilteredImageSource( image.getSource(), filter );
+  		Image img = Toolkit.getDefaultToolkit().createImage(ip);
+  		BufferedImage dest = new BufferedImage(img.getWidth(null), 
+  				img.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+  		Graphics2D g = dest.createGraphics();
+  		g.drawImage(img, 0, 0, null);
+  		g.dispose();
+  		return dest;
+  	}
 }
