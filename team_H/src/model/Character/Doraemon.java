@@ -28,7 +28,7 @@ public class Doraemon extends Character {
           }
          
          // skillEffect = ImageIO.read(new File(""));
-         logo = ImageIO.read(new File("res/character/doraemon_logo.jpg"));
+         logo = ImageIO.read(new File("res/character/doraemon_logo.png"));
       } catch (IOException e) {
          e.printStackTrace();
       }

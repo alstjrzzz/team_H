@@ -58,6 +58,7 @@ public class SuperMan extends Character {
     public void initCardImage() {
         cardImage = new HashMap<>();
 
+
         try {
             // 카드 이미지 파일 경로를 절대 경로로 지정
             File moveImage = new File("res/card/superman_move.png");
@@ -75,7 +76,6 @@ public class SuperMan extends Character {
             e.printStackTrace();
         }
     }
-
 
 
 	@Override
