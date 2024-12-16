@@ -3,9 +3,12 @@ package model;
 import java.awt.Dimension;
 import java.util.LinkedList;
 
+import model.Character.Ace;
 import model.Character.Character;
+import model.Character.Cygnus;
 import model.Character.Doraemon;
 import model.Character.SuperMan;
+import model.Character.Zoro;
 
 public class GameState {
 
@@ -38,6 +41,9 @@ public class GameState {
        
        characterList.add("SuperMan");
        characterList.add("Doraemon");
+       characterList.add("Zoro");
+       characterList.add("Cygnus");
+       characterList.add("Ace");
        // ...
     }
     
@@ -51,6 +57,18 @@ public class GameState {
                 Doraemon doraemon = new Doraemon();
                 doraemon.initCardImage(); // 카드 이미지 초기화
                 return doraemon;
+            case "Zoro":
+                Zoro zoro = new Zoro();
+                zoro.initCardImage(); // 카드 이미지 초기화
+                return zoro;
+            case "Cygnus":
+            	Cygnus cygnus = new Cygnus();
+            	cygnus.initCardImage(); // 카드 이미지 초기화
+                return cygnus;
+            case "Ace":
+            	Ace ace = new Ace();
+            	ace.initCardImage(); // 카드 이미지 초기화
+                return ace;
             default:
                 return null;
         }

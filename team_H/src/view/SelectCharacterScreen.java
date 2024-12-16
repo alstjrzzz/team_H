@@ -37,6 +37,9 @@ public class SelectCharacterScreen extends JPanel {
     // 캐릭터 버튼 이미지 변수
     private ImageIcon supermanIcon;
     private ImageIcon doraemonIcon;
+    private ImageIcon zoroIcon;
+    private ImageIcon CygnusIcon;
+    private ImageIcon AceIcon;
     
     // 캐릭터 배경 이미지 관련 변수
     private Map<String, Image> characterBackgrounds = new HashMap<>();
@@ -87,8 +90,23 @@ public class SelectCharacterScreen extends JPanel {
                         y = (getHeight() - height); // 세로 가운데 정렬
                         break;
                     case "Doraemon":
-                        width = 400;
-                        height = 400;
+                        width = 425;
+                        height = 475;
+                        y = (getHeight() - height); // 세로 가운데 정렬
+                        break;
+                    case "Zoro":
+                        width = 450;
+                        height = 500;
+                        y = (getHeight() - height); // 세로 가운데 정렬
+                        break;
+                    case "Cygnus":
+                        width = 500;
+                        height = 500;
+                        y = (getHeight() - height); // 세로 가운데 정렬
+                        break;
+                    case "Ace":
+                        width = 450;
+                        height = 520;
                         y = (getHeight() - height); // 세로 가운데 정렬
                         break;
                     // 다른 캐릭터 추가 시 여기에 case를 추가
@@ -107,12 +125,17 @@ public class SelectCharacterScreen extends JPanel {
         // 캐릭터 이미지 로드
         supermanIcon = new ImageIcon("res/character/superman_face.png");
         doraemonIcon = new ImageIcon("res/character/Doraemon_face.png");
+        zoroIcon = new ImageIcon("res/character/Zoro_face.png");
+        CygnusIcon = new ImageIcon("res/character/Cygnus_face.png");
+        AceIcon = new ImageIcon("res/character/Ace_face.png");
         
         // 캐릭터별 배경 이미지 로드
         characterBackgrounds.put("SuperMan", new ImageIcon("res/character/superman_background.png").getImage());
         characterBackgrounds.put("Doraemon", new ImageIcon("res/character/doraemon_background.png").getImage());
+        characterBackgrounds.put("Zoro", new ImageIcon("res/character/Zoro_background2.png").getImage());
+        characterBackgrounds.put("Cygnus", new ImageIcon("res/character/Cygnus_background.png").getImage());
+        characterBackgrounds.put("Ace", new ImageIcon("res/character/Ace_background.png").getImage());
         
-
         // 수동으로 캐릭터 버튼 추가
         int buttonWidth = 100;
         int buttonHeight = 100;
@@ -138,7 +161,35 @@ public class SelectCharacterScreen extends JPanel {
         });
         add(doraemonButton);
         
+        // Zoro 버튼
+        JButton zoroButton = new JButton(zoroIcon);
+        zoroButton.setBounds(400, 100, buttonWidth, buttonHeight);
+        zoroButton.addActionListener(e -> {
+            startAnimation("Zoro"); // 애니메이션 시작
+            gameState.setMyCharacter(gameState.createCharacter("Zoro"));
+            System.out.println("선택된 캐릭터: Zoro");
+        });
+        add(zoroButton);
         
+        // Cygnus 버튼
+        JButton CygnusButton = new JButton(CygnusIcon);
+        CygnusButton.setBounds(550, 100, buttonWidth, buttonHeight);
+        CygnusButton.addActionListener(e -> {
+            startAnimation("Cygnus"); // 애니메이션 시작
+            gameState.setMyCharacter(gameState.createCharacter("Cygnus"));
+            System.out.println("선택된 캐릭터: Cygnus");
+        });
+        add(CygnusButton);
+        
+        // Ace 버튼
+        JButton AceButton = new JButton(AceIcon);
+        AceButton.setBounds(700, 100, buttonWidth, buttonHeight);
+        AceButton.addActionListener(e -> {
+            startAnimation("Ace"); // 애니메이션 시작
+            gameState.setMyCharacter(gameState.createCharacter("Ace"));
+            System.out.println("선택된 캐릭터: Ace");
+        });
+        add(AceButton);
         // 새로운 캐릭터 버튼 추가 시 아래와 같은 형식으로 추가 가능
         // JButton newCharacterButton = new JButton("NewCharacter");
         // newCharacterButton.setBounds(400, 100, buttonWidth, buttonHeight);
