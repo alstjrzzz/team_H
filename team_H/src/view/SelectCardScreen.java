@@ -4,6 +4,8 @@ package view;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import java.awt.BorderLayout;
 import java.awt.Button;
@@ -53,13 +55,15 @@ public class SelectCardScreen extends JPanel {
    private Image backgroundImage; // 배경 이미지 객체
    private int backgroundY = 0; // 배경 이미지의 Y 좌표
    private Timer animationTimer; // 애니메이션 타이머
-    private Card[] slotCards = new Card[3]; // 슬롯별 카드 상태를 저장
-    private int selectedSlotIndex = -1; // 선택된 슬롯 인덱스 (-1은 슬롯이 선택되지 않은 상태를 의미)
-    private Card slot1 = null;
-    private Card slot2 = null;
-    private Card slot3 = null;
+   private Card[] slotCards = new Card[3]; // 슬롯별 카드 상태를 저장
+   private int selectedSlotIndex = -1; // 선택된 슬롯 인덱스 (-1은 슬롯이 선택되지 않은 상태를 의미)
+   private Card slot1 = null;
+   private Card slot2 = null;
+   private Card slot3 = null;
    private JButton[] slotButtons;
-    
+   private Map<Card, JButton> cardButtonMap = new HashMap<>(); // 카드와 버튼 매핑
+   private Map<Card, JPanel> cardContainerMap = new HashMap<>(); // 카드와 컨테이너 매핑
+   
    public SelectCardScreen(GameState gameState, GameController gameController, NetworkManager networkManager) {
       
       this.gameState = gameState;
@@ -163,11 +167,21 @@ public class SelectCardScreen extends JPanel {
            JPanel cardContainer = new JPanel(new BorderLayout());
            cardContainer.setOpaque(false); // 투명 배경 유지
            
+           // 카드 이름 라벨 추가
+           JLabel cardNameLabel = new JLabel(card.getName());
+           cardNameLabel.setFont(new Font("Arial", Font.BOLD, 12));
+           cardNameLabel.setForeground(Color.BLACK); // 텍스트 색상
+           cardNameLabel.setHorizontalAlignment(SwingConstants.CENTER); // 중앙 정렬
+           cardContainer.add(cardNameLabel, BorderLayout.NORTH); // 카드 이름 라벨을 상단에 추가
+           
            JButton cardButton = new JButton(cardIcon);
            cardButton.setContentAreaFilled(false);
            cardButton.setFocusPainted(false);
            cardButton.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
 
+           // 카드 버튼과 카드 매핑 저장
+           cardButtonMap.put(card, cardButton);
+           
            // 마우스 호버 효과
            cardButton.addMouseListener(new java.awt.event.MouseAdapter() {
                @Override
@@ -188,6 +202,7 @@ public class SelectCardScreen extends JPanel {
                    JButton slotButton = slotButtons[selectedSlotIndex];
                    slotButton.setIcon(cardIcon);
                    slotButton.setText("");
+                   cardContainer.setVisible(false); // 카드 컨테이너 숨김
 
                    switch (selectedSlotIndex) {
                        case 0 -> slot1 = card;
@@ -203,6 +218,7 @@ public class SelectCardScreen extends JPanel {
                            JButton slotButton = slotButtons[i];
                            slotButton.setIcon(cardIcon);
                            slotButton.setText("");
+                           cardContainer.setVisible(false); // 카드 컨테이너 숨김
 
                            switch (i) {
                                case 0 -> slot1 = card;
@@ -215,28 +231,31 @@ public class SelectCardScreen extends JPanel {
                    }
                }
            });
-           // 카드 데미지 라벨 추가
-           int damageValue = card.getValue(); // 카드 데미지를 가져옴
-           String damageText = damageValue > 0 ? "DM " + damageValue : "DM 00"; // 데미지가 없으면 "DM 00"
+
+           int damageValue = card.getValue();
+           String damageText = damageValue > 0 ? "DM " + damageValue : "DM 00";
            JLabel damageLabel = new JLabel(damageText);
            damageLabel.setFont(new Font("Arial", Font.BOLD, 12));
            damageLabel.setForeground(Color.RED);
-           damageLabel.setHorizontalAlignment(SwingConstants.CENTER); // 중앙 정렬
+           damageLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
-           // 카드 버튼과 데미지 라벨을 컨테이너에 추가
            cardContainer.add(cardButton, BorderLayout.CENTER);
            cardContainer.add(damageLabel, BorderLayout.SOUTH);
-
-
-           cardPanel.add(cardContainer); // 카드 패널에 컨테이너 추가
+           
+           // 카드와 컨테이너 매핑 저장
+           cardContainerMap.put(card, cardContainer);
+           
+           cardPanel.add(cardContainer);
        }
 
        backgroundPanel.add(cardPanel, BorderLayout.CENTER);
        selectCardPanel.setLayout(new BorderLayout());
        selectCardPanel.add(backgroundPanel, BorderLayout.CENTER);
-       selectCardPanel.setBorder(BorderFactory.createLineBorder(new Color(85, 0, 0), 4)); // 테두리 추가
+       selectCardPanel.setBorder(BorderFactory.createLineBorder(new Color(85, 0, 0), 4));
        add(selectCardPanel, BorderLayout.CENTER);
 
+       
+       
        selectCardPanel.revalidate();
        selectCardPanel.repaint();
    }
@@ -257,6 +276,7 @@ public class SelectCardScreen extends JPanel {
        slotContainer.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
        slotButtons = new JButton[3]; // 슬롯 버튼 배열 초기화
+       
        for (int i = 0; i < slotButtons.length; i++) {
            int index = i;
 
@@ -272,12 +292,19 @@ public class SelectCardScreen extends JPanel {
            // 슬롯 클릭 이벤트
            slotButton.addActionListener(e -> {
                if (slotCards[index] != null) {
+            	   // 슬롯에서 카드 제거
+                   Card removedCard = slotCards[index];
                    // 슬롯에 카드가 있으면 삭제
                    System.out.println("슬롯 " + (index + 1) + "에서 카드 삭제됨");
                    slotCards[index] = null;
                    slotButton.setIcon(null);
                    slotButton.setText("<html><center>" +
                            (index + 1) + "<br>PLACE CARD HERE</center></html>");
+                   // 카드 컨테이너 다시 표시
+                   JPanel correspondingContainer = cardContainerMap.get(removedCard);
+                   if (correspondingContainer != null) {
+                       correspondingContainer.setVisible(true);
+                   }
                    switch (index) {
                        case 0 -> slot1 = null;
                        case 1 -> slot2 = null;
@@ -295,7 +322,7 @@ public class SelectCardScreen extends JPanel {
            slotButton.addMouseListener(new java.awt.event.MouseAdapter() {
                @Override
                public void mouseEntered(java.awt.event.MouseEvent e) {
-                   slotButton.setBorder(BorderFactory.createLineBorder(Color.BLUE, 2)); // 호버 시 파란 테두리
+                   slotButton.setBorder(BorderFactory.createLineBorder(Color.RED, 2)); // 호버 시 파란 테두리
                }
 
                @Override
