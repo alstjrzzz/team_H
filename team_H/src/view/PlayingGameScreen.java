@@ -34,7 +34,7 @@ public class PlayingGameScreen extends JPanel {
     private JPanel healthPanel;
     private JPanel fieldPanel;
     private JPanel cardPanel;
-
+    
     public PlayingGameScreen(GameState gameState, GameController gameController, NetworkManager networkManager) {
 
         this.gameState = gameState;
@@ -90,7 +90,7 @@ public class PlayingGameScreen extends JPanel {
 
     public void drawHealthPanel() {
         healthPanel.setLayout(null);
-        healthPanel.setPreferredSize(new Dimension(0, 50)); // 고정 높이 설정
+        healthPanel.setPreferredSize(new Dimension(0, 70)); // 고정 높이를 늘림
         healthPanel.setOpaque(false);
 
         int panelWidth = 950; // 패널의 예상 너비를 설정
@@ -108,6 +108,13 @@ public class PlayingGameScreen extends JPanel {
         player1HealthBar.setForeground(Color.RED);
         healthPanel.add(player1HealthBar);
 
+        // Player 1의 이름
+        JLabel player1NameLabel = new JLabel(gameState.getMyCharacter().getName());
+        player1NameLabel.setBounds(90, 40, panelWidth / 2 - 100, 20);
+        player1NameLabel.setHorizontalAlignment(SwingConstants.LEFT);
+        player1NameLabel.setForeground(Color.WHITE); // 흰색 글씨로 이름 표시
+        healthPanel.add(player1NameLabel);
+
         // Player 2의 캐릭터 로고
         JLabel player2Logo = new JLabel(new ImageIcon(gameState.getEnemyCharacter().getLogo()));
         player2Logo.setBounds(panelWidth - panelHeight - 10, 0, panelHeight, panelHeight);
@@ -119,30 +126,61 @@ public class PlayingGameScreen extends JPanel {
         player2HealthBar.setBounds(panelWidth / 2 + 20, 10, panelWidth / 2 - 100, 30);
         player2HealthBar.setForeground(Color.RED);
         healthPanel.add(player2HealthBar);
+
+        // Player 2의 이름
+        JLabel player2NameLabel = new JLabel(gameState.getEnemyCharacter().getName());
+        player2NameLabel.setBounds(panelWidth / 2 + 20, 40, panelWidth / 2 - 100, 20);
+        player2NameLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+        player2NameLabel.setForeground(Color.WHITE); // 흰색 글씨로 이름 표시
+        healthPanel.add(player2NameLabel);
     }
+
 
     public void drawSelectedCardPanel() {
         cardPanel.removeAll();
-        cardPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
-        cardPanel.setBackground(Color.black);
-        // Player 1의 카드 이미지 추가
+        cardPanel.setLayout(new BorderLayout()); // BorderLayout으로 배치
+
+        // Player 1의 카드 패널 (왼쪽)
+        JPanel player1CardPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+        player1CardPanel.setBackground(Color.BLACK);
+        JLabel player1Label = new JLabel("Player 1 Cards");
+        player1Label.setForeground(Color.WHITE);
+        player1CardPanel.add(player1Label);
+
         for (Card card : gameState.getSelectedCardList()) {
             ImageIcon cardImage = new ImageIcon(gameState.getMyCharacter().getCardImage().get(card.getName()));
             if (cardImage != null) {
-                cardPanel.add(new JLabel(cardImage));
+                player1CardPanel.add(new JLabel(cardImage));
             }
         }
 
-        // Player 2의 카드 이미지 추가
+        // Player 2의 카드 패널 (오른쪽)
+        JPanel player2CardPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+        player2CardPanel.setBackground(Color.BLACK);
+        JLabel player2Label = new JLabel("Player 2 Cards");
+        player2Label.setForeground(Color.WHITE);
+        player2CardPanel.add(player2Label);
+
         for (Card card : gameState.getEnemySelectedCardList()) {
             ImageIcon cardImage = new ImageIcon(gameState.getEnemyCharacter().getCardImage().get(card.getName()));
             if (cardImage != null) {
-                cardPanel.add(new JLabel(cardImage));
+                player2CardPanel.add(new JLabel(cardImage));
             }
         }
+
+        // 중앙 빈 패널
+        JPanel emptyCenterPanel = new JPanel();
+        emptyCenterPanel.setBackground(Color.BLACK);
+
+        // 패널 추가
+        cardPanel.add(player1CardPanel, BorderLayout.WEST);
+        cardPanel.add(emptyCenterPanel, BorderLayout.CENTER); // 중앙 빈 공간
+        cardPanel.add(player2CardPanel, BorderLayout.EAST);
+
         cardPanel.revalidate();
         cardPanel.repaint();
     }
+
 
     private void drawDashedGrid(Graphics2D g2d, int rows, int cols, int cellWidth, int cellHeight) {
         int gridWidth = cols * cellWidth; // 전체 그리드 너비

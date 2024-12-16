@@ -189,6 +189,7 @@ public class GameController {
 	                    String character = jsonResponse.getString("character");
 	                    Character enemyCharacter = gameState.createCharacter(character);
 	                    gameState.setEnemyCharacter(enemyCharacter);
+	                    gameState.setEnemyHealth(enemyCharacter.getMaxHealth());
 
 	                    System.out.println("상대방 캐릭터 : " + character);
 

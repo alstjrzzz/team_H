@@ -18,6 +18,13 @@ import javax.swing.Timer;
 import controller.GameController;
 import model.Card;
 import model.GameState;
+import model.Character.Ace;
+import model.Character.Cygnus;
+import model.Character.Doraemon;
+import model.Character.Finn;
+import model.Character.Luffy;
+import model.Character.SuperMan;
+import model.Character.Zoro;
 import network.NetworkManager;
 
 import java.awt.Dimension;
@@ -164,6 +171,7 @@ public class SelectCharacterScreen extends JPanel {
         supermanButton.addActionListener(e -> {
             startAnimation("SuperMan"); // 애니메이션 시작
             gameState.setMyCharacter(gameState.createCharacter("SuperMan"));
+            gameState.setMyHealth(SuperMan.maxHealth);
             System.out.println("선택된 캐릭터: SuperMan");
         });
         add(supermanButton);
@@ -174,6 +182,7 @@ public class SelectCharacterScreen extends JPanel {
         doraemonButton.addActionListener(e -> {
             startAnimation("Doraemon"); // 애니메이션 시작
             gameState.setMyCharacter(gameState.createCharacter("Doraemon"));
+            gameState.setMyHealth(Doraemon.maxHealth);
             System.out.println("선택된 캐릭터: Doraemon");
         });
         add(doraemonButton);
@@ -184,6 +193,7 @@ public class SelectCharacterScreen extends JPanel {
         zoroButton.addActionListener(e -> {
             startAnimation("Zoro"); // 애니메이션 시작
             gameState.setMyCharacter(gameState.createCharacter("Zoro"));
+            gameState.setMyHealth(Zoro.maxHealth);
             System.out.println("선택된 캐릭터: Zoro");
         });
         add(zoroButton);
@@ -194,6 +204,7 @@ public class SelectCharacterScreen extends JPanel {
         CygnusButton.addActionListener(e -> {
             startAnimation("Cygnus"); // 애니메이션 시작
             gameState.setMyCharacter(gameState.createCharacter("Cygnus"));
+            gameState.setMyHealth(Cygnus.maxHealth);
             System.out.println("선택된 캐릭터: Cygnus");
         });
         add(CygnusButton);
@@ -204,6 +215,7 @@ public class SelectCharacterScreen extends JPanel {
         AceButton.addActionListener(e -> {
             startAnimation("Ace"); // 애니메이션 시작
             gameState.setMyCharacter(gameState.createCharacter("Ace"));
+            gameState.setMyHealth(Ace.maxHealth);
             System.out.println("선택된 캐릭터: Ace");
         });
         add(AceButton);
@@ -214,6 +226,7 @@ public class SelectCharacterScreen extends JPanel {
         LuffyButton.addActionListener(e -> {
             startAnimation("Luffy"); // 애니메이션 시작
             gameState.setMyCharacter(gameState.createCharacter("Luffy"));
+            gameState.setMyHealth(Luffy.maxHealth);
             System.out.println("선택된 캐릭터: Luffy");
         });
         add(LuffyButton);
@@ -224,6 +237,7 @@ public class SelectCharacterScreen extends JPanel {
         FinnButton.addActionListener(e -> {
             startAnimation("Finn"); // 애니메이션 시작
             gameState.setMyCharacter(gameState.createCharacter("Finn"));
+            gameState.setMyHealth(Finn.maxHealth);
             System.out.println("선택된 캐릭터: Finn");
         });
         add(FinnButton);
