@@ -54,12 +54,24 @@ public class SuperMan extends Character {
 
 
 
-	@Override
-	public void initCardImage() {
-		// TODO Auto-generated method stub
-		
-	}
-
+    @Override
+    public void initCardImage() {
+        cardImage = new HashMap<>();
+        try {
+            // 카드 이미지 파일 경로를 절대 경로로 지정
+            File moveImage = new File("res/card/superman_move.png");
+            File super_PunchImage = new File("res/card/superman_move.png");
+            File Flying_StrikeImage = new File("res/card/superman_move.png");
+            cardImage.put("Move Up", ImageIO.read(moveImage));
+            cardImage.put("Move Down", ImageIO.read(moveImage));
+            cardImage.put("Move Left", ImageIO.read(moveImage));
+            cardImage.put("Move Right", ImageIO.read(moveImage));
+            cardImage.put("Super Punch", ImageIO.read(super_PunchImage));
+            cardImage.put("Flying Strike", ImageIO.read(Flying_StrikeImage));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 
 	@Override
