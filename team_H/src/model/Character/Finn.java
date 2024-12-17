@@ -33,7 +33,7 @@ public class Finn extends Character {
              }
             
             // skillEffect = ImageIO.read(new File(""));
-            logo = ImageIO.read(new File("res/character/Finn_face.png"));
+            logo = ImageIO.read(new File("res/character/Finn_logo.png"));
          } catch (IOException e) {
             e.printStackTrace();
          }
