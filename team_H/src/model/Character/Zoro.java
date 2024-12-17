@@ -19,6 +19,7 @@ import model.Card;
 
 public class Zoro extends Character {
    
+	private int character_size = 110;
    
     public Zoro() {
        
@@ -100,7 +101,7 @@ public class Zoro extends Character {
       motions = new HashMap<>();
       BufferedImage[] tempArr = new BufferedImage[4];
       for (int i = 0; i < 4; i++) {
-         tempArr[i] = resizeImage(sprite.getSubimage(i * 123, 770, 123, 152), 90, 90, true);
+         tempArr[i] = resizeImage(sprite.getSubimage(i * 123, 770, 123, 152), character_size, character_size, true);
       }
       motions.put("IDLE", tempArr.clone());
       
@@ -108,26 +109,26 @@ public class Zoro extends Character {
       
       tempArr = new BufferedImage[3];
       for (int i = 0; i < 3; i++) {
-         tempArr[i] = resizeImage(sprite.getSubimage(i * 177, 10049, 177, 122), 90, 90, true);
+         tempArr[i] = resizeImage(sprite.getSubimage(i * 177, 10049, 177, 122), character_size, character_size, true);
       }
       motions.put("DEAD", tempArr.clone());
       motions.put("GUARD", null);
       
       tempArr = new BufferedImage[8];
       for (int i = 0; i < 8; i++) {
-         tempArr[i] = resizeImage(sprite.getSubimage(i * 145, 924,145,162), 90, 90, true);
+         tempArr[i] = resizeImage(sprite.getSubimage(i * 145, 924,145,162), character_size, character_size, true);
       }
       motions.put("Move Up", tempArr.clone());
       
       tempArr = new BufferedImage[8];
       for (int i = 0; i < 8; i++) {
-         tempArr[i] = resizeImage(sprite.getSubimage(i * 145, 924,145,162), 90, 90, true);
+         tempArr[i] = resizeImage(sprite.getSubimage(i * 145, 924,145,162), character_size, character_size, true);
       }
       motions.put("Move Down", tempArr.clone());
       
       tempArr = new BufferedImage[8];
       for (int i = 0; i < 8; i++) {
-         tempArr[i] = resizeImage(sprite.getSubimage(i * 145, 924,145,162), 90, 90, true);
+         tempArr[i] = resizeImage(sprite.getSubimage(i * 145, 924,145,162), character_size, character_size, true);
       }
       motions.put("Move Left", tempArr.clone());
       

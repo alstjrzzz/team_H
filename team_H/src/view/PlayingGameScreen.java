@@ -110,10 +110,10 @@ public class PlayingGameScreen extends JPanel {
     	myCharacter = gameState.getMyCharacter();
     	if (gameState.getClientNumber() == 1) {
     		myCharacter.setCurrentX(gridStartX + gameState.getMyPosition()[0] * gridWidth + gridClient1X);
-    		myCharacter.setCurrentY(gridStartY + gameState.getMyPosition()[1] * gridHeight + gridClient1Y);
+    		myCharacter.setCurrentY(gridStartY + gameState.getMyPosition()[1] * gridHeight + gridClient1Y -60);
     	} else {
     		myCharacter.setCurrentX(gridStartX + gameState.getMyPosition()[0] * gridWidth + gridClient2X);
-    		myCharacter.setCurrentY(gridStartY + gameState.getMyPosition()[1] * gridHeight + gridClient2Y);
+    		myCharacter.setCurrentY(gridStartY + gameState.getMyPosition()[1] * gridHeight + gridClient2Y-60);
     	}
     	// 이 주석 지우면 ㅈ버그나는데 왜 그런지는 모르겠음 ㅅㅂ
 		switch (myCharacter.getName()) {
@@ -817,10 +817,10 @@ public class PlayingGameScreen extends JPanel {
 		enemyCharacter = gameState.getEnemyCharacter();
     	if (gameState.getClientNumber() == 1) {
     		enemyCharacter.setCurrentX(gridStartX + gameState.getEnemyPosition()[0] * gridWidth + gridClient2X);
-    		enemyCharacter.setCurrentY(gridStartY + gameState.getEnemyPosition()[1] * gridHeight + gridClient2Y);
+    		enemyCharacter.setCurrentY(gridStartY + gameState.getEnemyPosition()[1] * gridHeight + gridClient2Y-60);
     	} else {
     		enemyCharacter.setCurrentX(gridStartX + gameState.getEnemyPosition()[0] * gridWidth + gridClient1X);
-    		enemyCharacter.setCurrentY(gridStartY + gameState.getEnemyPosition()[1] * gridHeight + gridClient1Y);
+    		enemyCharacter.setCurrentY(gridStartY + gameState.getEnemyPosition()[1] * gridHeight + gridClient1Y-60);
     	}
         
         switch (enemyCharacter.getName()) {

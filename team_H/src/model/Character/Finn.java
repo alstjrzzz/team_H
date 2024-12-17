@@ -19,6 +19,7 @@ import model.Card;
 
 public class Finn extends Character {
    
+	private int character_size = 100;
    
     public Finn() {
        
@@ -99,7 +100,7 @@ public class Finn extends Character {
       motions = new HashMap<>();
       BufferedImage[] tempArr = new BufferedImage[12];
       for (int i = 0; i < 12; i++) {
-         tempArr[i] = resizeImage(sprite.getSubimage(i * 48, 16, 48, 48), 90, 90, true);
+         tempArr[i] = resizeImage(sprite.getSubimage(i * 48, 16, 48, 48), character_size, character_size, true);
       }
       motions.put("IDLE", tempArr.clone());
       
@@ -107,26 +108,26 @@ public class Finn extends Character {
       
       tempArr = new BufferedImage[20];
       for (int i = 0; i < 20; i++) {
-         tempArr[i] = resizeImage(sprite.getSubimage(i * 64, 2016, 64, 48), 90, 90, true);
+         tempArr[i] = resizeImage(sprite.getSubimage(i * 64, 2016, 64, 48), character_size, character_size, true);
       }
       motions.put("DEAD", null);
       motions.put("GUARD", null);
       
       tempArr = new BufferedImage[14];
       for (int i = 0; i < 14; i++) {
-         tempArr[i] = resizeImage(sprite.getSubimage(i * 48, 1440, 48, 48), 90, 90, true);
+         tempArr[i] = resizeImage(sprite.getSubimage(i * 48, 1440, 48, 48), character_size, character_size, true);
       }
       motions.put("Move Up", tempArr.clone());
       
       tempArr = new BufferedImage[10];
       for (int i = 0; i < 10; i++) {
-         tempArr[i] = resizeImage(sprite.getSubimage(i * 48, 1568, 48, 48), 90, 90, true);
+         tempArr[i] = resizeImage(sprite.getSubimage(i * 48, 1568, 48, 48), character_size, character_size, true);
       }
       motions.put("Move Down", tempArr.clone());
       
       tempArr = new BufferedImage[12];
       for (int i = 0; i < 12; i++) {
-         tempArr[i] = resizeImage(sprite.getSubimage(i * 48, 848, 48, 48), 90, 90, true);
+         tempArr[i] = resizeImage(sprite.getSubimage(i * 48, 848, 48, 48), character_size, character_size, true);
       }
       motions.put("Move Right", tempArr.clone());
       
@@ -137,7 +138,7 @@ public class Finn extends Character {
       
       tempArr = new BufferedImage[19];
       for (int i = 0; i < 19; i++) {
-         tempArr[i] = resizeImage(sprite.getSubimage(i * 176, 3663, 176, 65), 90, 90, true);
+         tempArr[i] = resizeImage(sprite.getSubimage(i * 176, 3663, 176, 65), character_size, character_size, true);
       }
       motions.put("Skill1", tempArr.clone());
       motions.put("Skill2", null);

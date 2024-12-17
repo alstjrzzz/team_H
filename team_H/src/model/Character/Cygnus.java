@@ -18,7 +18,7 @@ import java.util.Map;
 import model.Card;
 
 public class Cygnus extends Character {
-   
+	private int character_size = 100;
    
     public Cygnus() {
        
@@ -100,7 +100,7 @@ public class Cygnus extends Character {
        motions = new HashMap<>();
        BufferedImage[] tempArr = new BufferedImage[8];
        for (int i = 0; i < 8; i++) {
-          tempArr[i] = resizeImage(sprite.getSubimage(i * 85, 7,85,118), 90, 90, true);
+          tempArr[i] = resizeImage(sprite.getSubimage(i * 85, 7,85,118), character_size, character_size, true);
        }
        motions.put("IDLE", tempArr.clone());
        
@@ -108,26 +108,26 @@ public class Cygnus extends Character {
        
        tempArr = new BufferedImage[29];
        for (int i = 0; i < 29; i++) {
-          tempArr[i] = resizeImage(sprite.getSubimage(i * 152, 5206, 152,182), 90, 90, true);
+          tempArr[i] = resizeImage(sprite.getSubimage(i * 152, 5206, 152,182), character_size, character_size, true);
        }
        motions.put("DEAD", tempArr.clone());
        motions.put("GUARD", null);
        
        tempArr = new BufferedImage[8];
        for (int i = 0; i < 8; i++) {
-           tempArr[i] = resizeImage(sprite.getSubimage(i * 85, 131,85,118), 90, 90, true);
+           tempArr[i] = resizeImage(sprite.getSubimage(i * 85, 131,85,118), character_size, character_size, true);
        }
        motions.put("Move Up", tempArr.clone());
        
        tempArr = new BufferedImage[8];
        for (int i = 0; i < 8; i++) {
-           tempArr[i] = resizeImage(sprite.getSubimage(i * 85, 131,85,118), 90, 90, true);
+           tempArr[i] = resizeImage(sprite.getSubimage(i * 85, 131,85,118), character_size, character_size, true);
        }
        motions.put("Move Down", tempArr.clone());
        
        tempArr = new BufferedImage[8];
        for (int i = 0; i < 8; i++) {
-          tempArr[i] = resizeImage(sprite.getSubimage(i * 85, 131,85,118), 90, 90, true);
+          tempArr[i] = resizeImage(sprite.getSubimage(i * 85, 131,85,118), character_size, character_size, true);
        }
        motions.put("Move Left", tempArr.clone());
        

@@ -22,7 +22,9 @@ import java.io.IOException;
 import java.net.URL;
 
 public class Doraemon extends Character {
-   
+	
+private int character_size = 100;
+
    public Doraemon() {
       
       name = "Doraemon";
@@ -107,7 +109,7 @@ public class Doraemon extends Character {
       motions = new HashMap<>();
       BufferedImage[] tempArr = new BufferedImage[8];
       for (int i = 0; i < 8; i++) {
-         tempArr[i] = resizeImage(sprite.getSubimage(i * 32, 144, 32, 48), 75, 75, true);
+         tempArr[i] = resizeImage(sprite.getSubimage(i * 32, 144, 32, 48), character_size, character_size, true);
       }
       motions.put("IDLE", tempArr.clone());
       
@@ -115,26 +117,26 @@ public class Doraemon extends Character {
       
       tempArr = new BufferedImage[8];
       for (int i = 0; i < 8; i++) {
-         tempArr[i] = resizeImage(sprite.getSubimage(i * 32, 192, 32, 48), 75, 75, true);
+         tempArr[i] = resizeImage(sprite.getSubimage(i * 32, 192, 32, 48), character_size, character_size, true);
       }
       motions.put("DEAD", null);
       motions.put("GUARD", null);
       
       tempArr = new BufferedImage[3];
       for (int i = 0; i < 3; i++) {
-         tempArr[i] = resizeImage(sprite.getSubimage(i * 32, 48, 32, 48), 75, 75, true);
+         tempArr[i] = resizeImage(sprite.getSubimage(i * 32, 48, 32, 48), character_size, character_size, true);
       }
       motions.put("Move Up", tempArr.clone());
       
       tempArr = new BufferedImage[3];
       for (int i = 0; i < 3; i++) {
-         tempArr[i] = resizeImage(sprite.getSubimage(i * 32, 0, 32, 48), 75, 75, true);
+         tempArr[i] = resizeImage(sprite.getSubimage(i * 32, 0, 32, 48), character_size, character_size, true);
       }
       motions.put("Move Down", tempArr.clone());
       
       tempArr = new BufferedImage[3];
       for (int i = 0; i < 3; i++) {
-         tempArr[i] = resizeImage(sprite.getSubimage(i * 32, 96, 32, 48), 75, 75, true);
+         tempArr[i] = resizeImage(sprite.getSubimage(i * 32, 96, 32, 48), character_size, character_size, true);
       }
       motions.put("Move Left", tempArr.clone());
       
@@ -145,13 +147,13 @@ public class Doraemon extends Character {
       
       tempArr = new BufferedImage[3];
       for (int i = 0; i < 3; i++) {
-         tempArr[i] = resizeImage(sprite.getSubimage(i * 32, 656, 32, 48), 75, 75, true);
+         tempArr[i] = resizeImage(sprite.getSubimage(i * 32, 656, 32, 48), character_size, character_size, true);
       }
       motions.put("Skill1", tempArr.clone());
       
       tempArr = new BufferedImage[8];
       for (int i = 0; i < 8; i++) {
-         tempArr[i] = resizeImage(sprite.getSubimage(i * 48, 592, 48, 64), 75, 75, true);
+         tempArr[i] = resizeImage(sprite.getSubimage(i * 48, 592, 48, 64), character_size, character_size, true);
       }
       motions.put("Skill2", tempArr.clone());
    }
