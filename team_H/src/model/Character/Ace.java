@@ -22,7 +22,6 @@ public class Ace extends Character {
 	
     public Ace() {
     	
-        super();
         this.name = "Ace";
         this.maxHealth = 100;
         

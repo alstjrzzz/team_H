@@ -402,13 +402,17 @@ public class GameController {
 				// GameState 업데이트
 				if (character == gameState.getMyCharacter()) {
 					int[] newPosition = gameState.getMyPosition().clone();
-					newPosition[0] += card.getRange().get(0)[0];
-					newPosition[1] += card.getRange().get(0)[1];
+					if (newPosition[0] + card.getRange().get(0)[0] >= 0 && newPosition[0] + card.getRange().get(0)[0] <= 5)
+						newPosition[0] += card.getRange().get(0)[0];
+					if (newPosition[1] + card.getRange().get(0)[1] >= 0 && newPosition[1] + card.getRange().get(0)[1] <= 2)
+						newPosition[1] += card.getRange().get(0)[1];
 					gameState.setMyPosition(newPosition.clone());
 				} else {
 					int[] newPosition = gameState.getEnemyPosition().clone();
-					newPosition[0] += card.getRange().get(0)[0];
-					newPosition[1] += card.getRange().get(0)[1];
+					if (newPosition[0] + card.getRange().get(0)[0] >= 0 && newPosition[0] + card.getRange().get(0)[0] <= 5)
+						newPosition[0] += card.getRange().get(0)[0];
+					if (newPosition[1] + card.getRange().get(0)[1] >= 0 && newPosition[1] + card.getRange().get(0)[1] <= 2)
+						newPosition[1] += card.getRange().get(0)[1];
 					gameState.setEnemyPosition(newPosition.clone());
 				}
 				

@@ -27,6 +27,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.SwingConstants;
 import javax.imageio.ImageIO;
 
@@ -105,11 +106,52 @@ public class SelectCardScreen extends JPanel {
    
    // 상단에 위치한 가로100% 세로10% 비율의 상태칸
    public void drawHealthPanel() {
-      
-      healthPanel.setBackground(Color.cyan);
-      healthPanel.add(new JLabel("<player1 health bar>  <turn>  <player1 health bar>"));
-      healthPanel.setPreferredSize(new Dimension((int)gameState.getDimension().getWidth()
-            , (int)(gameState.getDimension().getHeight() * 1 / 10)));
+       healthPanel.setLayout(null);
+       healthPanel.setPreferredSize(new Dimension(0, 70)); // 고정 높이를 늘림
+       healthPanel.setOpaque(true);
+       healthPanel.setBackground(new Color(236, 237, 215)); 
+       healthPanel.setBorder(BorderFactory.createMatteBorder(4, 4, 0, 4, new Color(85, 0, 0))); // 하단과 오른쪽 테두리 추가
+       
+       int panelWidth = 950; // 패널의 예상 너비를 설정
+       int panelHeight = 50;
+
+       // Player 1의 캐릭터 로고
+       JLabel player1Logo = new JLabel(new ImageIcon(gameState.getMyCharacter().getLogo()));
+       player1Logo.setBounds(30, 10, panelHeight, panelHeight);
+       healthPanel.add(player1Logo);
+
+       // Player 1의 체력바
+       JProgressBar player1HealthBar = new JProgressBar(0, gameState.getMyCharacter().getMaxHealth());
+       player1HealthBar.setValue(gameState.getMyHealth());
+       player1HealthBar.setBounds(90, 10, panelWidth / 2 - 100, 30);
+       player1HealthBar.setForeground(Color.RED);
+       healthPanel.add(player1HealthBar);
+
+       // Player 1의 이름
+       JLabel player1NameLabel = new JLabel(gameState.getMyCharacter().getName());
+       player1NameLabel.setBounds(90, 40, panelWidth / 2 - 100, 20);
+       player1NameLabel.setHorizontalAlignment(SwingConstants.LEFT);
+       player1NameLabel.setForeground(Color.black); // 검정 글씨로 이름 표시
+       healthPanel.add(player1NameLabel);
+
+       // Player 2의 캐릭터 로고
+       JLabel player2Logo = new JLabel(new ImageIcon(gameState.getEnemyCharacter().getLogo()));
+       player2Logo.setBounds(panelWidth - panelHeight - 10, 10, panelHeight, panelHeight);
+       healthPanel.add(player2Logo);
+
+       // Player 2의 체력바
+       JProgressBar player2HealthBar = new JProgressBar(0, gameState.getEnemyCharacter().getMaxHealth());
+       player2HealthBar.setValue(gameState.getEnemyHealth());
+       player2HealthBar.setBounds(panelWidth / 2 + 20, 10, panelWidth / 2 - 100, 30);
+       player2HealthBar.setForeground(Color.RED);
+       healthPanel.add(player2HealthBar);
+
+       // Player 2의 이름
+       JLabel player2NameLabel = new JLabel(gameState.getEnemyCharacter().getName());
+       player2NameLabel.setBounds(panelWidth / 2 + 20, 40, panelWidth / 2 - 100, 20);
+       player2NameLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+       player2NameLabel.setForeground(Color.black); // 검정 글씨로 이름 표시
+       healthPanel.add(player2NameLabel);
    }
    
    
@@ -128,25 +170,25 @@ public class SelectCardScreen extends JPanel {
    // 중앙에 위치한 가로100% 세로 60% 비율의 카드 선택 칸
    public void drawSelectCardPanel() {
        JPanel backgroundPanel = new JPanel() {
-    	   @Override
-    	   protected void paintComponent(Graphics g) {
-    	       super.paintComponent(g);
-    	       if (backgroundImage != null) {
-    	           int panelWidth = getWidth();
-    	           int panelHeight = getHeight();
+          @Override
+          protected void paintComponent(Graphics g) {
+              super.paintComponent(g);
+              if (backgroundImage != null) {
+                  int panelWidth = getWidth();
+                  int panelHeight = getHeight();
 
-    	           // 이미지 반복을 위한 Y 좌표 계산
-    	           int currentY = backgroundY % panelHeight; // 패널 높이로 나눈 나머지
+                  // 이미지 반복을 위한 Y 좌표 계산
+                  int currentY = backgroundY % panelHeight; // 패널 높이로 나눈 나머지
 
-    	           if (currentY > 0) {
-    	               currentY -= panelHeight; // 자연스럽게 이어지도록 조정
-    	           }
+                  if (currentY > 0) {
+                      currentY -= panelHeight; // 자연스럽게 이어지도록 조정
+                  }
 
-    	           // 이미지를 두 번 그려서 끊김 없는 반복
-    	           g.drawImage(backgroundImage, 0, currentY, panelWidth, panelHeight, this);
-    	           g.drawImage(backgroundImage, 0, currentY + panelHeight, panelWidth, panelHeight, this);
-    	       }
-    	   }
+                  // 이미지를 두 번 그려서 끊김 없는 반복
+                  g.drawImage(backgroundImage, 0, currentY, panelWidth, panelHeight, this);
+                  g.drawImage(backgroundImage, 0, currentY + panelHeight, panelWidth, panelHeight, this);
+              }
+          }
        };
        
        backgroundPanel.setLayout(new BorderLayout());
@@ -292,7 +334,7 @@ public class SelectCardScreen extends JPanel {
            // 슬롯 클릭 이벤트
            slotButton.addActionListener(e -> {
                if (slotCards[index] != null) {
-            	   // 슬롯에서 카드 제거
+                  // 슬롯에서 카드 제거
                    Card removedCard = slotCards[index];
                    // 슬롯에 카드가 있으면 삭제
                    System.out.println("슬롯 " + (index + 1) + "에서 카드 삭제됨");

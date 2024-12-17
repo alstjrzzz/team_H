@@ -20,13 +20,27 @@ import model.Card;
 public class SuperMan extends Character {
 	
 	
-    public SuperMan() {
-    	
-        super();
-        this.name = "SuperMan";
-        this.maxHealth = 100;
-        
-    }
+	public SuperMan() {
+	       
+	       name = "SuperMan";
+	        maxHealth = 100;
+	        try {
+	           sprite = ImageIO.read(new File("res/character/SuperMan.png"));
+	           if (sprite == null) {
+	                System.err.println("sprite가 초기화되지 않았습니다. initCardMotions를 실행할 수 없습니다.");
+	                return;
+	            }
+	           
+	           // skillEffect = ImageIO.read(new File(""));
+	           logo = ImageIO.read(new File("res/character/superMan_logo.png"));
+	        } catch (IOException e) {
+	           e.printStackTrace();
+	        }
+	        
+	        initCardImage();
+	        initMotions();
+	        
+	    }
     
     
     

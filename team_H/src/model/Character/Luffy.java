@@ -22,7 +22,6 @@ public class Luffy extends Character {
 	
     public Luffy() {
     	
-        super();
         this.name = "Luffy";
         this.maxHealth = 100;
         
