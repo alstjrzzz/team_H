@@ -14,6 +14,8 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -486,49 +488,64 @@ public class SelectCardScreen extends JPanel {
    
    // 우측하단에 위치한 가로40% 세로30% 비율의 선택된 카드 보여주는칸
    public void drawSelectedCardPanel() {
-      
-      selectedCardPanel.setBackground(new Color(236, 237, 215));
-      selectedCardPanel.setBorder(BorderFactory.createMatteBorder(0, 0, 4, 4, new Color(85, 0, 0))); // 하단과 오른쪽 테두리 추가
-      selectedCardPanel.add(new JLabel("<selected card 1, 2, 3>"));
-      selectedCardPanel.setPreferredSize(new Dimension((int)(gameState.getDimension().getWidth() * 4 / 10)
-                                          , (int)(gameState.getDimension().getHeight() * 3 / 10)));
-      
-      
-      selectedCardPanel.setLayout(null);
+       selectedCardPanel.setBackground(new Color(236, 237, 215));
+       selectedCardPanel.setBorder(BorderFactory.createMatteBorder(0, 0, 4, 4, new Color(85, 0, 0))); // 테두리 추가
+       selectedCardPanel.setPreferredSize(new Dimension(
+               (int) (gameState.getDimension().getWidth() * 4 / 10),
+               (int) (gameState.getDimension().getHeight() * 3 / 10))
+       );
 
-      int width = selectedCardPanel.getWidth();
-      int height = selectedCardPanel.getHeight();
-      
-       int buttonWidth = 40;
-       int buttonHeight = 100;
-       int gap = 20;
-       
-       
-       for (int i = 0; i < 3; i++) {
-          
-          final int index = i;
-          JButton selectedCardButton;
-          
-          if (selectedCardList.get(i) == null) {
-             selectedCardButton = new JButton("null");
-             selectedCardButton.setEnabled(false);
-          } else {
-             selectedCardButton = new JButton(selectedCardList.get(i).getName());
-             selectedCardButton.setBounds((int) (width * 0.1) + i * (buttonWidth + gap), (int) (height * 0.1), buttonWidth, buttonHeight);
-             selectedCardButton.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        selectedCardList.set(index, null);
-                        revalidate();
-                        repaint();
-                    }
-                });
-          }
-          selectedCardPanel.add(selectedCardButton);
+       // 격자와 이미지 패널
+       int cellSize = 50; // 각 셀의 크기
+       int rows = 3;
+       int cols = 6;
+
+       // 그리드 패널 생성 (GridLayout 사용)
+       JPanel gridPanel = new JPanel(new GridLayout(rows, cols)) {
+           @Override
+           public Dimension getPreferredSize() {
+               return new Dimension(cols * cellSize, rows * cellSize);
+           }
+       };
+       gridPanel.setBackground(Color.BLACK); // 격자 배경색
+
+       // 빈 셀들을 그리드에 추가
+       JLabel[][] cells = new JLabel[rows][cols];
+       for (int row = 0; row < rows; row++) {
+           for (int col = 0; col < cols; col++) {
+               cells[row][col] = new JLabel();
+               cells[row][col].setOpaque(true);
+               cells[row][col].setBackground(new Color(255, 255, 255)); // 셀 배경색
+               cells[row][col].setBorder(BorderFactory.createLineBorder(Color.BLACK)); // 셀 테두리 추가
+               gridPanel.add(cells[row][col]);
+           }
        }
-       revalidate();
-        repaint();
+
+       // 이미지 크기 조절
+       Image myLogo = gameState.getMyCharacter().getLogo()
+               .getScaledInstance(cellSize, cellSize, Image.SCALE_SMOOTH);
+       Image enemyLogo = gameState.getEnemyCharacter().getLogo()
+               .getScaledInstance(cellSize, cellSize, Image.SCALE_SMOOTH);
+
+       // 위치에 이미지 배치
+       int myX = gameState.getMyPosition()[0];
+       int myY = gameState.getMyPosition()[1];
+
+       int enemyX = gameState.getEnemyPosition()[0];
+       int enemyY = gameState.getEnemyPosition()[1];
+
+       cells[myY][myX].setIcon(new ImageIcon(myLogo)); // MyCharacter 이미지 추가
+       cells[enemyY][enemyX].setIcon(new ImageIcon(enemyLogo)); // EnemyCharacter 이미지 추가
+
+       // 중앙에 그리드 패널 배치
+       selectedCardPanel.setLayout(new GridBagLayout());
+       selectedCardPanel.add(gridPanel);
    }
+
+
+
+
+
    
    
 }

@@ -138,6 +138,16 @@ public class GameController {
         startGame();
     }
 	public void showSelectCharacterScreen() {
+		if (gameState.getMyPosition() == null) {
+			if (gameState.getClientNumber() == 1) {
+				gameState.setMyPosition(new int[] {0, 1});
+				gameState.setEnemyPosition(new int[] {5, 1});
+			}
+			else {
+				gameState.setMyPosition(new int[] {5, 1});
+				gameState.setEnemyPosition(new int[] {0, 1});
+			}
+		}
 		System.out.println("Show SelectCharacterScreen");
 		mainFrame.setScreen(new SelectCharacterScreen(gameState, this, networkManager));
 		
@@ -288,17 +298,6 @@ public class GameController {
 	
 	// 전투 로직
 	private void fight() {
-		
-		if (gameState.getMyPosition() == null) {
-			if (gameState.getClientNumber() == 1) {
-				gameState.setMyPosition(new int[] {0, 1});
-				gameState.setEnemyPosition(new int[] {5, 1});
-			}
-			else {
-				gameState.setMyPosition(new int[] {5, 1});
-				gameState.setEnemyPosition(new int[] {0, 1});
-			}
-		}
 		
 		showPlayingGameScreen();
 		
