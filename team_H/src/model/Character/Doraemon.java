@@ -34,7 +34,7 @@ public class Doraemon extends Character {
       }
       
       initCardImage();
-      
+      initMotions();
    }
 
    
@@ -95,11 +95,58 @@ public class Doraemon extends Character {
 
 	@Override
 	public void initMotions() {
-		// TODO Auto-generated method stub
 		
+		motions = new HashMap<>();
+		BufferedImage[] tempArr = new BufferedImage[8];
+		for (int i = 0; i < 8; i++) {
+			tempArr[i] = sprite.getSubimage(i * 32, 144, 32, 48);
+		}
+		motions.put("IDLE", tempArr.clone());
+		
+		motions.put("HIT", null);
+		
+		tempArr = new BufferedImage[8];
+		for (int i = 0; i < 8; i++) {
+			tempArr[i] = sprite.getSubimage(i * 32, 192, 32, 48);
+		}
+		motions.put("DEAD", null);
+		motions.put("GUARD", null);
+		
+		tempArr = new BufferedImage[3];
+		for (int i = 0; i < 3; i++) {
+			tempArr[i] = sprite.getSubimage(i * 32, 48, 32, 48);
+		}
+		motions.put("Move Up", tempArr.clone());
+		
+		tempArr = new BufferedImage[3];
+		for (int i = 0; i < 3; i++) {
+			tempArr[i] = sprite.getSubimage(i * 32, 0, 32, 48);
+		}
+		motions.put("Move Down", tempArr.clone());
+		
+		tempArr = new BufferedImage[3];
+		for (int i = 0; i < 3; i++) {
+			tempArr[i] = sprite.getSubimage(i * 32, 96, 32, 48);
+		}
+		motions.put("Move Left", tempArr.clone());
+		
+		for (int i = 0; i < 3; i++) {
+			tempArr[i] = flipHorizontally(tempArr[i]);
+		}
+		motions.put("Move Right", tempArr.clone());
+		
+		tempArr = new BufferedImage[3];
+		for (int i = 0; i < 3; i++) {
+			tempArr[i] = sprite.getSubimage(i * 32, 656, 32, 48);
+		}
+		motions.put("Skill1", tempArr.clone());
+		
+		tempArr = new BufferedImage[8];
+		for (int i = 0; i < 8; i++) {
+			tempArr[i] = sprite.getSubimage(i * 48, 592, 48, 64);
+		}
+		motions.put("Skill2", tempArr.clone());
 	}
-
-   
    
    
 }

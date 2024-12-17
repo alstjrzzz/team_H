@@ -22,8 +22,8 @@ public class Finn extends Character {
 	
     public Finn() {
     	
-        this.name = "Finn";
-        this.maxHealth = 100;
+        name = "Finn";
+        maxHealth = 100;
         
         try {
             sprite = ImageIO.read(new File("res/character/Finn.png"));
@@ -97,36 +97,49 @@ public class Finn extends Character {
 	public void initMotions() {
 		
 		motions = new HashMap<>();
+		BufferedImage[] tempArr = new BufferedImage[12];
+		for (int i = 0; i < 12; i++) {
+			tempArr[i] = sprite.getSubimage(i * 48, 16, 48, 48);
+		}
+		motions.put("IDLE", tempArr.clone());
 		
-		motions.put("IDLE", null);
 		motions.put("HIT", null);
+		
+		tempArr = new BufferedImage[20];
+		for (int i = 0; i < 20; i++) {
+			tempArr[i] = sprite.getSubimage(i * 64, 2016, 64, 48);
+		}
 		motions.put("DEAD", null);
 		motions.put("GUARD", null);
 		
-		BufferedImage[] tempArr = new BufferedImage[12];
-		for (int i = 0; i < 12; i++) {
-			tempArr[i] = sprite.getSubimage(i * 54, 1438, 54, 54);
+		tempArr = new BufferedImage[14];
+		for (int i = 0; i < 14; i++) {
+			tempArr[i] = sprite.getSubimage(i * 48, 1440, 48, 48);
 		}
 		motions.put("Move Up", tempArr.clone());
 		
-		tempArr = new BufferedImage[13];
-		for (int i = 0; i < 13; i++) {
-			tempArr[i] = sprite.getSubimage(i * 65, 1577, 65, 65);
+		tempArr = new BufferedImage[10];
+		for (int i = 0; i < 10; i++) {
+			tempArr[i] = sprite.getSubimage(i * 48, 1568, 48, 48);
 		}
 		motions.put("Move Down", tempArr.clone());
 		
 		tempArr = new BufferedImage[12];
 		for (int i = 0; i < 12; i++) {
-			tempArr[i] = sprite.getSubimage(i * 53, 720, 53, 53);
+			tempArr[i] = sprite.getSubimage(i * 48, 848, 48, 48);
 		}
-		motions.put("Move Left", tempArr.clone());
+		motions.put("Move Right", tempArr.clone());
 		
 		for (int i = 0; i < 12; i++) {
 			tempArr[i] = flipHorizontally(tempArr[i]);
 		}
-		motions.put("Move Right", tempArr.clone());
+		motions.put("Move Left", tempArr.clone());
 		
-		motions.put("Skill1", null);
+		tempArr = new BufferedImage[19];
+		for (int i = 0; i < 19; i++) {
+			tempArr[i] = sprite.getSubimage(i * 176, 3663, 176, 65);
+		}
+		motions.put("Skill1", tempArr.clone());
 		motions.put("Skill2", null);
 	}
 
