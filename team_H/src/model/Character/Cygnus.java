@@ -129,7 +129,7 @@ public class Cygnus extends Character {
        for (int i = 0; i < 8; i++) {
           tempArr[i] = resizeImage(sprite.getSubimage(i * 85, 131,85,118), 90, 90, true);
        }
-       motions.put("Move left", tempArr.clone());
+       motions.put("Move Left", tempArr.clone());
        
        for (int i = 0; i < 8; i++) {
           tempArr[i] = flipHorizontally(tempArr[i]);

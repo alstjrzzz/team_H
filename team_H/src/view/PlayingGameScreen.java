@@ -99,7 +99,6 @@ public class PlayingGameScreen extends JPanel {
     
     // drawMotion에서는 타이머를 이용해 repaint()를 호출하고, paintComponent에서는 그리는 동작만 수행합니다!!
     public void drawMotion() {
-    	
     	if (myMotionTimer != null && myMotionTimer.isRunning()) {
     	    myMotionTimer.stop();
     	}
