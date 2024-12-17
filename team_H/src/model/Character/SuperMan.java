@@ -77,4 +77,12 @@ public class SuperMan extends Character {
         }
     }
 
+
+
+	@Override
+	public void initMotions() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

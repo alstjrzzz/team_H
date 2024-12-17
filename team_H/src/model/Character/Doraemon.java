@@ -34,7 +34,7 @@ public class Doraemon extends Character {
       }
       
       initCardImage();
-      
+      initMotions();
    }
 
    
@@ -91,24 +91,62 @@ public class Doraemon extends Character {
         }
    }
 
+
+
+	@Override
+	public void initMotions() {
+		
+		motions = new HashMap<>();
+		BufferedImage[] tempArr = new BufferedImage[8];
+		for (int i = 0; i < 8; i++) {
+			tempArr[i] = sprite.getSubimage(i * 32, 144, 32, 48);
+		}
+		motions.put("IDLE", tempArr.clone());
+		
+		motions.put("HIT", null);
+		
+		tempArr = new BufferedImage[8];
+		for (int i = 0; i < 8; i++) {
+			tempArr[i] = sprite.getSubimage(i * 32, 192, 32, 48);
+		}
+		motions.put("DEAD", null);
+		motions.put("GUARD", null);
+		
+		tempArr = new BufferedImage[3];
+		for (int i = 0; i < 3; i++) {
+			tempArr[i] = sprite.getSubimage(i * 32, 48, 32, 48);
+		}
+		motions.put("Move Up", tempArr.clone());
+		
+		tempArr = new BufferedImage[3];
+		for (int i = 0; i < 3; i++) {
+			tempArr[i] = sprite.getSubimage(i * 32, 0, 32, 48);
+		}
+		motions.put("Move Down", tempArr.clone());
+		
+		tempArr = new BufferedImage[3];
+		for (int i = 0; i < 3; i++) {
+			tempArr[i] = sprite.getSubimage(i * 32, 96, 32, 48);
+		}
+		motions.put("Move Left", tempArr.clone());
+		
+		for (int i = 0; i < 3; i++) {
+			tempArr[i] = flipHorizontally(tempArr[i]);
+		}
+		motions.put("Move Right", tempArr.clone());
+		
+		tempArr = new BufferedImage[3];
+		for (int i = 0; i < 3; i++) {
+			tempArr[i] = sprite.getSubimage(i * 32, 656, 32, 48);
+		}
+		motions.put("Skill1", tempArr.clone());
+		
+		tempArr = new BufferedImage[8];
+		for (int i = 0; i < 8; i++) {
+			tempArr[i] = sprite.getSubimage(i * 48, 592, 48, 64);
+		}
+		motions.put("Skill2", tempArr.clone());
+	}
    
    
-   // BufferedImage를 수평으로 뒤집는 메서드
-    public static BufferedImage flipHorizontally(BufferedImage image) {
-        // 뒤집힌 이미지를 담을 새로운 BufferedImage 생성
-        BufferedImage flippedImage = new BufferedImage(image.getWidth(), image.getHeight(), image.getType());
-        
-        // Graphics2D 객체 생성
-        Graphics2D g2d = flippedImage.createGraphics();
-        
-        // AffineTransform을 사용해 수평으로 이미지를 뒤집기
-        AffineTransform transform = AffineTransform.getScaleInstance(-1, 1); // 수평 뒤집기
-        transform.translate(-image.getWidth(), 0); // 원래 이미지의 위치로 이동시킴
-        
-        // 뒤집힌 이미지를 그리기
-        g2d.drawImage(image, transform, null);
-        g2d.dispose();
-        
-        return flippedImage; // 뒤집힌 이미지 반환
-    }
 }
