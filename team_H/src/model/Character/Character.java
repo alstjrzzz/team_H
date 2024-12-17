@@ -117,7 +117,19 @@ public abstract class Character {
    }
 
 
-   public void setCurrentMotion(String motion) {
+   public BufferedImage getSprite() {
+	return sprite;
+}
+
+
+
+public BufferedImage getSkillEffect() {
+	return skillEffect;
+}
+
+
+
+public void setCurrentMotion(String motion) {
       
       switch (motion) {
       case "IDLE":

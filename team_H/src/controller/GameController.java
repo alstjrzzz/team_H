@@ -375,7 +375,7 @@ public class GameController {
 				else System.out.println("null 아닌디");
 				character.setCurrentCard(card);
 				System.out.println("playing game screen repaint start 1");
-				playingGameScreen.repaint();
+				playingGameScreen.drawMotion();
 				
 				// Timer 대신 CountDownLatch로 대기 구현
 	            CountDownLatch latch = new CountDownLatch(1);
@@ -418,13 +418,13 @@ public class GameController {
 				// 기본 자세로 변경
 				character.setCurrentMotion("IDLE");
 				character.setCurrentCard(card);
-				playingGameScreen.repaint();
+				playingGameScreen.drawMotion();
 				System.out.println("playing game screen repaint start 2");
 				break;
 			case "ATTACK":
 				character.setCurrentMotion("ATTACK");
 				character.setCurrentCard(card);
-				playingGameScreen.repaint();
+				playingGameScreen.drawMotion();
 				
 				// 모션 끝날 때까지 대기
 				Timer timer = new Timer(5000, e -> {
@@ -449,7 +449,7 @@ public class GameController {
 							gameState.setEnemyHealth(gameState.getEnemyHealth() - card.getValue());
 							character.setCurrentMotion("IDLE");
 							gameState.getEnemyCharacter().setCurrentMotion("HIT");
-							playingGameScreen.repaint();
+							playingGameScreen.drawMotion();
 							
 							// 모션 끝날 때까지 대기
 							timer = new Timer(5000, e -> {
@@ -461,7 +461,7 @@ public class GameController {
 					}
 					gameState.getEnemyCharacter().setCurrentMotion("IDLE");
 					character.setCurrentCard(card);
-					playingGameScreen.repaint();
+					playingGameScreen.drawMotion();
 				} else {
 					
 					for (int i = 0; i < card.getRange().size(); i++) {
@@ -478,7 +478,7 @@ public class GameController {
 							gameState.setMyHealth(gameState.getMyHealth() - card.getValue());
 							character.setCurrentMotion("IDLE");
 							gameState.getMyCharacter().setCurrentMotion("HIT");
-							playingGameScreen.repaint();
+							playingGameScreen.drawMotion();
 							
 							// 모션 끝날 때까지 대기
 							timer = new Timer(5000, e -> {
@@ -490,7 +490,7 @@ public class GameController {
 					}
 					gameState.getMyCharacter().setCurrentMotion("IDLE");
 					character.setCurrentCard(card);
-					playingGameScreen.repaint();
+					playingGameScreen.drawMotion();
 				}
 				break;
 			case "GUARD":
