@@ -77,4 +77,12 @@ public class Ace extends Character {
         }
     }
 
+
+
+	@Override
+	public void initMotions() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

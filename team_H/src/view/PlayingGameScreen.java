@@ -34,11 +34,20 @@ public class PlayingGameScreen extends JPanel {
     public final static int gridClient2X = 80; // Client2(오른쪽) 수정필요
     public final static int gridClient2Y = 0;
 
-    int currentX = 100;
-    int currentY = 100;
-    Character currentCharacter;
-    LinkedList<BufferedImage> motions;
-    int currentFrame = 0;
+    Character myCharacter;
+    Character enemyCharacter;
+    
+    BufferedImage[] myMotions;
+    int myCurrentFrame;
+    int myFrameDelay;
+    int myDuration;
+    Timer myMotionTimer;
+    
+    BufferedImage[] enemyMotions;
+    int enemyCurrentFrame;
+    int enemyFrameDelay;
+    int enemyDuration;
+    Timer enemyMotionTimer;
     
     private JPanel healthPanel;
     private JPanel fieldPanel;
@@ -83,238 +92,22 @@ public class PlayingGameScreen extends JPanel {
     public void drawMotion() {
     	
     	// 내 캐릭터 그리기
-    	currentCharacter = gameState.getMyCharacter();
+    	myCharacter = gameState.getMyCharacter();
     	if (gameState.getClientNumber() == 1) {
-    		currentX = 100;
-    		currentY = 100;
+    		myCharacter.setCurrentX(100);
+    		myCharacter.setCurrentY(100);
     	} else {
-    		currentX = 600;
-    		currentY = 100;
+    		myCharacter.setCurrentX(500);
+    		myCharacter.setCurrentY(100);
     	}
-    	// 이 주석 지우면 ㅈ버그나는데 왜 그런지는 모르겠음 ㅅㅂ)
-		switch (currentCharacter.getName()) {
+    	// 이 주석 지우면 ㅈ버그나는데 왜 그런지는 모르겠음 ㅅㅂ
+		switch (myCharacter.getName()) {
         
         // SuperMan ------------------------------------------------------------
         case "SuperMan":
-        	switch (currentCharacter.getCurrentMotion()) {
-        	case MOVE:
-        		
-        		break;
-        	case ATTACK:
-        		
-        		break;
-        	case GUARD:
-        		
-        		break;
-        	case HIT:
-        		
-        		break;
-        	case DEAD:
-        		
-        		break;
-        	}
-        	
-        	break;
-        	
-        // Doraemon ------------------------------------------------------------	
-        case "Doraemon":
-        	switch (currentCharacter.getCurrentMotion()) {
-        	case MOVE:
-        		
-        		break;
-        	case ATTACK:
-        		
-        		break;
-        	case GUARD:
-        		
-        		break;
-        	case HIT:
-        		
-        		break;
-        	case DEAD:
-        		
-        		break;
-        	}
-        	
-        	break;
-        	
-        // Zoro ------------------------------------------------------------		
-        case "Zoro":
-        	switch (currentCharacter.getCurrentMotion()) {
-        	case MOVE:
-        		
-        		break;
-        	case ATTACK:
-        		
-        		break;
-        	case GUARD:
-        		
-        		break;
-        	case HIT:
-        		
-        		break;
-        	case DEAD:
-        		
-        		break;
-        	}
-        	
-        	break;
-        	
-        // Cygnus ------------------------------------------------------------	
-        case "Cygnus":
-        	switch (currentCharacter.getCurrentMotion()) {
-        	case MOVE:
-        		
-        		break;
-        	case ATTACK:
-        		
-        		break;
-        	case GUARD:
-        		
-        		break;
-        	case HIT:
-        		
-        		break;
-        	case DEAD:
-        		
-        		break;
-        	}
-        	
-        	break;
-        	
-        // Ace ------------------------------------------------------------	
-        case "Ace":
-        	switch (currentCharacter.getCurrentMotion()) {
-        	case MOVE:
-        		
-        		break;
-        	case ATTACK:
-        		
-        		break;
-        	case GUARD:
-        		
-        		break;
-        	case HIT:
-        		
-        		break;
-        	case DEAD:
-        		
-        		break;
-        	}
-        	
-        	break;
-        	
-        // Finn ------------------------------------------------------------	
-        case "Finn":
-        	switch (currentCharacter.getCurrentMotion()) {
-        	case MOVE:
-        		BufferedImage sprite = gameState.getMyCharacter().getSprite();
-        		motions = new LinkedList<>();
-        		for (int i = 0; i < 12; i++) {
-        			motions.add(sprite.getSubimage(i * 54, 1438, 54, 54));
-        		}
-        		
-        		int frameDelay = 100; // 각 프레임의 지속 시간 (100ms = 0.1초)
-        		int duration = 3000;
-        		Timer motionTimer = new Timer(frameDelay, null);
-        		
-        		motionTimer.addActionListener(e -> {
-        		    currentFrame = (currentFrame + 1) % motions.size(); // 프레임 순환
-        		    repaint(); // 화면 갱신
-        		});
-
-        		// 전체 지속 시간이 지난 후 타이머를 멈추도록 설정
-        		new Timer(duration, e -> {
-        		    motionTimer.stop(); // 모션 타이머 중지
-        		    ((Timer) e.getSource()).stop(); // 지속 시간 타이머도 중지
-        		}).start();
-
-        		motionTimer.start(); // 모션 타이머 시작
-                
-        		break;
-        	case ATTACK:
-        		
-        		break;
-        	case GUARD:
-        		
-        		break;
-        	case HIT:
-        		
-        		break;
-        	case DEAD:
-        		
-        		break;
-        	}
-        	
-        	break;
-        	
-        // Luffy ------------------------------------------------------------	
-        case "Luffy":
-        	switch (currentCharacter.getCurrentMotion()) {
-        	case MOVE:
-        		
-        		break;
-        	case ATTACK:
-        		
-        		break;
-        	case GUARD:
-        		
-        		break;
-        	case HIT:
-        		
-        		break;
-        	case DEAD:
-        		
-        		break;
-        	}
-        	
-        	break;
-        	
-        default:
-        	System.out.println("엄준식");
-        	break;
-		}
-        
-        
-        // 상대 캐릭터 그리기
-        currentCharacter = gameState.getEnemyCharacter();
-        if (gameState.getClientNumber() == 1) {
-    		currentX = 600;
-    		currentY = 100;
-    	} else {
-    		currentX = 100;
-    		currentY = 100;
-    	}
-        
-        switch (currentCharacter.getName()) {
-        
-        // SuperMan ------------------------------------------------------------
-        case "SuperMan":
-        	switch (currentCharacter.getCurrentMotion()) {
-        	case MOVE:
-        		
-        		break;
-        	case ATTACK:
-        		
-        		break;
-        	case GUARD:
-        		
-        		break;
-        	case HIT:
-        		
-        		break;
-        	case DEAD:
-        		
-        		break;
-        	}
-        	
-        	break;
-        	
-        // Doraemon ------------------------------------------------------------	
-        case "Doraemon":
-        	switch (currentCharacter.getCurrentMotion()) {
-        	case MOVE:
-        		switch (currentCharacter.getCurrentCard().getName()) {
+        	switch (myCharacter.getCurrentMotion()) {
+        	case "MOVE":
+        		switch (myCharacter.getCurrentCard().getName()) {
         		case "Move Up":
         			
         			break;
@@ -329,16 +122,49 @@ public class PlayingGameScreen extends JPanel {
         			break;
         		}
         		break;
-        	case ATTACK:
+        	case "ATTACK":
+        		switch (myCharacter.getCurrentCard().getName()) {
+        		// ... skill들 넣으셈
+        		}
+        		break;
+        	case "HIT":
         		
         		break;
-        	case GUARD:
+        	case "DEAD":
         		
         		break;
-        	case HIT:
+        	}
+        	
+        	break;
+        	
+        // Doraemon ------------------------------------------------------------	
+        case "Doraemon":
+        	switch (myCharacter.getCurrentMotion()) {
+        	case "MOVE":
+        		switch (myCharacter.getCurrentCard().getName()) {
+        		case "Move Up":
+        			
+        			break;
+        		case "Move Down":
+        			
+        			break;
+        		case "Move Left":
+        			
+        			break;
+        		case "Move Right":
+        			
+        			break;
+        		}
+        		break;
+        	case "ATTACK":
+        		switch (myCharacter.getCurrentCard().getName()) {
+        		// ... skill들 넣으셈
+        		}
+        		break;
+        	case "HIT":
         		
         		break;
-        	case DEAD:
+        	case "DEAD":
         		
         		break;
         	}
@@ -347,20 +173,32 @@ public class PlayingGameScreen extends JPanel {
         	
         // Zoro ------------------------------------------------------------		
         case "Zoro":
-        	switch (currentCharacter.getCurrentMotion()) {
-        	case MOVE:
+        	switch (myCharacter.getCurrentMotion()) {
+        	case "MOVE":
+        		switch (myCharacter.getCurrentCard().getName()) {
+        		case "Move Up":
+        			
+        			break;
+        		case "Move Down":
+        			
+        			break;
+        		case "Move Left":
+        			
+        			break;
+        		case "Move Right":
+        			
+        			break;
+        		}
+        		break;
+        	case "ATTACK":
+        		switch (myCharacter.getCurrentCard().getName()) {
+        		// ... skill들 넣으셈
+        		}
+        		break;
+        	case "HIT":
         		
         		break;
-        	case ATTACK:
-        		
-        		break;
-        	case GUARD:
-        		
-        		break;
-        	case HIT:
-        		
-        		break;
-        	case DEAD:
+        	case "DEAD":
         		
         		break;
         	}
@@ -369,20 +207,32 @@ public class PlayingGameScreen extends JPanel {
         	
         // Cygnus ------------------------------------------------------------	
         case "Cygnus":
-        	switch (currentCharacter.getCurrentMotion()) {
-        	case MOVE:
+        	switch (myCharacter.getCurrentMotion()) {
+        	case "MOVE":
+        		switch (myCharacter.getCurrentCard().getName()) {
+        		case "Move Up":
+        			
+        			break;
+        		case "Move Down":
+        			
+        			break;
+        		case "Move Left":
+        			
+        			break;
+        		case "Move Right":
+        			
+        			break;
+        		}
+        		break;
+        	case "ATTACK":
+        		switch (myCharacter.getCurrentCard().getName()) {
+        		// ... skill들 넣으셈
+        		}
+        		break;
+        	case "HIT":
         		
         		break;
-        	case ATTACK:
-        		
-        		break;
-        	case GUARD:
-        		
-        		break;
-        	case HIT:
-        		
-        		break;
-        	case DEAD:
+        	case "DEAD":
         		
         		break;
         	}
@@ -391,20 +241,32 @@ public class PlayingGameScreen extends JPanel {
         	
         // Ace ------------------------------------------------------------	
         case "Ace":
-        	switch (currentCharacter.getCurrentMotion()) {
-        	case MOVE:
+        	switch (myCharacter.getCurrentMotion()) {
+        	case "MOVE":
+        		switch (myCharacter.getCurrentCard().getName()) {
+        		case "Move Up":
+        			
+        			break;
+        		case "Move Down":
+        			
+        			break;
+        		case "Move Left":
+        			
+        			break;
+        		case "Move Right":
+        			
+        			break;
+        		}
+        		break;
+        	case "ATTACK":
+        		switch (myCharacter.getCurrentCard().getName()) {
+        		// ... skill들 넣으셈
+        		}
+        		break;
+        	case "HIT":
         		
         		break;
-        	case ATTACK:
-        		
-        		break;
-        	case GUARD:
-        		
-        		break;
-        	case HIT:
-        		
-        		break;
-        	case DEAD:
+        	case "DEAD":
         		
         		break;
         	}
@@ -413,42 +275,104 @@ public class PlayingGameScreen extends JPanel {
         	
         // Finn ------------------------------------------------------------	
         case "Finn":
-        	switch (currentCharacter.getCurrentMotion()) {
-        	case MOVE:
-        		BufferedImage sprite = gameState.getMyCharacter().getSprite();
-        		motions = new LinkedList<>();
-        		for (int i = 0; i < 12; i++) {
-        			motions.add(sprite.getSubimage(i * 54, 1438, 54, 54));
+        	switch (myCharacter.getCurrentMotion()) {
+        	case "MOVE":
+        		switch (myCharacter.getCurrentCard().getName()) {
+        		case "Move Up":
+        			
+        			myMotions = myCharacter.getMotions().get(myCharacter.getCurrentCard().getName());
+        			myFrameDelay = 100;	// 각 프레임 간격
+        			myDuration = myFrameDelay * myMotions.length * 4;	// 해당 모션의 총 시간
+        			
+        			myCurrentFrame = 0;
+        			myMotionTimer = new Timer(myFrameDelay, null);
+        			myMotionTimer.addActionListener(e -> {
+        				myCurrentFrame = (myCurrentFrame + 1) % myMotions.length;
+        			    repaint();
+        			});
+        			
+        			new Timer(myDuration, e -> {
+        				myMotionTimer.stop();
+        			    ((Timer) e.getSource()).stop();
+        			}).start();
+        			
+        			myMotionTimer.start();
+        			
+        			break;
+        		case "Move Down":
+
+        			myMotions = myCharacter.getMotions().get(myCharacter.getCurrentCard().getName());
+        			myFrameDelay = 100;	// 각 프레임 간격
+        			myDuration = myFrameDelay * myMotions.length * 4;	// 해당 모션의 총 시간
+        			
+        			myCurrentFrame = 0;
+        			myMotionTimer = new Timer(myFrameDelay, null);
+        			myMotionTimer.addActionListener(e -> {
+        				myCurrentFrame = (myCurrentFrame + 1) % myMotions.length;
+        			    repaint();
+        			});
+        			
+        			new Timer(myDuration, e -> {
+        				myMotionTimer.stop();
+        			    ((Timer) e.getSource()).stop();
+        			}).start();
+        			
+        			myMotionTimer.start();
+        			
+        			break;
+        		case "Move Left":
+
+        			myMotions = myCharacter.getMotions().get(myCharacter.getCurrentCard().getName());
+        			myFrameDelay = 100;	// 각 프레임 간격
+        			myDuration = myFrameDelay * myMotions.length * 4;	// 해당 모션의 총 시간
+        			
+        			myCurrentFrame = 0;
+        			myMotionTimer = new Timer(myFrameDelay, null);
+        			myMotionTimer.addActionListener(e -> {
+        				myCurrentFrame = (myCurrentFrame + 1) % myMotions.length;
+        			    repaint();
+        			});
+        			
+        			new Timer(myDuration, e -> {
+        				myMotionTimer.stop();
+        			    ((Timer) e.getSource()).stop();
+        			}).start();
+        			
+        			myMotionTimer.start();
+        			
+        			break;
+        		case "Move Right":
+
+        			myMotions = myCharacter.getMotions().get(myCharacter.getCurrentCard().getName());
+        			myFrameDelay = 100;	// 각 프레임 간격
+        			myDuration = myFrameDelay * myMotions.length * 4;	// 해당 모션의 총 시간
+        			
+        			myCurrentFrame = 0;
+        			myMotionTimer = new Timer(myFrameDelay, null);
+        			myMotionTimer.addActionListener(e -> {
+        				myCurrentFrame = (myCurrentFrame + 1) % myMotions.length;
+        			    repaint();
+        			});
+        			
+        			new Timer(myDuration, e -> {
+        				myMotionTimer.stop();
+        			    ((Timer) e.getSource()).stop();
+        			}).start();
+        			
+        			myMotionTimer.start();
+        			
+        			break;
         		}
-        		
-        		int frameDelay = 100; // 각 프레임의 지속 시간 (100ms = 0.1초)
-        		int duration = 3000;
-        		Timer motionTimer = new Timer(frameDelay, null);
-        		
-        		motionTimer.addActionListener(e -> {
-        		    currentFrame = (currentFrame + 1) % motions.size(); // 프레임 순환
-        		    repaint(); // 화면 갱신
-        		});
-
-        		// 전체 지속 시간이 지난 후 타이머를 멈추도록 설정
-        		new Timer(duration, e -> {
-        		    motionTimer.stop(); // 모션 타이머 중지
-        		    ((Timer) e.getSource()).stop(); // 지속 시간 타이머도 중지
-        		}).start();
-
-        		motionTimer.start(); // 모션 타이머 시작
-                
         		break;
-        	case ATTACK:
+        	case "ATTACK":
+        		switch (myCharacter.getCurrentCard().getName()) {
+        		// ... skill들 넣으셈
+        		}
+        		break;
+        	case "HIT":
         		
         		break;
-        	case GUARD:
-        		
-        		break;
-        	case HIT:
-        		
-        		break;
-        	case DEAD:
+        	case "DEAD":
         		
         		break;
         	}
@@ -457,20 +381,363 @@ public class PlayingGameScreen extends JPanel {
         	
         // Luffy ------------------------------------------------------------	
         case "Luffy":
-        	switch (currentCharacter.getCurrentMotion()) {
-        	case MOVE:
+        	switch (myCharacter.getCurrentMotion()) {
+        	case "MOVE":
+        		switch (myCharacter.getCurrentCard().getName()) {
+        		case "Move Up":
+        			
+        			break;
+        		case "Move Down":
+        			
+        			break;
+        		case "Move Left":
+        			
+        			break;
+        		case "Move Right":
+        			
+        			break;
+        		}
+        		break;
+        	case "ATTACK":
+        		switch (myCharacter.getCurrentCard().getName()) {
+        		// ... skill들 넣으셈
+        		}
+        		break;
+        	case "HIT":
         		
         		break;
-        	case ATTACK:
+        	case "DEAD":
         		
         		break;
-        	case GUARD:
+        	}
+        	
+        	break;
+        	
+        default:
+        	System.out.println("엄준식");
+        	break;
+		}
+        
+		
+		
+		
+        
+        // 상대 캐릭터 그리기
+		enemyCharacter = gameState.getEnemyCharacter();
+    	if (gameState.getClientNumber() == 1) {
+    		enemyCharacter.setCurrentX(100);
+    		enemyCharacter.setCurrentY(100);
+    	} else {
+    		enemyCharacter.setCurrentX(500);
+    		enemyCharacter.setCurrentY(100);
+    	}
+        
+        switch (enemyCharacter.getName()) {
+        
+        // SuperMan ------------------------------------------------------------
+        case "SuperMan":
+        	switch (enemyCharacter.getCurrentMotion()) {
+        	case "MOVE":
+        		switch (enemyCharacter.getCurrentCard().getName()) {
+        		case "Move Up":
+        			
+        			break;
+        		case "Move Down":
+        			
+        			break;
+        		case "Move Left":
+        			
+        			break;
+        		case "Move Right":
+        			
+        			break;
+        		}
+        		break;
+        	case "ATTACK":
+        		switch (enemyCharacter.getCurrentCard().getName()) {
+        		// ... skill들 넣으셈
+        		}
+        		break;
+        	case "HIT":
         		
         		break;
-        	case HIT:
+        	case "DEAD":
         		
         		break;
-        	case DEAD:
+        	}
+        	
+        	break;
+        	
+        // Doraemon ------------------------------------------------------------	
+        case "Doraemon":
+        	switch (enemyCharacter.getCurrentMotion()) {
+        	case "MOVE":
+        		switch (enemyCharacter.getCurrentCard().getName()) {
+        		case "Move Up":
+        			
+        			break;
+        		case "Move Down":
+        			
+        			break;
+        		case "Move Left":
+        			
+        			break;
+        		case "Move Right":
+        			
+        			break;
+        		}
+        		break;
+        	case "ATTACK":
+        		switch (enemyCharacter.getCurrentCard().getName()) {
+        		// ... skill들 넣으셈
+        		}
+        		break;
+        	case "HIT":
+        		
+        		break;
+        	case "DEAD":
+        		
+        		break;
+        	}
+        	
+        	break;
+        	
+        // Zoro ------------------------------------------------------------		
+        case "Zoro":
+        	switch (enemyCharacter.getCurrentMotion()) {
+        	case "MOVE":
+        		switch (enemyCharacter.getCurrentCard().getName()) {
+        		case "Move Up":
+        			
+        			break;
+        		case "Move Down":
+        			
+        			break;
+        		case "Move Left":
+        			
+        			break;
+        		case "Move Right":
+        			
+        			break;
+        		}
+        		break;
+        	case "ATTACK":
+        		switch (enemyCharacter.getCurrentCard().getName()) {
+        		// ... skill들 넣으셈
+        		}
+        		break;
+        	case "HIT":
+        		
+        		break;
+        	case "DEAD":
+        		
+        		break;
+        	}
+        	
+        	break;
+        	
+        // Cygnus ------------------------------------------------------------	
+        case "Cygnus":
+        	switch (enemyCharacter.getCurrentMotion()) {
+        	case "MOVE":
+        		switch (enemyCharacter.getCurrentCard().getName()) {
+        		case "Move Up":
+        			
+        			break;
+        		case "Move Down":
+        			
+        			break;
+        		case "Move Left":
+        			
+        			break;
+        		case "Move Right":
+        			
+        			break;
+        		}
+        		break;
+        	case "ATTACK":
+        		switch (enemyCharacter.getCurrentCard().getName()) {
+        		// ... skill들 넣으셈
+        		}
+        		break;
+        	case "HIT":
+        		
+        		break;
+        	case "DEAD":
+        		
+        		break;
+        	}
+        	
+        	break;
+        	
+        // Ace ------------------------------------------------------------	
+        case "Ace":
+        	switch (enemyCharacter.getCurrentMotion()) {
+        	case "MOVE":
+        		switch (enemyCharacter.getCurrentCard().getName()) {
+        		case "Move Up":
+        			
+        			break;
+        		case "Move Down":
+        			
+        			break;
+        		case "Move Left":
+        			
+        			break;
+        		case "Move Right":
+        			
+        			break;
+        		}
+        		break;
+        	case "ATTACK":
+        		switch (enemyCharacter.getCurrentCard().getName()) {
+        		// ... skill들 넣으셈
+        		}
+        		break;
+        	case "HIT":
+        		
+        		break;
+        	case "DEAD":
+        		
+        		break;
+        	}
+        	
+        	break;
+        	
+        // Finn ------------------------------------------------------------	
+        case "Finn":
+        	switch (enemyCharacter.getCurrentMotion()) {
+        	case "MOVE":
+        		switch (enemyCharacter.getCurrentCard().getName()) {
+        		case "Move Up":
+
+        			enemyMotions = enemyCharacter.getMotions().get(enemyCharacter.getCurrentCard().getName());
+        			enemyFrameDelay = 100;	// 각 프레임 간격
+        			enemyDuration = enemyFrameDelay * enemyMotions.length * 4;	// 해당 모션의 총 시간
+        			
+        			enemyCurrentFrame = 0;
+        			enemyMotionTimer = new Timer(enemyFrameDelay, null);
+        			enemyMotionTimer.addActionListener(e -> {
+        				enemyCurrentFrame = (enemyCurrentFrame + 1) % enemyMotions.length;
+        			    repaint();
+        			});
+        			
+        			new Timer(enemyDuration, e -> {
+        				enemyMotionTimer.stop();
+        			    ((Timer) e.getSource()).stop();
+        			}).start();
+        			
+        			enemyMotionTimer.start();
+        			
+        			break;
+        		case "Move Down":
+
+        			enemyMotions = enemyCharacter.getMotions().get(enemyCharacter.getCurrentCard().getName());
+        			enemyFrameDelay = 100;	// 각 프레임 간격
+        			enemyDuration = enemyFrameDelay * enemyMotions.length * 4;	// 해당 모션의 총 시간
+        			
+        			enemyCurrentFrame = 0;
+        			enemyMotionTimer = new Timer(enemyFrameDelay, null);
+        			enemyMotionTimer.addActionListener(e -> {
+        				enemyCurrentFrame = (enemyCurrentFrame + 1) % enemyMotions.length;
+        			    repaint();
+        			});
+        			
+        			new Timer(enemyDuration, e -> {
+        				enemyMotionTimer.stop();
+        			    ((Timer) e.getSource()).stop();
+        			}).start();
+        			
+        			enemyMotionTimer.start();
+        			
+        			break;
+        		case "Move Left":
+
+        			enemyMotions = enemyCharacter.getMotions().get(enemyCharacter.getCurrentCard().getName());
+        			enemyFrameDelay = 100;	// 각 프레임 간격
+        			enemyDuration = enemyFrameDelay * enemyMotions.length * 4;	// 해당 모션의 총 시간
+        			
+        			enemyCurrentFrame = 0;
+        			enemyMotionTimer = new Timer(enemyFrameDelay, null);
+        			enemyMotionTimer.addActionListener(e -> {
+        				enemyCurrentFrame = (enemyCurrentFrame + 1) % enemyMotions.length;
+        			    repaint();
+        			});
+        			
+        			new Timer(enemyDuration, e -> {
+        				enemyMotionTimer.stop();
+        			    ((Timer) e.getSource()).stop();
+        			}).start();
+        			
+        			enemyMotionTimer.start();
+        			
+        			break;
+        		case "Move Right":
+
+        			enemyMotions = enemyCharacter.getMotions().get(enemyCharacter.getCurrentCard().getName());
+        			enemyFrameDelay = 100;	// 각 프레임 간격
+        			enemyDuration = enemyFrameDelay * enemyMotions.length * 4;	// 해당 모션의 총 시간
+        			
+        			enemyCurrentFrame = 0;
+        			enemyMotionTimer = new Timer(enemyFrameDelay, null);
+        			enemyMotionTimer.addActionListener(e -> {
+        				enemyCurrentFrame = (enemyCurrentFrame + 1) % enemyMotions.length;
+        			    repaint();
+        			});
+        			
+        			new Timer(enemyDuration, e -> {
+        				enemyMotionTimer.stop();
+        			    ((Timer) e.getSource()).stop();
+        			}).start();
+        			
+        			enemyMotionTimer.start();
+        			
+        			break;
+        		}
+        		break;
+        	case "ATTACK":
+        		switch (enemyCharacter.getCurrentCard().getName()) {
+        		// ... skill들 넣으셈
+        		}
+        		break;
+        	case "HIT":
+        		
+        		break;
+        	case "DEAD":
+        		
+        		break;
+        	}
+        	
+        	break;
+        	
+        // Luffy ------------------------------------------------------------	
+        case "Luffy":
+        	switch (enemyCharacter.getCurrentMotion()) {
+        	case "MOVE":
+        		switch (enemyCharacter.getCurrentCard().getName()) {
+        		case "Move Up":
+        			
+        			break;
+        		case "Move Down":
+        			
+        			break;
+        		case "Move Left":
+        			
+        			break;
+        		case "Move Right":
+        			
+        			break;
+        		}
+        		break;
+        	case "ATTACK":
+        		switch (enemyCharacter.getCurrentCard().getName()) {
+        		// ... skill들 넣으셈
+        		}
+        		break;
+        	case "HIT":
+        		
+        		break;
+        	case "DEAD":
         		
         		break;
         	}
@@ -502,26 +769,40 @@ public class PlayingGameScreen extends JPanel {
         drawDashedGrid(g2d, 3, 6, 150, 60);
         
         // 캐릭터 그리기
-        if (motions == null) return;
         
-        switch (currentCharacter.getName()) {
+        if (enemyCharacter == null || myCharacter == null) return;
+        
+        // 내 캐릭터 그리기
+        switch (myCharacter.getName()) {
         
         // SuperMan ------------------------------------------------------------
         case "SuperMan":
-        	switch (currentCharacter.getCurrentMotion()) {
-        	case MOVE:
+        	switch (myCharacter.getCurrentMotion()) {
+        	case "MOVE":
+        		switch (myCharacter.getCurrentCard().getName()) {
+        		case "Move Up":
+        			
+        			break;
+        		case "Move Down":
+        			
+        			break;
+        		case "Move Left":
+        			
+        			break;
+        		case "Move Right":
+        			
+        			break;
+        		}
+        		break;
+        	case "ATTACK":
+        		switch (myCharacter.getCurrentCard().getName()) {
+        		// ... skill들 넣으셈
+        		}
+        		break;
+        	case "HIT":
         		
         		break;
-        	case ATTACK:
-        		
-        		break;
-        	case GUARD:
-        		
-        		break;
-        	case HIT:
-        		
-        		break;
-        	case DEAD:
+        	case "DEAD":
         		
         		break;
         	}
@@ -530,20 +811,32 @@ public class PlayingGameScreen extends JPanel {
         	
         // Doraemon ------------------------------------------------------------	
         case "Doraemon":
-        	switch (currentCharacter.getCurrentMotion()) {
-        	case MOVE:
+        	switch (myCharacter.getCurrentMotion()) {
+        	case "MOVE":
+        		switch (myCharacter.getCurrentCard().getName()) {
+        		case "Move Up":
+        			
+        			break;
+        		case "Move Down":
+        			
+        			break;
+        		case "Move Left":
+        			
+        			break;
+        		case "Move Right":
+        			
+        			break;
+        		}
+        		break;
+        	case "ATTACK":
+        		switch (myCharacter.getCurrentCard().getName()) {
+        		// ... skill들 넣으셈
+        		}
+        		break;
+        	case "HIT":
         		
         		break;
-        	case ATTACK:
-        		
-        		break;
-        	case GUARD:
-        		
-        		break;
-        	case HIT:
-        		
-        		break;
-        	case DEAD:
+        	case "DEAD":
         		
         		break;
         	}
@@ -552,20 +845,32 @@ public class PlayingGameScreen extends JPanel {
         	
         // Zoro ------------------------------------------------------------		
         case "Zoro":
-        	switch (currentCharacter.getCurrentMotion()) {
-        	case MOVE:
+        	switch (myCharacter.getCurrentMotion()) {
+        	case "MOVE":
+        		switch (myCharacter.getCurrentCard().getName()) {
+        		case "Move Up":
+        			
+        			break;
+        		case "Move Down":
+        			
+        			break;
+        		case "Move Left":
+        			
+        			break;
+        		case "Move Right":
+        			
+        			break;
+        		}
+        		break;
+        	case "ATTACK":
+        		switch (myCharacter.getCurrentCard().getName()) {
+        		// ... skill들 넣으셈
+        		}
+        		break;
+        	case "HIT":
         		
         		break;
-        	case ATTACK:
-        		
-        		break;
-        	case GUARD:
-        		
-        		break;
-        	case HIT:
-        		
-        		break;
-        	case DEAD:
+        	case "DEAD":
         		
         		break;
         	}
@@ -574,20 +879,32 @@ public class PlayingGameScreen extends JPanel {
         	
         // Cygnus ------------------------------------------------------------	
         case "Cygnus":
-        	switch (currentCharacter.getCurrentMotion()) {
-        	case MOVE:
+        	switch (myCharacter.getCurrentMotion()) {
+        	case "MOVE":
+        		switch (myCharacter.getCurrentCard().getName()) {
+        		case "Move Up":
+        			
+        			break;
+        		case "Move Down":
+        			
+        			break;
+        		case "Move Left":
+        			
+        			break;
+        		case "Move Right":
+        			
+        			break;
+        		}
+        		break;
+        	case "ATTACK":
+        		switch (myCharacter.getCurrentCard().getName()) {
+        		// ... skill들 넣으셈
+        		}
+        		break;
+        	case "HIT":
         		
         		break;
-        	case ATTACK:
-        		
-        		break;
-        	case GUARD:
-        		
-        		break;
-        	case HIT:
-        		
-        		break;
-        	case DEAD:
+        	case "DEAD":
         		
         		break;
         	}
@@ -596,20 +913,32 @@ public class PlayingGameScreen extends JPanel {
         	
         // Ace ------------------------------------------------------------	
         case "Ace":
-        	switch (currentCharacter.getCurrentMotion()) {
-        	case MOVE:
+        	switch (myCharacter.getCurrentMotion()) {
+        	case "MOVE":
+        		switch (myCharacter.getCurrentCard().getName()) {
+        		case "Move Up":
+        			
+        			break;
+        		case "Move Down":
+        			
+        			break;
+        		case "Move Left":
+        			
+        			break;
+        		case "Move Right":
+        			
+        			break;
+        		}
+        		break;
+        	case "ATTACK":
+        		switch (myCharacter.getCurrentCard().getName()) {
+        		// ... skill들 넣으셈
+        		}
+        		break;
+        	case "HIT":
         		
         		break;
-        	case ATTACK:
-        		
-        		break;
-        	case GUARD:
-        		
-        		break;
-        	case HIT:
-        		
-        		break;
-        	case DEAD:
+        	case "DEAD":
         		
         		break;
         	}
@@ -618,24 +947,44 @@ public class PlayingGameScreen extends JPanel {
         	
         // Finn ------------------------------------------------------------	
         case "Finn":
-        	switch (currentCharacter.getCurrentMotion()) {
-        	case MOVE:
-        		if (!motions.isEmpty()) {
-                    // 현재 프레임 이미지 가져와서 그리기
-                    BufferedImage currentImage = motions.get(currentFrame);
-                    g.drawImage(currentImage, 100, 100, null); // (100, 100) 위치에 이미지 그리기
-                }
+        	switch (myCharacter.getCurrentMotion()) {
+        	case "MOVE":
+        		switch (myCharacter.getCurrentCard().getName()) {
+        		case "Move Up":
+        			if (myMotions != null) {
+        		        BufferedImage currentImage = myMotions[myCurrentFrame];
+        		        g.drawImage(currentImage, myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
+        			}
+        			break;
+        		case "Move Down":
+        			if (myMotions != null) {
+        		        BufferedImage currentImage = myMotions[myCurrentFrame];
+        		        g.drawImage(currentImage, myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
+        			}
+        			break;
+        		case "Move Left":
+        			if (myMotions != null) {
+        		        BufferedImage currentImage = myMotions[myCurrentFrame];
+        		        g.drawImage(currentImage, myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
+        			}
+        			break;
+        		case "Move Right":
+        			if (myMotions != null) {
+        		        BufferedImage currentImage = myMotions[myCurrentFrame];
+        		        g.drawImage(currentImage, myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
+        			}
+        			break;
+        		}
         		break;
-        	case ATTACK:
+        	case "ATTACK":
+        		switch (myCharacter.getCurrentCard().getName()) {
+        		// ... skill들 넣으셈
+        		}
+        		break;
+        	case "HIT":
         		
         		break;
-        	case GUARD:
-        		
-        		break;
-        	case HIT:
-        		
-        		break;
-        	case DEAD:
+        	case "DEAD":
         		
         		break;
         	}
@@ -644,28 +993,292 @@ public class PlayingGameScreen extends JPanel {
         	
         // Luffy ------------------------------------------------------------	
         case "Luffy":
-        	switch (currentCharacter.getCurrentMotion()) {
-        	case MOVE:
+        	switch (myCharacter.getCurrentMotion()) {
+        	case "MOVE":
+        		switch (myCharacter.getCurrentCard().getName()) {
+        		case "Move Up":
+        			
+        			break;
+        		case "Move Down":
+        			
+        			break;
+        		case "Move Left":
+        			
+        			break;
+        		case "Move Right":
+        			
+        			break;
+        		}
+        		break;
+        	case "ATTACK":
+        		switch (myCharacter.getCurrentCard().getName()) {
+        		// ... skill들 넣으셈
+        		}
+        		break;
+        	case "HIT":
         		
         		break;
-        	case ATTACK:
+        	case "DEAD":
         		
         		break;
-        	case GUARD:
+        	}
+        	
+        	break;
+		}
+
+
+		// 상대 캐릭터 그리기
+        switch (enemyCharacter.getName()) {
+        
+        // SuperMan ------------------------------------------------------------
+        case "SuperMan":
+        	switch (enemyCharacter.getCurrentMotion()) {
+        	case "MOVE":
+        		switch (enemyCharacter.getCurrentCard().getName()) {
+        		case "Move Up":
+        			
+        			break;
+        		case "Move Down":
+        			
+        			break;
+        		case "Move Left":
+        			
+        			break;
+        		case "Move Right":
+        			
+        			break;
+        		}
+        		break;
+        	case "ATTACK":
+        		switch (enemyCharacter.getCurrentCard().getName()) {
+        		// ... skill들 넣으셈
+        		}
+        		break;
+        	case "HIT":
         		
         		break;
-        	case HIT:
-        		
-        		break;
-        	case DEAD:
+        	case "DEAD":
         		
         		break;
         	}
         	
         	break;
         	
-        default:
-        	System.out.println("엄준식");
+        // Doraemon ------------------------------------------------------------	
+        case "Doraemon":
+        	switch (enemyCharacter.getCurrentMotion()) {
+        	case "MOVE":
+        		switch (enemyCharacter.getCurrentCard().getName()) {
+        		case "Move Up":
+        			
+        			break;
+        		case "Move Down":
+        			
+        			break;
+        		case "Move Left":
+        			
+        			break;
+        		case "Move Right":
+        			
+        			break;
+        		}
+        		break;
+        	case "ATTACK":
+        		switch (enemyCharacter.getCurrentCard().getName()) {
+        		// ... skill들 넣으셈
+        		}
+        		break;
+        	case "HIT":
+        		
+        		break;
+        	case "DEAD":
+        		
+        		break;
+        	}
+        	
+        	break;
+        	
+        // Zoro ------------------------------------------------------------		
+        case "Zoro":
+        	switch (enemyCharacter.getCurrentMotion()) {
+        	case "MOVE":
+        		switch (enemyCharacter.getCurrentCard().getName()) {
+        		case "Move Up":
+        			
+        			break;
+        		case "Move Down":
+        			
+        			break;
+        		case "Move Left":
+        			
+        			break;
+        		case "Move Right":
+        			
+        			break;
+        		}
+        		break;
+        	case "ATTACK":
+        		switch (enemyCharacter.getCurrentCard().getName()) {
+        		// ... skill들 넣으셈
+        		}
+        		break;
+        	case "HIT":
+        		
+        		break;
+        	case "DEAD":
+        		
+        		break;
+        	}
+        	
+        	break;
+        	
+        // Cygnus ------------------------------------------------------------	
+        case "Cygnus":
+        	switch (enemyCharacter.getCurrentMotion()) {
+        	case "MOVE":
+        		switch (enemyCharacter.getCurrentCard().getName()) {
+        		case "Move Up":
+        			
+        			break;
+        		case "Move Down":
+        			
+        			break;
+        		case "Move Left":
+        			
+        			break;
+        		case "Move Right":
+        			
+        			break;
+        		}
+        		break;
+        	case "ATTACK":
+        		switch (enemyCharacter.getCurrentCard().getName()) {
+        		// ... skill들 넣으셈
+        		}
+        		break;
+        	case "HIT":
+        		
+        		break;
+        	case "DEAD":
+        		
+        		break;
+        	}
+        	
+        	break;
+        	
+        // Ace ------------------------------------------------------------	
+        case "Ace":
+        	switch (enemyCharacter.getCurrentMotion()) {
+        	case "MOVE":
+        		switch (enemyCharacter.getCurrentCard().getName()) {
+        		case "Move Up":
+        			
+        			break;
+        		case "Move Down":
+        			
+        			break;
+        		case "Move Left":
+        			
+        			break;
+        		case "Move Right":
+        			
+        			break;
+        		}
+        		break;
+        	case "ATTACK":
+        		switch (enemyCharacter.getCurrentCard().getName()) {
+        		// ... skill들 넣으셈
+        		}
+        		break;
+        	case "HIT":
+        		
+        		break;
+        	case "DEAD":
+        		
+        		break;
+        	}
+        	
+        	break;
+        	
+        // Finn ------------------------------------------------------------	
+        case "Finn":
+        	switch (enemyCharacter.getCurrentMotion()) {
+        	case "MOVE":
+        		switch (enemyCharacter.getCurrentCard().getName()) {
+        		case "Move Up":
+        			if (enemyMotions != null) {
+        		        BufferedImage currentImage = enemyMotions[enemyCurrentFrame];
+        		        g.drawImage(currentImage, enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
+        			}
+        			break;
+        		case "Move Down":
+        			if (enemyMotions != null) {
+        		        BufferedImage currentImage = enemyMotions[enemyCurrentFrame];
+        		        g.drawImage(currentImage, enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
+        			}
+        			break;
+        		case "Move Left":
+        			if (enemyMotions != null) {
+        		        BufferedImage currentImage = enemyMotions[enemyCurrentFrame];
+        		        g.drawImage(currentImage, enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
+        			}
+        			break;
+        		case "Move Right":
+        			if (enemyMotions != null) {
+        		        BufferedImage currentImage = enemyMotions[enemyCurrentFrame];
+        		        g.drawImage(currentImage, enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
+        			}
+        			break;
+        		}
+        		break;
+        	case "ATTACK":
+        		switch (enemyCharacter.getCurrentCard().getName()) {
+        		// ... skill들 넣으셈
+        		}
+        		break;
+        	case "HIT":
+        		
+        		break;
+        	case "DEAD":
+        		
+        		break;
+        	}
+        	
+        	break;
+        	
+        // Luffy ------------------------------------------------------------	
+        case "Luffy":
+        	switch (enemyCharacter.getCurrentMotion()) {
+        	case "MOVE":
+        		switch (enemyCharacter.getCurrentCard().getName()) {
+        		case "Move Up":
+        			
+        			break;
+        		case "Move Down":
+        			
+        			break;
+        		case "Move Left":
+        			
+        			break;
+        		case "Move Right":
+        			
+        			break;
+        		}
+        		break;
+        	case "ATTACK":
+        		switch (enemyCharacter.getCurrentCard().getName()) {
+        		// ... skill들 넣으셈
+        		}
+        		break;
+        	case "HIT":
+        		
+        		break;
+        	case "DEAD":
+        		
+        		break;
+        	}
+        	
+        	break;
         }
     }
 

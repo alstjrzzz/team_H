@@ -1,6 +1,8 @@
 package model.Character;
 
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.Map;
@@ -21,20 +23,13 @@ public abstract class Character {
     protected BufferedImage skillEffect;
     protected BufferedImage logo;
     protected Map<String, BufferedImage> cardImage;
+    protected Map<String, BufferedImage[]> motions;
     
-    protected Motion currentMotion = Motion.IDLE;
-    protected int currentSprite;
+    protected String currentMotion = "IDLE";
     protected Card currentCard;
+    protected int currentX;
+    protected int currentY;
     
-    
-    public enum Motion {
-       IDLE,      // 가만히 있을 때
-       ATTACK,      // 공격
-       MOVE,      // 걷기
-       GUARD,      // 막기
-       HIT,      // 피격
-       DEAD      // 죽음
-    }
     
     public Character() {
        
@@ -87,6 +82,8 @@ public abstract class Character {
     
     public abstract void initCardImage();
     
+    public abstract void initMotions();
+    
     public BufferedImage getLogo() {
         return this.logo;
     }
@@ -104,7 +101,13 @@ public abstract class Character {
       return maxHealth;
    }
 
-   public LinkedList<Card> getCardList() {
+   public void setCurrentMotion(String currentMotion) {
+		this.currentMotion = currentMotion;
+	}
+
+
+
+public LinkedList<Card> getCardList() {
         return cardList;
     }
 
@@ -123,43 +126,61 @@ public abstract class Character {
 
 
 
+public void setCurrentX(int currentX) {
+	this.currentX = currentX;
+}
+
+
+
+public void setCurrentY(int currentY) {
+	this.currentY = currentY;
+}
+
+
+
 public BufferedImage getSkillEffect() {
 	return skillEffect;
 }
 
 
 
-public void setCurrentMotion(String motion) {
-      
-      switch (motion) {
-      case "IDLE":
-         this.currentMotion = Motion.IDLE;
-         break;
-      case "ATTACK":
-         this.currentMotion = Motion.ATTACK;
-         break;
-      case "MOVE":
-         this.currentMotion = Motion.MOVE;
-         break;
-      case "GUARD":
-         this.currentMotion = Motion.GUARD;
-         break;
-      case "HIT":
-         this.currentMotion = Motion.HIT;
-         break;
-      case "DEAD":
-         this.currentMotion = Motion.DEAD;
-         break;
-      }
-   }
+public Map<String, BufferedImage[]> getMotions() {
+	return motions;
+}
+
+public int getCurrentX() {
+	return currentX;
+}
 
 
-	
-	public Motion getCurrentMotion() {
+
+public int getCurrentY() {
+	return currentY;
+}
+
+
+	public String getCurrentMotion() {
 		return currentMotion;
 	}
 	   
-   
+	// BufferedImage를 수평으로 뒤집는 메서드
+    public static BufferedImage flipHorizontally(BufferedImage image) {
+        // 뒤집힌 이미지를 담을 새로운 BufferedImage 생성
+        BufferedImage flippedImage = new BufferedImage(image.getWidth(), image.getHeight(), image.getType());
+        
+        // Graphics2D 객체 생성
+        Graphics2D g2d = flippedImage.createGraphics();
+        
+        // AffineTransform을 사용해 수평으로 이미지를 뒤집기
+        AffineTransform transform = AffineTransform.getScaleInstance(-1, 1); // 수평 뒤집기
+        transform.translate(-image.getWidth(), 0); // 원래 이미지의 위치로 이동시킴
+        
+        // 뒤집힌 이미지를 그리기
+        g2d.drawImage(image, transform, null);
+        g2d.dispose();
+        
+        return flippedImage; // 뒤집힌 이미지 반환
+    }
 
 }
 

@@ -76,4 +76,12 @@ public class Cygnus extends Character {
             e.printStackTrace();
         }
     }
+
+
+
+	@Override
+	public void initMotions() {
+		// TODO Auto-generated method stub
+		
+	}
 }

@@ -22,7 +22,6 @@ public class Finn extends Character {
 	
     public Finn() {
     	
-        super();
         this.name = "Finn";
         this.maxHealth = 100;
         
@@ -40,6 +39,7 @@ public class Finn extends Character {
          }
          
          initCardImage();
+         initMotions();
     }
     
     
@@ -90,5 +90,44 @@ public class Finn extends Character {
             e.printStackTrace();
         }
     }
+
+
+
+	@Override
+	public void initMotions() {
+		
+		motions = new HashMap<>();
+		
+		motions.put("IDLE", null);
+		motions.put("HIT", null);
+		motions.put("DEAD", null);
+		motions.put("GUARD", null);
+		
+		BufferedImage[] tempArr = new BufferedImage[12];
+		for (int i = 0; i < 12; i++) {
+			tempArr[i] = sprite.getSubimage(i * 54, 1438, 54, 54);
+		}
+		motions.put("Move Up", tempArr.clone());
+		
+		tempArr = new BufferedImage[13];
+		for (int i = 0; i < 13; i++) {
+			tempArr[i] = sprite.getSubimage(i * 65, 1577, 65, 65);
+		}
+		motions.put("Move Down", tempArr.clone());
+		
+		tempArr = new BufferedImage[12];
+		for (int i = 0; i < 12; i++) {
+			tempArr[i] = sprite.getSubimage(i * 53, 720, 53, 53);
+		}
+		motions.put("Move Left", tempArr.clone());
+		
+		for (int i = 0; i < 12; i++) {
+			tempArr[i] = flipHorizontally(tempArr[i]);
+		}
+		motions.put("Move Right", tempArr.clone());
+		
+		motions.put("Skill1", null);
+		motions.put("Skill2", null);
+	}
 
 }

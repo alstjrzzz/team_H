@@ -371,10 +371,7 @@ public class GameController {
 			case "MOVE":
 				// 모션 실행
 				character.setCurrentMotion("MOVE");
-				if (card == null) System.out.println("카드가 null이네요~");
-				else System.out.println("null 아닌디");
 				character.setCurrentCard(card);
-				System.out.println("playing game screen repaint start 1");
 				playingGameScreen.drawMotion();
 				
 				// Timer 대신 CountDownLatch로 대기 구현

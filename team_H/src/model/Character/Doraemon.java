@@ -91,24 +91,15 @@ public class Doraemon extends Character {
         }
    }
 
+
+
+	@Override
+	public void initMotions() {
+		// TODO Auto-generated method stub
+		
+	}
+
    
    
-   // BufferedImage를 수평으로 뒤집는 메서드
-    public static BufferedImage flipHorizontally(BufferedImage image) {
-        // 뒤집힌 이미지를 담을 새로운 BufferedImage 생성
-        BufferedImage flippedImage = new BufferedImage(image.getWidth(), image.getHeight(), image.getType());
-        
-        // Graphics2D 객체 생성
-        Graphics2D g2d = flippedImage.createGraphics();
-        
-        // AffineTransform을 사용해 수평으로 이미지를 뒤집기
-        AffineTransform transform = AffineTransform.getScaleInstance(-1, 1); // 수평 뒤집기
-        transform.translate(-image.getWidth(), 0); // 원래 이미지의 위치로 이동시킴
-        
-        // 뒤집힌 이미지를 그리기
-        g2d.drawImage(image, transform, null);
-        g2d.dispose();
-        
-        return flippedImage; // 뒤집힌 이미지 반환
-    }
+   
 }
