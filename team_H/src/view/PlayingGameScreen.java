@@ -305,21 +305,112 @@ public class PlayingGameScreen extends JPanel {
         		switch (myCharacter.getCurrentCard().getName()) {
         		case "Move Up":
         			
+        			myMotions = myCharacter.getMotions().get(myCharacter.getCurrentCard().getName());
+        			myFrameDelay = 200;	// 각 프레임 간격
+        			myDuration = myFrameDelay * myMotions.length * 8;	// 해당 모션의 총 시간
+        			
+        			myCurrentFrame = 0;
+        			myMotionTimer = new Timer(myFrameDelay, null);
+        			myMotionTimer.addActionListener(e -> {
+        				myCurrentFrame = (myCurrentFrame + 1) % myMotions.length;
+        			    repaint();
+        			});
+        			
+        			new Timer(myDuration, e -> {
+        				myMotionTimer.stop();
+        			    ((Timer) e.getSource()).stop();
+        			}).start();
+        			
+        			myMotionTimer.start();
+        			
         			break;
         		case "Move Down":
+
+        			myMotions = myCharacter.getMotions().get(myCharacter.getCurrentCard().getName());
+        			myFrameDelay = 200;	// 각 프레임 간격
+        			myDuration = myFrameDelay * myMotions.length * 8;	// 해당 모션의 총 시간
+        			
+        			myCurrentFrame = 0;
+        			myMotionTimer = new Timer(myFrameDelay, null);
+        			myMotionTimer.addActionListener(e -> {
+        				myCurrentFrame = (myCurrentFrame + 1) % myMotions.length;
+        			    repaint();
+        			});
+        			
+        			new Timer(myDuration, e -> {
+        				myMotionTimer.stop();
+        			    ((Timer) e.getSource()).stop();
+        			}).start();
+        			
+        			myMotionTimer.start();
         			
         			break;
         		case "Move Left":
+
+        			myMotions = myCharacter.getMotions().get(myCharacter.getCurrentCard().getName());
+        			myFrameDelay = 200;	// 각 프레임 간격
+        			myDuration = myFrameDelay * myMotions.length * 8;	// 해당 모션의 총 시간
+        			
+        			myCurrentFrame = 0;
+        			myMotionTimer = new Timer(myFrameDelay, null);
+        			myMotionTimer.addActionListener(e -> {
+        				myCurrentFrame = (myCurrentFrame + 1) % myMotions.length;
+        			    repaint();
+        			});
+        			
+        			new Timer(myDuration, e -> {
+        				myMotionTimer.stop();
+        			    ((Timer) e.getSource()).stop();
+        			}).start();
+        			
+        			myMotionTimer.start();
         			
         			break;
         		case "Move Right":
+
+        			myMotions = myCharacter.getMotions().get(myCharacter.getCurrentCard().getName());
+        			myFrameDelay = 200;	// 각 프레임 간격
+        			myDuration = myFrameDelay * myMotions.length * 8;	// 해당 모션의 총 시간
+        			
+        			myCurrentFrame = 0;
+        			myMotionTimer = new Timer(myFrameDelay, null);
+        			myMotionTimer.addActionListener(e -> {
+        				myCurrentFrame = (myCurrentFrame + 1) % myMotions.length;
+        			    repaint();
+        			});
+        			
+        			new Timer(myDuration, e -> {
+        				myMotionTimer.stop();
+        			    ((Timer) e.getSource()).stop();
+        			}).start();
+        			
+        			myMotionTimer.start();
         			
         			break;
         		}
         		break;
         	case "ATTACK":
         		switch (myCharacter.getCurrentCard().getName()) {
-        		// ... skill들 넣으셈
+        		case "Skill1" :
+        			myMotions = myCharacter.getMotions().get(myCharacter.getCurrentCard().getName());
+        			myFrameDelay = 200;	// 각 프레임 간격
+        			myDuration = myFrameDelay * myMotions.length * 8;	// 해당 모션의 총 시간
+        			
+        			myCurrentFrame = 0;
+        			myMotionTimer = new Timer(myFrameDelay, null);
+        			myMotionTimer.addActionListener(e -> {
+        				myCurrentFrame = (myCurrentFrame + 1) % myMotions.length;
+        			    repaint();
+        			});
+        			
+        			new Timer(myDuration, e -> {
+        				myMotionTimer.stop();
+        			    ((Timer) e.getSource()).stop();
+        			}).start();
+        			
+        			myMotionTimer.start();
+        		        			
+        			break;
         		}
         		break;
         	case "HIT":
@@ -327,6 +418,27 @@ public class PlayingGameScreen extends JPanel {
         		break;
         	case "DEAD":
         		
+        		break;
+        	case "IDLE":
+        		
+        		myMotions = myCharacter.getMotions().get("IDLE");
+    			myFrameDelay = 200;	// 각 프레임 간격
+    			myDuration = Integer.MAX_VALUE;	// 해당 모션의 총 시간
+    			
+    			myCurrentFrame = 0;
+    			myMotionTimer = new Timer(myFrameDelay, null);
+    			myMotionTimer.addActionListener(e -> {
+    				myCurrentFrame = (myCurrentFrame + 1) % myMotions.length;
+    			    repaint();
+    			});
+    			
+    			new Timer(myDuration, e -> {
+    				myMotionTimer.stop();
+    			    ((Timer) e.getSource()).stop();
+    			}).start();
+    			
+    			myMotionTimer.start();
+    			
         		break;
         	}
         	
@@ -899,19 +1011,91 @@ public class PlayingGameScreen extends JPanel {
         	
         // Zoro ------------------------------------------------------------		
         case "Zoro":
-        	switch (enemyCharacter.getCurrentMotion()) {
+         	switch (enemyCharacter.getCurrentMotion()) {
         	case "MOVE":
         		switch (enemyCharacter.getCurrentCard().getName()) {
         		case "Move Up":
+
+        			enemyMotions = enemyCharacter.getMotions().get(enemyCharacter.getCurrentCard().getName());
+        			enemyFrameDelay = 200;	// 각 프레임 간격
+        			enemyDuration = enemyFrameDelay * enemyMotions.length * 8;	// 해당 모션의 총 시간
+        			
+        			enemyCurrentFrame = 0;
+        			enemyMotionTimer = new Timer(enemyFrameDelay, null);
+        			enemyMotionTimer.addActionListener(e -> {
+        				enemyCurrentFrame = (enemyCurrentFrame + 1) % enemyMotions.length;
+        			    repaint();
+        			});
+        			
+        			new Timer(enemyDuration, e -> {
+        				enemyMotionTimer.stop();
+        			    ((Timer) e.getSource()).stop();
+        			}).start();
+        			
+        			enemyMotionTimer.start();
         			
         			break;
         		case "Move Down":
+
+        			enemyMotions = enemyCharacter.getMotions().get(enemyCharacter.getCurrentCard().getName());
+        			enemyFrameDelay = 200;	// 각 프레임 간격
+        			enemyDuration = enemyFrameDelay * enemyMotions.length * 8;	// 해당 모션의 총 시간
+        			
+        			enemyCurrentFrame = 0;
+        			enemyMotionTimer = new Timer(enemyFrameDelay, null);
+        			enemyMotionTimer.addActionListener(e -> {
+        				enemyCurrentFrame = (enemyCurrentFrame + 1) % enemyMotions.length;
+        			    repaint();
+        			});
+        			
+        			new Timer(enemyDuration, e -> {
+        				enemyMotionTimer.stop();
+        			    ((Timer) e.getSource()).stop();
+        			}).start();
+        			
+        			enemyMotionTimer.start();
         			
         			break;
         		case "Move Left":
+
+        			enemyMotions = enemyCharacter.getMotions().get(enemyCharacter.getCurrentCard().getName());
+        			enemyFrameDelay = 200;	// 각 프레임 간격
+        			enemyDuration = enemyFrameDelay * enemyMotions.length * 8;	// 해당 모션의 총 시간
+        			
+        			enemyCurrentFrame = 0;
+        			enemyMotionTimer = new Timer(enemyFrameDelay, null);
+        			enemyMotionTimer.addActionListener(e -> {
+        				enemyCurrentFrame = (enemyCurrentFrame + 1) % enemyMotions.length;
+        			    repaint();
+        			});
+        			
+        			new Timer(enemyDuration, e -> {
+        				enemyMotionTimer.stop();
+        			    ((Timer) e.getSource()).stop();
+        			}).start();
+        			
+        			enemyMotionTimer.start();
         			
         			break;
         		case "Move Right":
+
+        			enemyMotions = enemyCharacter.getMotions().get(enemyCharacter.getCurrentCard().getName());
+        			enemyFrameDelay = 200;	// 각 프레임 간격
+        			enemyDuration = enemyFrameDelay * enemyMotions.length * 8;	// 해당 모션의 총 시간
+        			
+        			enemyCurrentFrame = 0;
+        			enemyMotionTimer = new Timer(enemyFrameDelay, null);
+        			enemyMotionTimer.addActionListener(e -> {
+        				enemyCurrentFrame = (enemyCurrentFrame + 1) % enemyMotions.length;
+        			    repaint();
+        			});
+        			
+        			new Timer(enemyDuration, e -> {
+        				enemyMotionTimer.stop();
+        			    ((Timer) e.getSource()).stop();
+        			}).start();
+        			
+        			enemyMotionTimer.start();
         			
         			break;
         		}
@@ -919,6 +1103,28 @@ public class PlayingGameScreen extends JPanel {
         	case "ATTACK":
         		switch (enemyCharacter.getCurrentCard().getName()) {
         		// ... skill들 넣으셈
+        		case "Skill1" :
+        			
+        			enemyMotions = enemyCharacter.getMotions().get(enemyCharacter.getCurrentCard().getName());
+        			enemyFrameDelay = 200;	// 각 프레임 간격
+        			enemyDuration = enemyFrameDelay * enemyMotions.length * 8;	// 해당 모션의 총 시간
+        			
+        			enemyCurrentFrame = 0;
+        			enemyMotionTimer = new Timer(enemyFrameDelay, null);
+        			enemyMotionTimer.addActionListener(e -> {
+        				enemyCurrentFrame = (enemyCurrentFrame + 1) % enemyMotions.length;
+        			    repaint();
+        			});
+        			
+        			new Timer(enemyDuration, e -> {
+        				enemyMotionTimer.stop();
+        			    ((Timer) e.getSource()).stop();
+        			}).start();
+        			
+        			enemyMotionTimer.start();
+        			
+        			break;
+        			
         		}
         		break;
         	case "HIT":
@@ -926,6 +1132,27 @@ public class PlayingGameScreen extends JPanel {
         		break;
         	case "DEAD":
         		
+        		break;
+        	case "IDLE":
+
+        		enemyMotions = enemyCharacter.getMotions().get("IDLE");
+        		enemyFrameDelay = 200;	// 각 프레임 간격
+        		enemyDuration = Integer.MAX_VALUE;	// 해당 모션의 총 시간
+    			
+        		enemyCurrentFrame = 0;
+        		enemyMotionTimer = new Timer(myFrameDelay, null);
+        		enemyMotionTimer.addActionListener(e -> {
+        			enemyCurrentFrame = (enemyCurrentFrame + 1) % enemyMotions.length;
+    			    repaint();
+    			});
+    			
+    			new Timer(enemyDuration, e -> {
+    				enemyMotionTimer.stop();
+    			    ((Timer) e.getSource()).stop();
+    			}).start();
+    			
+    			enemyMotionTimer.start();
+    			
         		break;
         	}
         	
@@ -1424,22 +1651,40 @@ public class PlayingGameScreen extends JPanel {
         	case "MOVE":
         		switch (myCharacter.getCurrentCard().getName()) {
         		case "Move Up":
-        			
+        			if (myMotions != null) {
+        		        BufferedImage currentImage = myMotions[myCurrentFrame];
+        		        g.drawImage(currentImage, myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
+        			}
         			break;
         		case "Move Down":
-        			
+        			if (myMotions != null) {
+        		        BufferedImage currentImage = myMotions[myCurrentFrame];
+        		        g.drawImage(currentImage, myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
+        			}
         			break;
         		case "Move Left":
-        			
+        			if (myMotions != null) {
+        		        BufferedImage currentImage = myMotions[myCurrentFrame];
+        		        g.drawImage(currentImage, myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
+        			}
         			break;
         		case "Move Right":
-        			
+        			if (myMotions != null) {
+        		        BufferedImage currentImage = myMotions[myCurrentFrame];
+        		        g.drawImage(currentImage, myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
+        			}
         			break;
         		}
         		break;
         	case "ATTACK":
         		switch (myCharacter.getCurrentCard().getName()) {
         		// ... skill들 넣으셈
+        		case "Skill1":
+        			if (myMotions != null) {
+        		        BufferedImage currentImage = myMotions[myCurrentFrame];
+        		        g.drawImage(currentImage, myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
+        			}
+        			break;
         		}
         		break;
         	case "HIT":
@@ -1447,6 +1692,12 @@ public class PlayingGameScreen extends JPanel {
         		break;
         	case "DEAD":
         		
+        		break;
+        	case "IDLE":
+        		if (myMotions != null) {
+    		        BufferedImage currentImage = myMotions[myCurrentFrame];
+    		        g.drawImage(currentImage, myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
+    			}
         		break;
         	}
         	
@@ -1738,22 +1989,40 @@ public class PlayingGameScreen extends JPanel {
         	case "MOVE":
         		switch (enemyCharacter.getCurrentCard().getName()) {
         		case "Move Up":
-        			
+        			if (enemyMotions != null) {
+        		        BufferedImage currentImage = enemyMotions[enemyCurrentFrame];
+        		        g.drawImage(currentImage, enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
+        			}
         			break;
         		case "Move Down":
-        			
+        			if (enemyMotions != null) {
+        		        BufferedImage currentImage = enemyMotions[enemyCurrentFrame];
+        		        g.drawImage(currentImage, enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
+        			}
         			break;
         		case "Move Left":
-        			
+        			if (enemyMotions != null) {
+        		        BufferedImage currentImage = enemyMotions[enemyCurrentFrame];
+        		        g.drawImage(currentImage, enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
+        			}
         			break;
         		case "Move Right":
-        			
+        			if (enemyMotions != null) {
+        		        BufferedImage currentImage = enemyMotions[enemyCurrentFrame];
+        		        g.drawImage(currentImage, enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
+        			}
         			break;
         		}
         		break;
         	case "ATTACK":
         		switch (enemyCharacter.getCurrentCard().getName()) {
         		// ... skill들 넣으셈
+        		case "Skill1":
+        			if (enemyMotions != null) {
+        		        BufferedImage currentImage = enemyMotions[enemyCurrentFrame];
+        		        g.drawImage(currentImage, enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
+        			}
+        			break;
         		}
         		break;
         	case "HIT":
@@ -1762,6 +2031,12 @@ public class PlayingGameScreen extends JPanel {
         	case "DEAD":
         		
         		break;
+        	case "IDLE":
+        		if (enemyMotions != null) {
+    		        BufferedImage currentImage = enemyMotions[enemyCurrentFrame];
+    		        g.drawImage(currentImage, enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
+    			}
+    			break;
         	}
         	
         	break;

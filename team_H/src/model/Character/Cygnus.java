@@ -94,55 +94,53 @@ public class Cygnus extends Character {
 
 
 
-   @Override
-   public void initMotions() {
-      
-      motions = new HashMap<>();
-      BufferedImage[] tempArr = new BufferedImage[8];
-      for (int i = 0; i < 8; i++) {
-         tempArr[i] = sprite.getSubimage(i * 146, 11, 146, 204);
-      }
-      motions.put("IDLE", tempArr.clone());
-      
-      motions.put("HIT", null);
-      
-      tempArr = new BufferedImage[29];
-      for (int i = 0; i < 29; i++) {
-         tempArr[i] = sprite.getSubimage(i * 262, 9024, 262, 317);
-      }
-      motions.put("DEAD", null);
-      motions.put("GUARD", null);
-      
-      tempArr = new BufferedImage[8];
-      for (int i = 0; i < 8; i++) {
-         tempArr[i] = sprite.getSubimage(i * 146, 226, 146, 204);
-      }
-      motions.put("Move Up", tempArr.clone());
-      
-      tempArr = new BufferedImage[8];
-      for (int i = 0; i < 8; i++) {
-         tempArr[i] = sprite.getSubimage(i * 146, 226, 146, 204);
-      }
-      motions.put("Move Down", tempArr.clone());
-      
-      tempArr = new BufferedImage[8];
-      for (int i = 0; i < 8; i++) {
-         tempArr[i] = sprite.getSubimage(i * 146, 226, 146, 204);
-      }
-      motions.put("Move Left", tempArr.clone());
-      
-      for (int i = 0; i < 8; i++) {
-         tempArr[i] = flipHorizontally(tempArr[i]);
-      }
-      motions.put("Move Right", tempArr.clone());
-      
-      tempArr = new BufferedImage[29];
-      for (int i = 0; i < 29; i++) {
-         tempArr[i] = sprite.getSubimage(i * 226, 442, 226, 226);
-      }
-      motions.put("Skill1", tempArr.clone());
-      motions.put("Skill2", null);
-   }
+    @Override
+    public void initMotions() {
+       
+       motions = new HashMap<>();
+       BufferedImage[] tempArr = new BufferedImage[8];
+       for (int i = 0; i < 8; i++) {
+          tempArr[i] = resizeImage(sprite.getSubimage(i * 85, 7,85,118), 90, 90, true);
+       }
+       motions.put("IDLE", tempArr.clone());
+       
+       motions.put("HIT", null);
+       
+       tempArr = new BufferedImage[29];
+       for (int i = 0; i < 29; i++) {
+          tempArr[i] = resizeImage(sprite.getSubimage(i * 152, 5206, 152,182), 90, 90, true);
+       }
+       motions.put("DEAD", tempArr.clone());
+       motions.put("GUARD", null);
+       
+       tempArr = new BufferedImage[8];
+       for (int i = 0; i < 8; i++) {
+           tempArr[i] = resizeImage(sprite.getSubimage(i * 85, 131,85,118), 90, 90, true);
+       }
+       motions.put("Move Up", tempArr.clone());
+       
+       tempArr = new BufferedImage[8];
+       for (int i = 0; i < 8; i++) {
+           tempArr[i] = resizeImage(sprite.getSubimage(i * 85, 131,85,118), 90, 90, true);
+       }
+       motions.put("Move Down", tempArr.clone());
+       
+       tempArr = new BufferedImage[8];
+       for (int i = 0; i < 8; i++) {
+          tempArr[i] = resizeImage(sprite.getSubimage(i * 85, 131,85,118), 90, 90, true);
+       }
+       motions.put("Move left", tempArr.clone());
+       
+       for (int i = 0; i < 8; i++) {
+          tempArr[i] = flipHorizontally(tempArr[i]);
+       }
+       motions.put("Move Right", tempArr.clone());
+       
+       motions.put("Skill1", null);
+       motions.put("Skill2", null);
+    }
+    
+    
    protected BufferedImage TransformColorToTransparency(BufferedImage image, Color c1) {
         final int r1 = c1.getRed();
         final int g1 = c1.getGreen();
@@ -169,4 +167,46 @@ public class Cygnus extends Character {
          g.dispose();
          return dest;
       }
+   private  BufferedImage resizeImage(BufferedImage image, int newWidth, int newHeight, boolean keepRatio) {
+       int imageWidth = image.getWidth();
+       int imageHeight = image.getHeight();
+
+       if (keepRatio) {
+           // 비율 유지
+           double ratio;
+           if (newWidth > 0 && newHeight == 0) {
+               // 너비 기준
+               ratio = (double) newWidth / imageWidth;
+               newHeight = (int) (imageHeight * ratio);
+           } else if (newHeight > 0 && newWidth == 0) {
+               // 높이 기준
+               ratio = (double) newHeight / imageHeight;
+               newWidth = (int) (imageWidth * ratio);
+           } else if (newWidth > 0 && newHeight > 0) {
+               // 비율을 유지하면서 목표 너비, 높이 중 작은 쪽에 맞춤
+               double ratioWidth = (double) newWidth / imageWidth;
+               double ratioHeight = (double) newHeight / imageHeight;
+               ratio = Math.min(ratioWidth, ratioHeight);
+               newWidth = (int) (imageWidth * ratio);
+               newHeight = (int) (imageHeight * ratio);
+           } else {
+               throw new IllegalArgumentException("Width or height must be greater than 0.");
+           }
+       } else {
+           // 비율 무시
+           if (newWidth <= 0 || newHeight <= 0) {
+               throw new IllegalArgumentException("Both width and height must be greater than 0 when keepRatio is false.");
+           }
+       }
+
+       // 이미지 리사이징
+       Image resizedImage = image.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
+       BufferedImage newImage = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_ARGB);
+
+       Graphics2D g2d = newImage.createGraphics();
+       g2d.drawImage(resizedImage, 0, 0, null);
+       g2d.dispose();
+
+       return newImage;
+   }
 }
