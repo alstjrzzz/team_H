@@ -2,6 +2,8 @@
 
 package controller;
 
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -19,6 +21,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import javazoom.jl.player.Player;
 import model.Card;
 import model.GameState;
 import network.NetworkManager;
@@ -42,7 +45,8 @@ public class GameController {
 	private CountDownLatch characterLatch = new CountDownLatch(1); // 동기화 도구 추가
 	private boolean isCardSelectionComplete = false;
 	private CountDownLatch cardLatch;
-	
+	private Player bgmPlayer; // 현재 재생 중인 BGM
+
 	public GameController() {
 		
 		startProgram();
@@ -503,4 +507,30 @@ public class GameController {
 		}
 	}
 	
+    // 브금 재생 메서드
+    public void playBGM(String filePath) {
+        stopBGM(); // 현재 재생 중인 브금 중단
+        try {
+            FileInputStream fis = new FileInputStream(filePath);
+            BufferedInputStream bis = new BufferedInputStream(fis);
+            bgmPlayer = new Player(bis);
+            new Thread(() -> {
+                try {
+                    bgmPlayer.play();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }).start();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // 브금 중지 메서드
+    public void stopBGM() {
+        if (bgmPlayer != null) {
+            bgmPlayer.close();
+            bgmPlayer = null;
+        }
+    }
 }

@@ -40,7 +40,7 @@ public class SelectUserScreen extends JPanel {
         this.networkManager = networkManager;
         
         //playBgm(); //배경화면 음악
-        
+        gameController.playBGM("res/sound/bgm/로그인창_브금2.mp3"); // SelectUserScreen 브금
         initUI();
     }
 
@@ -152,26 +152,5 @@ public class SelectUserScreen extends JPanel {
     }
 
    
-    public void playBgm() {
-        Player bgmPlayer = null;
-        String bgmFilePath = "res/sound/bgm/로그인창_브금2.mp3";
-        try {
-            FileInputStream fis = new FileInputStream(bgmFilePath);
-            BufferedInputStream bis = new BufferedInputStream(fis);
-            bgmPlayer = new Player(bis);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-
-        final Player player = bgmPlayer;
-        new Thread() {
-            public void run() {
-                try {
-                    player.play();
-                } catch (Exception e) {
-                    System.out.println(e.getMessage());
-                }
-            }
-        }.start();
-    }
+    
 }

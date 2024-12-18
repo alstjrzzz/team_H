@@ -35,7 +35,7 @@ public class Zoro extends Character {
              }
             
             // skillEffect = ImageIO.read(new File(""));
-            logo = ImageIO.read(new File("res/character/Zoro_face.png"));
+            logo = ImageIO.read(new File("res/character/Zoro_logo.png"));
          } catch (IOException e) {
             e.printStackTrace();
          }
@@ -51,20 +51,20 @@ public class Zoro extends Character {
     public void addUniqueCard() {
         
        cardList.add(new Card(
-             /*name:*/ "Super Punch", 
+             /*name:*/ "Tiger Trap", 
              /*category:*/ "ATTACK", 
              /*range:*/ new LinkedList<>() {{
                       add(new int[]{0, -1});}}, 
-             /*value:*/ 50, 
+             /*value:*/ 30, 
              /*priority:*/ 2));
        
        cardList.add(new Card(
-             /*name:*/ "Flying Strike", 
+             /*name:*/ "Onigiri", 
              /*category:*/ "ATTACK", 
              /*range:*/ new LinkedList<>() {{
-                      add(new int[]{0, -2});
-                      add(new int[]{0, -3});}}, 
-             /*value:*/ 75, 
+                      add(new int[]{0, -1});
+                      add(new int[]{0, -2});}}, 
+             /*value:*/ 45, 
              /*priority:*/ 2));
     }
 
@@ -77,16 +77,16 @@ public class Zoro extends Character {
 
         try {
             // 카드 이미지 파일 경로를 절대 경로로 지정
-            File moveImage = new File("res/card/superman_move.png");
-            File super_PunchImage = new File("res/card/superman_move.png");
-            File Flying_StrikeImage = new File("res/card/superman_move.png");
+            File moveImage = new File("res/card/zoro_move.png");
+            File tiger_TrapImage = new File("res/card/zoro_tigerTrap.png");
+            File onigiriImage = new File("res/card/zoro_onigiri.png");
 
             cardImage.put("Move Up", ImageIO.read(moveImage));
             cardImage.put("Move Down", ImageIO.read(moveImage));
             cardImage.put("Move Left", ImageIO.read(moveImage));
             cardImage.put("Move Right", ImageIO.read(moveImage));
-            cardImage.put("Super Punch", ImageIO.read(super_PunchImage));
-            cardImage.put("Flying Strike", ImageIO.read(Flying_StrikeImage));
+            cardImage.put("Tiger Trap", ImageIO.read(tiger_TrapImage));
+            cardImage.put("Onigiri", ImageIO.read(onigiriImage));
 
         } catch (IOException e) {
             e.printStackTrace();

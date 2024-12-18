@@ -50,20 +50,20 @@ public class Finn extends Character {
     public void addUniqueCard() {
         
        cardList.add(new Card(
-             /*name:*/ "Super Punch", 
+             /*name:*/ "Sword Slash", 
              /*category:*/ "ATTACK", 
              /*range:*/ new LinkedList<>() {{
                       add(new int[]{0, -1});}}, 
-             /*value:*/ 50, 
+             /*value:*/ 40, 
              /*priority:*/ 2));
        
        cardList.add(new Card(
-             /*name:*/ "Flying Strike", 
+             /*name:*/ "Stretch Punch", 
              /*category:*/ "ATTACK", 
              /*range:*/ new LinkedList<>() {{
                       add(new int[]{0, -2});
-                      add(new int[]{0, -3});}}, 
-             /*value:*/ 75, 
+                      }}, 
+             /*value:*/ 35, 
              /*priority:*/ 2));
     }
 
@@ -76,16 +76,16 @@ public class Finn extends Character {
 
         try {
             // 카드 이미지 파일 경로를 절대 경로로 지정
-            File moveImage = new File("res/card/superman_move.png");
-            File super_PunchImage = new File("res/card/superman_move.png");
-            File Flying_StrikeImage = new File("res/card/superman_move.png");
+            File moveImage = new File("res/card/finn_move.png");
+            File sword_SlashImage = new File("res/card/finn_swordSlash.jpg");
+            File stretch_PunchImage = new File("res/card/finn_stretchPunch.png");
 
             cardImage.put("Move Up", ImageIO.read(moveImage));
             cardImage.put("Move Down", ImageIO.read(moveImage));
             cardImage.put("Move Left", ImageIO.read(moveImage));
             cardImage.put("Move Right", ImageIO.read(moveImage));
-            cardImage.put("Super Punch", ImageIO.read(super_PunchImage));
-            cardImage.put("Flying Strike", ImageIO.read(Flying_StrikeImage));
+            cardImage.put("Sword Slash", ImageIO.read(sword_SlashImage));
+            cardImage.put("Stretch Punch", ImageIO.read(stretch_PunchImage));
 
         } catch (IOException e) {
             e.printStackTrace();

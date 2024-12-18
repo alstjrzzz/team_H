@@ -50,20 +50,21 @@ public class Cygnus extends Character {
     public void addUniqueCard() {
         
        cardList.add(new Card(
-             /*name:*/ "Skill1", 
-             /*category:*/ "ATTACK", 
-             /*range:*/ new LinkedList<>() {{
-                      add(new int[]{0, -1});}}, 
-             /*value:*/ 50, 
-             /*priority:*/ 2));
-       
-       cardList.add(new Card(
-             /*name:*/ "Skill2", 
+             /*name:*/ "Galactic Burst", 
              /*category:*/ "ATTACK", 
              /*range:*/ new LinkedList<>() {{
                       add(new int[]{0, -2});
-                      add(new int[]{0, -3});}}, 
-             /*value:*/ 75, 
+                      add(new int[]{0, 2});}}, 
+             /*value:*/ 25, 
+             /*priority:*/ 2));
+       
+       cardList.add(new Card(
+             /*name:*/ "Phoenix Breath", 
+             /*category:*/ "ATTACK", 
+             /*range:*/ new LinkedList<>() {{
+                      add(new int[]{0, -1});
+                      add(new int[]{-1, 0});}}, 
+             /*value:*/ 35, 
              /*priority:*/ 2));
     }
 
@@ -76,16 +77,16 @@ public class Cygnus extends Character {
 
         try {
             // 카드 이미지 파일 경로를 절대 경로로 지정
-            File moveImage = new File("res/card/superman_move.png");
-            File super_PunchImage = new File("res/card/superman_move.png");
-            File Flying_StrikeImage = new File("res/card/superman_move.png");
+            File moveImage = new File("res/card/cygnus_move.png");
+            File galactic_BurstImage = new File("res/card/cygnus_galacticBurst.png");
+            File phoenix_BreathImage = new File("res/card/cygnus_phoenixBreath.png");
 
             cardImage.put("Move Up", ImageIO.read(moveImage));
             cardImage.put("Move Down", ImageIO.read(moveImage));
             cardImage.put("Move Left", ImageIO.read(moveImage));
             cardImage.put("Move Right", ImageIO.read(moveImage));
-            cardImage.put("Skill1", ImageIO.read(super_PunchImage));
-            cardImage.put("Skill2", ImageIO.read(Flying_StrikeImage));
+            cardImage.put("Galactic Burst", ImageIO.read(galactic_BurstImage));
+            cardImage.put("Phoenix Breath", ImageIO.read(phoenix_BreathImage));
 
         } catch (IOException e) {
             e.printStackTrace();

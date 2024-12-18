@@ -79,8 +79,10 @@ public class SelectCardScreen extends JPanel {
       selectedCardList.add(null);
       
       // 배경 이미지 로드
-        backgroundImage = new ImageIcon("res/img/카드선택_배경화면.png").getImage();
-        startAnimation(); // 애니메이션 시작
+      backgroundImage = new ImageIcon("res/img/카드선택_배경화면.png").getImage();
+      startAnimation(); // 애니메이션 시작
+        
+      gameController.playBGM("res/sound/bgm/게임진행브금.mp3"); // 캐릭터 선택창 브금
       
       splitPanel();
       drawHealthPanel();

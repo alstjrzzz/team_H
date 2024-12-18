@@ -69,6 +69,8 @@ public class SelectCharacterScreen extends JPanel {
         // 배경 이미지 로드
         backgroundImage = new ImageIcon("res/img/캐릭터 선택창 배경.png").getImage();
         
+        gameController.playBGM("res/sound/bgm/로그인창_브금.mp3"); // 캐릭터 선택창 브금
+        
         drawSelectCharacterPanel();
     }
 
