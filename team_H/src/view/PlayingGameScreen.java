@@ -1546,6 +1546,9 @@ public class PlayingGameScreen extends JPanel {
         // 그리드 그리기
         drawDashedGrid(g2d, 3, 6, 150, 60);
         
+        // 체력바 그리기
+        drawHealthPanel();
+        
         // 캐릭터 그리기
         
         if (enemyCharacter == null || myCharacter == null) return;
@@ -2264,43 +2267,87 @@ public class PlayingGameScreen extends JPanel {
         int panelWidth = 950; // 패널의 예상 너비를 설정
         int panelHeight = 50;
 
-        // Player 1의 캐릭터 로고
-        JLabel player1Logo = new JLabel(new ImageIcon(gameState.getMyCharacter().getLogo()));
-        player1Logo.setBounds(30, 10, panelHeight, panelHeight);
-        healthPanel.add(player1Logo);
+        
+        if (gameState.getClientNumber() == 1) {
+        	// Player 1의 캐릭터 로고
+            JLabel player1Logo = new JLabel(new ImageIcon(gameState.getMyCharacter().getLogo()));
+            player1Logo.setBounds(30, 10, panelHeight, panelHeight);
+            healthPanel.add(player1Logo);
+        	
+        	// Player 1의 체력바
+        	JProgressBar player1HealthBar = new JProgressBar(0, gameState.getMyCharacter().getMaxHealth());
+	        player1HealthBar.setValue(gameState.getMyHealth());
+	        player1HealthBar.setBounds(90, 10, panelWidth / 2 - 100, 30);
+	        player1HealthBar.setForeground(Color.RED);
+	        healthPanel.add(player1HealthBar);
+	        
+	        // Player 1의 이름
+	        JLabel player1NameLabel = new JLabel(gameState.getMyCharacter().getName());
+	        player1NameLabel.setBounds(90, 40, panelWidth / 2 - 100, 20);
+	        player1NameLabel.setHorizontalAlignment(SwingConstants.LEFT);
+	        player1NameLabel.setForeground(Color.black); // 흰색 글씨로 이름 표시
+	        healthPanel.add(player1NameLabel);
+	        
+	        
+	        // Player 2의 캐릭터 로고
+	        JLabel player2Logo = new JLabel(new ImageIcon(gameState.getEnemyCharacter().getLogo()));
+	        player2Logo.setBounds(panelWidth - panelHeight - 10, 10, panelHeight, panelHeight);
+	        healthPanel.add(player2Logo);
+	        
+	        // Player 2의 체력바
+	        JProgressBar player2HealthBar = new JProgressBar(0, gameState.getEnemyCharacter().getMaxHealth());
+	        player2HealthBar.setValue(gameState.getEnemyHealth());
+	        player2HealthBar.setBounds(panelWidth / 2 + 20, 10, panelWidth / 2 - 100, 30);
+	        player2HealthBar.setForeground(Color.RED);
+	        healthPanel.add(player2HealthBar);
 
-        // Player 1의 체력바
-        JProgressBar player1HealthBar = new JProgressBar(0, gameState.getMyCharacter().getMaxHealth());
-        player1HealthBar.setValue(gameState.getMyHealth());
-        player1HealthBar.setBounds(90, 10, panelWidth / 2 - 100, 30);
-        player1HealthBar.setForeground(Color.RED);
-        healthPanel.add(player1HealthBar);
+	        // Player 2의 이름
+	        JLabel player2NameLabel = new JLabel(gameState.getEnemyCharacter().getName());
+	        player2NameLabel.setBounds(panelWidth / 2 + 20, 40, panelWidth / 2 - 100, 20);
+	        player2NameLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+	        player2NameLabel.setForeground(Color.black); // 흰색 글씨로 이름 표시
+	        healthPanel.add(player2NameLabel);
+        } else {
+        	// Player 1의 캐릭터 로고
+            JLabel player1Logo = new JLabel(new ImageIcon(gameState.getEnemyCharacter().getLogo()));
+            player1Logo.setBounds(30, 10, panelHeight, panelHeight);
+            healthPanel.add(player1Logo);
+        	
+            // Player 1의 체력바
+        	JProgressBar player1HealthBar = new JProgressBar(0, gameState.getEnemyCharacter().getMaxHealth());
+	        player1HealthBar.setValue(gameState.getEnemyHealth());
+	        player1HealthBar.setBounds(90, 10, panelWidth / 2 - 100, 30);
+	        player1HealthBar.setForeground(Color.RED);
+	        healthPanel.add(player1HealthBar);
+	        
+	        // Player 1의 이름
+	        JLabel player1NameLabel = new JLabel(gameState.getEnemyCharacter().getName());
+	        player1NameLabel.setBounds(90, 40, panelWidth / 2 - 100, 20);
+	        player1NameLabel.setHorizontalAlignment(SwingConstants.LEFT);
+	        player1NameLabel.setForeground(Color.black); // 흰색 글씨로 이름 표시
+	        healthPanel.add(player1NameLabel);
+	        
+	        
+	        // Player 2의 캐릭터 로고
+	        JLabel player2Logo = new JLabel(new ImageIcon(gameState.getMyCharacter().getLogo()));
+	        player2Logo.setBounds(panelWidth - panelHeight - 10, 10, panelHeight, panelHeight);
+	        healthPanel.add(player2Logo);
+	        
+	        // Player 2의 체력바
+	        JProgressBar player2HealthBar = new JProgressBar(0, gameState.getMyCharacter().getMaxHealth());
+	        player2HealthBar.setValue(gameState.getMyHealth());
+	        player2HealthBar.setBounds(panelWidth / 2 + 20, 10, panelWidth / 2 - 100, 30);
+	        player2HealthBar.setForeground(Color.RED);
+	        healthPanel.add(player2HealthBar);
 
-        // Player 1의 이름
-        JLabel player1NameLabel = new JLabel(gameState.getMyCharacter().getName());
-        player1NameLabel.setBounds(90, 40, panelWidth / 2 - 100, 20);
-        player1NameLabel.setHorizontalAlignment(SwingConstants.LEFT);
-        player1NameLabel.setForeground(Color.black); // 흰색 글씨로 이름 표시
-        healthPanel.add(player1NameLabel);
+	        // Player 2의 이름
+	        JLabel player2NameLabel = new JLabel(gameState.getMyCharacter().getName());
+	        player2NameLabel.setBounds(panelWidth / 2 + 20, 40, panelWidth / 2 - 100, 20);
+	        player2NameLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+	        player2NameLabel.setForeground(Color.black); // 흰색 글씨로 이름 표시
+	        healthPanel.add(player2NameLabel);
+        }
 
-        // Player 2의 캐릭터 로고
-        JLabel player2Logo = new JLabel(new ImageIcon(gameState.getEnemyCharacter().getLogo()));
-        player2Logo.setBounds(panelWidth - panelHeight - 10, 10, panelHeight, panelHeight);
-        healthPanel.add(player2Logo);
-
-        // Player 2의 체력바
-        JProgressBar player2HealthBar = new JProgressBar(0, gameState.getEnemyCharacter().getMaxHealth());
-        player2HealthBar.setValue(gameState.getEnemyHealth());
-        player2HealthBar.setBounds(panelWidth / 2 + 20, 10, panelWidth / 2 - 100, 30);
-        player2HealthBar.setForeground(Color.RED);
-        healthPanel.add(player2HealthBar);
-
-        // Player 2의 이름
-        JLabel player2NameLabel = new JLabel(gameState.getEnemyCharacter().getName());
-        player2NameLabel.setBounds(panelWidth / 2 + 20, 40, panelWidth / 2 - 100, 20);
-        player2NameLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-        player2NameLabel.setForeground(Color.black); // 흰색 글씨로 이름 표시
-        healthPanel.add(player2NameLabel);
     }
 
 

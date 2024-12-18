@@ -6,6 +6,7 @@ import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -431,14 +432,9 @@ public class GameController {
 				playingGameScreen.drawMotion();
 				
 				// 모션 끝날 때까지 대기
-				Timer timer = new Timer(5000, e -> {
-			        ((Timer) e.getSource()).stop();
-			    });
-			    timer.setRepeats(false);
-			    timer.start();
+				// 타이머 넣어!!
 				
 				if (character == gameState.getMyCharacter()) { // 내 캐릭터가 공격함
-					
 					for (int i = 0; i < card.getRange().size(); i++) {
 						int[] range = new int[2];
 						if (!gameState.isMyCharacterIsFlip()) {
@@ -448,19 +444,18 @@ public class GameController {
 							range[0] = gameState.getMyPosition()[0] - card.getRange().get(i)[0];
 							range[1] = gameState.getMyPosition()[1] + card.getRange().get(i)[1];
 						}
-						
-						if (range.equals(gameState.getEnemyPosition())) {
+						System.out.println("공격 위치: "+range[0]+","+range[1]);
+						System.out.println("상대 캐릭터 위치: "+gameState.getEnemyPosition()[0]+","+gameState.getEnemyPosition()[1]);
+						if (Arrays.equals(range, gameState.getMyPosition())) {
+							System.out.println("내 캐릭터("+gameState.getMyCharacter().getName()+")가 공격, 대미지: "+card.getValue());
 							gameState.setEnemyHealth(gameState.getEnemyHealth() - card.getValue());
+							System.out.println("상대 캐릭터("+gameState.getEnemyCharacter().getName()+")가 피격, [현재 체력/최대 체력]: ["+gameState.getEnemyHealth()+"/"+gameState.getEnemyCharacter().getMaxHealth()+"]");
 							character.setCurrentMotion("IDLE");
 							gameState.getEnemyCharacter().setCurrentMotion("HIT");
 							playingGameScreen.drawMotion();
 							
 							// 모션 끝날 때까지 대기
-							timer = new Timer(5000, e -> {
-						        ((Timer) e.getSource()).stop();
-						    });
-						    timer.setRepeats(false);
-						    timer.start();
+							// 타이머 넣어!!
 						}
 					}
 					gameState.getEnemyCharacter().setCurrentMotion("IDLE");
@@ -477,19 +472,19 @@ public class GameController {
 							range[0] = gameState.getEnemyPosition()[0] - card.getRange().get(i)[0];
 							range[1] = gameState.getEnemyPosition()[1] + card.getRange().get(i)[1];
 						}
-						
-						if (range.equals(gameState.getEnemyPosition())) {
+						System.out.println("공격 위치: "+range[0]+","+range[1]);
+						System.out.println("상대 캐릭터 위치: "+gameState.getEnemyPosition()[0]+","+gameState.getEnemyPosition()[1]);
+						if (Arrays.equals(range, gameState.getMyPosition())) {
+							System.out.println("상대 캐릭터("+gameState.getEnemyCharacter().getName()+")가 공격, 대미지: "+card.getValue());
 							gameState.setMyHealth(gameState.getMyHealth() - card.getValue());
+							System.out.println("내 캐릭터("+gameState.getMyCharacter().getName()+")가 피격, [현재 체력/최대 체력]: ["+gameState.getMyHealth()+"/"+gameState.getMyCharacter().getMaxHealth()+"]");
+
 							character.setCurrentMotion("IDLE");
 							gameState.getMyCharacter().setCurrentMotion("HIT");
 							playingGameScreen.drawMotion();
 							
 							// 모션 끝날 때까지 대기
-							timer = new Timer(5000, e -> {
-						        ((Timer) e.getSource()).stop();
-						    });
-						    timer.setRepeats(false);
-						    timer.start();
+							// 타이머 넣어!!
 						}
 					}
 					gameState.getMyCharacter().setCurrentMotion("IDLE");
