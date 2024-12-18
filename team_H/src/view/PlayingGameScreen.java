@@ -2,6 +2,7 @@ package view;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.LinkedList;
@@ -1637,8 +1638,12 @@ public class PlayingGameScreen extends JPanel {
         	case "IDLE":
         		if (myMotions != null) {
     		        BufferedImage currentImage = myMotions[myCurrentFrame];
-    		        g.drawImage(currentImage, myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
-    			}
+    		        if(myCharacter.getCurrentX() >= 500) {
+    		        g.drawImage(flipHorizontally(currentImage), myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
+    			}else
+    				g.drawImage(currentImage, myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
+        		}
+    				
         		break;
         	}
         	
@@ -1695,6 +1700,9 @@ public class PlayingGameScreen extends JPanel {
         	case "IDLE":
         		if (myMotions != null) {
     		        BufferedImage currentImage = myMotions[myCurrentFrame];
+    		        if(myCharacter.getCurrentX() >= 500) {
+    		        	g.drawImage(flipHorizontally(currentImage), myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);	
+    		        }else
     		        g.drawImage(currentImage, myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
     			}
         		break;
@@ -1752,9 +1760,12 @@ public class PlayingGameScreen extends JPanel {
         	case "IDLE":
         		if (myMotions != null) {
     		        BufferedImage currentImage = myMotions[myCurrentFrame];
+    		        if(myCharacter.getCurrentX() >= 500) {
+    		        	g.drawImage(flipHorizontally(currentImage), myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);	
+    		        }else
     		        g.drawImage(currentImage, myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
     			}
-    			break;
+        		break;
         	}
         	
         	break;
@@ -1844,9 +1855,12 @@ public class PlayingGameScreen extends JPanel {
         	case "IDLE":
         		if (myMotions != null) {
     		        BufferedImage currentImage = myMotions[myCurrentFrame];
+    		        if(myCharacter.getCurrentX() >= 500) {
+    		        	g.drawImage(flipHorizontally(currentImage), myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);	
+    		        }else
     		        g.drawImage(currentImage, myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
     			}
-    			break;
+        		break;
         	}
         	
         	break;
@@ -1975,7 +1989,10 @@ public class PlayingGameScreen extends JPanel {
         	case "IDLE":
         		if (enemyMotions != null) {
     		        BufferedImage currentImage = enemyMotions[enemyCurrentFrame];
-    		        g.drawImage(currentImage, enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
+    		        if(enemyCharacter.getCurrentX() >= 500) {
+    		        	g.drawImage(flipHorizontally(currentImage), enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
+    		        }else
+    		        	g.drawImage(currentImage, enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
     			}
     			break;
         	}
@@ -2033,7 +2050,10 @@ public class PlayingGameScreen extends JPanel {
         	case "IDLE":
         		if (enemyMotions != null) {
     		        BufferedImage currentImage = enemyMotions[enemyCurrentFrame];
-    		        g.drawImage(currentImage, enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
+    		        if(enemyCharacter.getCurrentX() >= 500) {
+    		        	g.drawImage(flipHorizontally(currentImage), enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
+    		        }else
+    		        	g.drawImage(currentImage, enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
     			}
     			break;
         	}
@@ -2090,7 +2110,10 @@ public class PlayingGameScreen extends JPanel {
         	case "IDLE":
         		if (enemyMotions != null) {
     		        BufferedImage currentImage = enemyMotions[enemyCurrentFrame];
-    		        g.drawImage(currentImage, enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
+    		        if(enemyCharacter.getCurrentX() >= 500) {
+    		        	g.drawImage(flipHorizontally(currentImage), enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
+    		        }else
+    		        	g.drawImage(currentImage, enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
     			}
     			break;
         	}
@@ -2182,7 +2205,11 @@ public class PlayingGameScreen extends JPanel {
         	case "IDLE":
         		if (enemyMotions != null) {
     		        BufferedImage currentImage = enemyMotions[enemyCurrentFrame];
-    		        g.drawImage(currentImage, enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
+    		        
+    		        if(enemyCharacter.getCurrentX() >= 500) {
+    		        	g.drawImage(flipHorizontally(currentImage), enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
+    		        }else
+    		        	g.drawImage(currentImage, enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
     			}
     			break;
         	}
@@ -2347,4 +2374,23 @@ public class PlayingGameScreen extends JPanel {
             g2d.drawLine(x, yOffset, x, yOffset + gridHeight);
         }
     }
+    
+    private static BufferedImage flipHorizontally(BufferedImage image) {
+        // 뒤집힌 이미지를 담을 새로운 BufferedImage 생성
+        BufferedImage flippedImage = new BufferedImage(image.getWidth(), image.getHeight(), image.getType());
+        
+        // Graphics2D 객체 생성
+        Graphics2D g2d = flippedImage.createGraphics();
+        
+        // AffineTransform을 사용해 수평으로 이미지를 뒤집기
+        AffineTransform transform = AffineTransform.getScaleInstance(-1, 1); // 수평 뒤집기
+        transform.translate(-image.getWidth(), 0); // 원래 이미지의 위치로 이동시킴
+        
+        // 뒤집힌 이미지를 그리기
+        g2d.drawImage(image, transform, null);
+        g2d.dispose();
+        
+        return flippedImage; // 뒤집힌 이미지 반환
+    }
+
 }

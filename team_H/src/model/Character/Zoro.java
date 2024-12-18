@@ -103,6 +103,9 @@ public class Zoro extends Character {
       for (int i = 0; i < 4; i++) {
          tempArr[i] = resizeImage(sprite.getSubimage(i * 123, 770, 123, 152), character_size, character_size, true);
       }
+      for (int i = 0; i < 4; i++) {
+          tempArr[i] = flipHorizontally(tempArr[i]);
+       }
       motions.put("IDLE", tempArr.clone());
       
       motions.put("HIT", null);

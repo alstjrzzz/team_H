@@ -103,6 +103,9 @@ public class Cygnus extends Character {
        for (int i = 0; i < 8; i++) {
           tempArr[i] = resizeImage(sprite.getSubimage(i * 85, 7,85,118), character_size, character_size, true);
        }
+       for (int i = 0; i < 8; i++) {
+           tempArr[i] = flipHorizontally(tempArr[i]);
+        }
        motions.put("IDLE", tempArr.clone());
        
        motions.put("HIT", null);
