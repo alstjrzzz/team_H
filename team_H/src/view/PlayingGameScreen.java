@@ -107,6 +107,15 @@ public class PlayingGameScreen extends JPanel {
     		enemyMotionTimer.stop();
     	}
     	
+    	if (gameState.getMyCharacter().getCurrentMotion().equals("ATTACK")
+    			|| gameState.getMyCharacter().getCurrentMotion().equals("MOVE")
+    			|| gameState.getEnemyCharacter().getCurrentMotion().equals("ATTACK")
+    			|| gameState.getEnemyCharacter().getCurrentMotion().equals("MOVE")) {
+    		networkManager.sendStopPlease(5000);	// 공격이나 무빙은 오래걸리니까 8초 기둘
+    	} else {
+    		networkManager.sendStopPlease(1000);	// 맞은 모션이나 idle은 짧게 3초만 ㅋ
+    	}
+    	
     	// 내 캐릭터 그리기
     	myCharacter = gameState.getMyCharacter();
     	if (gameState.getClientNumber() == 1) {
@@ -809,7 +818,28 @@ public class PlayingGameScreen extends JPanel {
 
             case "ATTACK":
                 switch (myCharacter.getCurrentCard().getName()) {
-                case "Skill1":
+                case "Sword Slash":
+                    myMotions = myCharacter.getMotions().get(myCharacter.getCurrentCard().getName());
+                    myFrameDelay = 100; // 각 프레임 간격
+                    myDuration = myFrameDelay * myMotions.length * 4; // 애니메이션 총 시간
+
+                    myCurrentFrame = 0;
+
+                    myMotionTimer = new Timer(myFrameDelay, null);
+                    myMotionTimer.addActionListener(e -> {
+                        myCurrentFrame = (myCurrentFrame + 1) % myMotions.length;
+                        repaint();
+                    });
+
+                    new Timer(myDuration, e -> {
+                        myMotionTimer.stop();
+                        ((Timer) e.getSource()).stop();
+                    }).start();
+
+                    myMotionTimer.start();
+
+                    break;
+                case "Stretch Punch":
                     myMotions = myCharacter.getMotions().get(myCharacter.getCurrentCard().getName());
                     myFrameDelay = 100; // 각 프레임 간격
                     myDuration = myFrameDelay * myMotions.length * 4; // 애니메이션 총 시간
@@ -1620,8 +1650,7 @@ public class PlayingGameScreen extends JPanel {
         		
         	case "ATTACK":
         		switch (enemyCharacter.getCurrentCard().getName()) {
-        		// ... skill들 넣으셈
-        		case "Skill1" :
+        		case "Sword Slash" :
         			
         			enemyMotions = enemyCharacter.getMotions().get(enemyCharacter.getCurrentCard().getName());
         			enemyFrameDelay = 100;	// 각 프레임 간격
@@ -1642,6 +1671,27 @@ public class PlayingGameScreen extends JPanel {
         			enemyMotionTimer.start();
         			
         			break;
+        		case "Stretch Punch":
+                    myMotions = myCharacter.getMotions().get(myCharacter.getCurrentCard().getName());
+                    myFrameDelay = 100; // 각 프레임 간격
+                    myDuration = myFrameDelay * myMotions.length * 4; // 애니메이션 총 시간
+
+                    myCurrentFrame = 0;
+
+                    myMotionTimer = new Timer(myFrameDelay, null);
+                    myMotionTimer.addActionListener(e -> {
+                        myCurrentFrame = (myCurrentFrame + 1) % myMotions.length;
+                        repaint();
+                    });
+
+                    new Timer(myDuration, e -> {
+                        myMotionTimer.stop();
+                        ((Timer) e.getSource()).stop();
+                    }).start();
+
+                    myMotionTimer.start();
+
+                    break;
         			
         		}
         		break;
@@ -2028,13 +2078,19 @@ public class PlayingGameScreen extends JPanel {
         		break;
         	case "ATTACK":
         		switch (myCharacter.getCurrentCard().getName()) {
-        		// ... skill들 넣으셈
-        		case "Skill1":
+        		case "Sword Slash":
         			if (myMotions != null) {
         		        BufferedImage currentImage = myMotions[myCurrentFrame];
         		        g.drawImage(currentImage, myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
         			}
         			break;
+        		case "Stretch Punch":
+        			if (myMotions != null) {
+        		        BufferedImage currentImage = myMotions[myCurrentFrame];
+        		        g.drawImage(currentImage, myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
+        			}
+        			break;
+        			
         		}
         		break;
         	case "HIT":
@@ -2378,8 +2434,13 @@ public class PlayingGameScreen extends JPanel {
         		break;
         	case "ATTACK":
         		switch (enemyCharacter.getCurrentCard().getName()) {
-        		// ... skill들 넣으셈
-        		case "Skill1":
+        		case "Sword Slash":
+        			if (enemyMotions != null) {
+        		        BufferedImage currentImage = enemyMotions[enemyCurrentFrame];
+        		        g.drawImage(currentImage, enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
+        			}
+        			break;
+        		case "Stretch Punch":
         			if (enemyMotions != null) {
         		        BufferedImage currentImage = enemyMotions[enemyCurrentFrame];
         		        g.drawImage(currentImage, enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);

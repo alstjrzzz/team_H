@@ -140,8 +140,13 @@ public class Finn extends Character {
       for (int i = 0; i < 19; i++) {
          tempArr[i] = resizeImage(sprite.getSubimage(i * 176, 3663, 176, 65), character_size, character_size, true);
       }
-      motions.put("Skill1", tempArr.clone());
-      motions.put("Skill2", null);
+      motions.put("Sword Slash", tempArr.clone());
+      
+      tempArr = new BufferedImage[19];
+      for (int i = 0; i < 19; i++) {
+         tempArr[i] = resizeImage(sprite.getSubimage(i * 112, 3408, 112, 48), character_size, character_size, true);
+      }
+      motions.put("Stretch Punch", tempArr.clone());
    }
    
     private  BufferedImage resizeImage(BufferedImage image, int newWidth, int newHeight, boolean keepRatio) {

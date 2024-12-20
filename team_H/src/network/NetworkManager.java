@@ -102,6 +102,19 @@ public class NetworkManager {
         json.put("command", "CONNECT_FINISH");
         out.println(json.toString());
     }
+    
+    
+    // 타이머 대용 ㅋㅋ
+    public void sendStopPlease(int ms) {
+    	if (clientSocket == null || clientSocket.isClosed()) {
+	        System.out.println("서버와 연결되지 않았습니다.");
+	        return;
+	    }
+    	JSONObject json = new JSONObject();
+	    json.put("command", "WAIT");
+	    json.put("millisecond", ms);
+	    out.println(json.toString());
+    }
 	
 	
     // 메시지 수신

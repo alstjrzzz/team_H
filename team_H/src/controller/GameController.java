@@ -377,31 +377,11 @@ public class GameController {
 				character.setCurrentMotion("MOVE");
 				character.setCurrentCard(card);
 				playingGameScreen.drawMotion();
-				
-				// Timer 대신 CountDownLatch로 대기 구현
-	            CountDownLatch latch = new CountDownLatch(1);
-
-	            SwingUtilities.invokeLater(() -> {
-	                try {
-	                    Timer timer = new Timer(5000, e -> {
-	                        ((Timer) e.getSource()).stop();
-	                        latch.countDown(); // 작업 완료 신호
-	                    });
-	                    timer.setRepeats(false);
-	                    timer.start();
-	                } catch (Exception ex) {
-	                    ex.printStackTrace();
-	                    latch.countDown(); // 에러 발생 시에도 계속 진행
-	                }
-	            });
-
-	            try {
-	                latch.await(); // Timer 종료까지 대기
-	            } catch (InterruptedException e) {
-	                Thread.currentThread().interrupt();
-	                System.err.println("Thread interrupted: " + e.getMessage());
-	            }
-			    
+				try {
+					String response = networkManager.receiveJson();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}	
 			    
 				// GameState 업데이트
 				if (character == gameState.getMyCharacter()) {
@@ -424,16 +404,23 @@ public class GameController {
 				character.setCurrentMotion("IDLE");
 				character.setCurrentCard(card);
 				playingGameScreen.drawMotion();
+				try {
+					String response = networkManager.receiveJson();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 				System.out.println("playing game screen repaint start 2");
 				break;
 			case "ATTACK":
 				character.setCurrentMotion("ATTACK");
 				character.setCurrentCard(card);
 				playingGameScreen.drawMotion();
-				
-				// 모션 끝날 때까지 대기
-				// 타이머 넣어!!
-				
+				try {
+					String response = networkManager.receiveJson();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				character.setCurrentMotion("IDLE");
 				if (character == gameState.getMyCharacter()) { // 내 캐릭터가 공격함
 					for (int i = 0; i < card.getRange().size(); i++) {
 						int[] range = new int[2];
@@ -450,17 +437,24 @@ public class GameController {
 							System.out.println("내 캐릭터("+gameState.getMyCharacter().getName()+")가 공격, 대미지: "+card.getValue());
 							gameState.setEnemyHealth(gameState.getEnemyHealth() - card.getValue());
 							System.out.println("상대 캐릭터("+gameState.getEnemyCharacter().getName()+")가 피격, [현재 체력/최대 체력]: ["+gameState.getEnemyHealth()+"/"+gameState.getEnemyCharacter().getMaxHealth()+"]");
-							character.setCurrentMotion("IDLE");
+							
 							gameState.getEnemyCharacter().setCurrentMotion("HIT");
 							playingGameScreen.drawMotion();
-							
-							// 모션 끝날 때까지 대기
-							// 타이머 넣어!!
+							try {
+								String response = networkManager.receiveJson();
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
 						}
 					}
 					gameState.getEnemyCharacter().setCurrentMotion("IDLE");
 					character.setCurrentCard(card);
 					playingGameScreen.drawMotion();
+					try {
+						String response = networkManager.receiveJson();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 				} else {
 					
 					for (int i = 0; i < card.getRange().size(); i++) {
@@ -479,17 +473,23 @@ public class GameController {
 							gameState.setMyHealth(gameState.getMyHealth() - card.getValue());
 							System.out.println("내 캐릭터("+gameState.getMyCharacter().getName()+")가 피격, [현재 체력/최대 체력]: ["+gameState.getMyHealth()+"/"+gameState.getMyCharacter().getMaxHealth()+"]");
 
-							character.setCurrentMotion("IDLE");
 							gameState.getMyCharacter().setCurrentMotion("HIT");
 							playingGameScreen.drawMotion();
-							
-							// 모션 끝날 때까지 대기
-							// 타이머 넣어!!
+							try {
+								String response = networkManager.receiveJson();
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
 						}
 					}
 					gameState.getMyCharacter().setCurrentMotion("IDLE");
 					character.setCurrentCard(card);
 					playingGameScreen.drawMotion();
+					try {
+						String response = networkManager.receiveJson();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 				}
 				break;
 			case "GUARD":

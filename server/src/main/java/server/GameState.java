@@ -108,4 +108,5 @@ public class GameState {
     public void setClient2Ready(boolean client2Ready) {
         this.client2Ready = client2Ready;
     }
+    
 }

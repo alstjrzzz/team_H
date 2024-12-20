@@ -106,6 +106,10 @@ public class ClientHandler extends Thread {
                         gameState.setClient2CardList(cardsArray);
                     }
                     return null;
+                case "WAIT":
+                	int ms = jsonRequest.getInt("millisecond");
+                	this.sleep(ms);
+                	return "NON_NULL";
                 default:
                     System.out.println("Unknown command");
                     return null;
