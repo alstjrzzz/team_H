@@ -20,6 +20,7 @@ import model.Card;
 public class Finn extends Character {
    
 	private int character_size = 100;
+	private int character_skill_size = 300;
    
     public Finn() {
        
@@ -45,7 +46,7 @@ public class Finn extends Character {
     
     
     
-    // 슈퍼맨의 고유 카드 추가
+    // 핀의 고유카드 추가
     @Override
     public void addUniqueCard() {
         
@@ -53,7 +54,8 @@ public class Finn extends Character {
              /*name:*/ "Sword Slash", 
              /*category:*/ "ATTACK", 
              /*range:*/ new LinkedList<>() {{
-                      add(new int[]{0, -1});}}, 
+		                 add(new int[]{0, 0});
+		                 add(new int[]{1, 0});}},  
              /*value:*/ 40, 
              /*priority:*/ 2));
        
@@ -61,8 +63,8 @@ public class Finn extends Character {
              /*name:*/ "Stretch Punch", 
              /*category:*/ "ATTACK", 
              /*range:*/ new LinkedList<>() {{
-                      add(new int[]{0, -2});
-                      }}, 
+		                 add(new int[]{0, 0});
+		                 add(new int[]{1, 0});}}, 
              /*value:*/ 35, 
              /*priority:*/ 2));
     }
@@ -104,18 +106,23 @@ public class Finn extends Character {
       }
       motions.put("IDLE", tempArr.clone());
       
-      motions.put("HIT", null);
+      tempArr = new BufferedImage[12];
+      for (int i = 0; i < 12; i++) {
+         tempArr[i] = resizeImage(sprite.getSubimage(i * 64, 1036, 64, 48), character_size, character_size, true);
+      }
+      motions.put("HIT", tempArr.clone());
       
       tempArr = new BufferedImage[20];
       for (int i = 0; i < 20; i++) {
          tempArr[i] = resizeImage(sprite.getSubimage(i * 64, 2016, 64, 48), character_size, character_size, true);
       }
-      motions.put("DEAD", null);
+      motions.put("DEAD", tempArr.clone());
+      
       motions.put("GUARD", null);
       
-      tempArr = new BufferedImage[14];
-      for (int i = 0; i < 14; i++) {
-         tempArr[i] = resizeImage(sprite.getSubimage(i * 48, 1440, 48, 48), character_size, character_size, true);
+      tempArr = new BufferedImage[10];
+      for (int i = 4; i < 14; i++) {
+         tempArr[i-4] = resizeImage(sprite.getSubimage(i * 48, 1440, 48, 48), character_size, character_size, true);
       }
       motions.put("Move Up", tempArr.clone());
       
@@ -138,13 +145,13 @@ public class Finn extends Character {
       
       tempArr = new BufferedImage[19];
       for (int i = 0; i < 19; i++) {
-         tempArr[i] = resizeImage(sprite.getSubimage(i * 176, 3663, 176, 65), character_size, character_size, true);
+         tempArr[i] = resizeImage(sprite.getSubimage(i * 176, 3663, 176, 65), character_skill_size, character_skill_size, true);
       }
       motions.put("Sword Slash", tempArr.clone());
       
       tempArr = new BufferedImage[19];
       for (int i = 0; i < 19; i++) {
-         tempArr[i] = resizeImage(sprite.getSubimage(i * 112, 3408, 112, 48), character_size, character_size, true);
+         tempArr[i] = resizeImage(sprite.getSubimage(i * 112, 3408, 112, 48), character_skill_size, character_skill_size, true);
       }
       motions.put("Stretch Punch", tempArr.clone());
    }

@@ -164,119 +164,257 @@ public class PlayingGameScreen extends JPanel {
         	
         // Doraemon ------------------------------------------------------------	
         case "Doraemon":
-        	switch (myCharacter.getCurrentMotion()) {
-        	case "MOVE":
-        		switch (myCharacter.getCurrentCard().getName()) {
-        		case "Move Up":
-        			
-        			myMotions = myCharacter.getMotions().get(myCharacter.getCurrentCard().getName());
-        			myFrameDelay = 200;	// 각 프레임 간격
-        			myDuration = myFrameDelay * myMotions.length * 8;	// 해당 모션의 총 시간
-        			
-        			myCurrentFrame = 0;
-        			myMotionTimer = new Timer(myFrameDelay, null);
-        			myMotionTimer.addActionListener(e -> {
-        				myCurrentFrame = (myCurrentFrame + 1) % myMotions.length;
-        			    repaint();
-        			});
-        			
-        			new Timer(myDuration, e -> {
-        				myMotionTimer.stop();
-        			    ((Timer) e.getSource()).stop();
-        			}).start();
-        			
-        			myMotionTimer.start();
-        			
-        			break;
-        		case "Move Down":
+            switch (myCharacter.getCurrentMotion()) {
+            case "MOVE":
+                switch (myCharacter.getCurrentCard().getName()) {
+                case "Move Up":
+                    // 시작 위치와 이동 거리 설정
+                    int MU_startY = myCharacter.getCurrentY(); // 시작 위치 Y
+                    int MU_endY = MU_startY - 60; // 목표 위치 (위쪽으로 60px 이동)
 
-        			myMotions = myCharacter.getMotions().get(myCharacter.getCurrentCard().getName());
-        			myFrameDelay = 200;	// 각 프레임 간격
-        			myDuration = myFrameDelay * myMotions.length * 8;	// 해당 모션의 총 시간
-        			
-        			myCurrentFrame = 0;
-        			myMotionTimer = new Timer(myFrameDelay, null);
-        			myMotionTimer.addActionListener(e -> {
-        				myCurrentFrame = (myCurrentFrame + 1) % myMotions.length;
-        			    repaint();
-        			});
-        			
-        			new Timer(myDuration, e -> {
-        				myMotionTimer.stop();
-        			    ((Timer) e.getSource()).stop();
-        			}).start();
-        			
-        			myMotionTimer.start();
-        			
-        			break;
-        		case "Move Left":
+                    // 애니메이션 관련 설정
+                    myMotions = myCharacter.getMotions().get(myCharacter.getCurrentCard().getName());
+                    myFrameDelay = 200; // 각 프레임 간격
+                    int MU_totalFrames = myMotions.length; // 애니메이션 총 프레임 수
+                    myDuration = 7 * myFrameDelay * MU_totalFrames; // 애니메이션 총 시간
 
-        			myMotions = myCharacter.getMotions().get(myCharacter.getCurrentCard().getName());
-        			myFrameDelay = 200;	// 각 프레임 간격
-        			myDuration = myFrameDelay * myMotions.length * 8;	// 해당 모션의 총 시간
-        			
-        			myCurrentFrame = 0;
-        			myMotionTimer = new Timer(myFrameDelay, null);
-        			myMotionTimer.addActionListener(e -> {
-        				myCurrentFrame = (myCurrentFrame + 1) % myMotions.length;
-        			    repaint();
-        			});
-        			
-        			new Timer(myDuration, e -> {
-        				myMotionTimer.stop();
-        			    ((Timer) e.getSource()).stop();
-        			}).start();
-        			
-        			myMotionTimer.start();
-        			
-        			break;
-        		case "Move Right":
+                    myCurrentFrame = 0;
 
-        			myMotions = myCharacter.getMotions().get(myCharacter.getCurrentCard().getName());
-        			myFrameDelay = 200;	// 각 프레임 간격
-        			myDuration = myFrameDelay * myMotions.length * 8;	// 해당 모션의 총 시간
-        			
-        			myCurrentFrame = 0;
-        			myMotionTimer = new Timer(myFrameDelay, null);
-        			myMotionTimer.addActionListener(e -> {
-        				myCurrentFrame = (myCurrentFrame + 1) % myMotions.length;
-        			    repaint();
-        			});
-        			
-        			new Timer(myDuration, e -> {
-        				myMotionTimer.stop();
-        			    ((Timer) e.getSource()).stop();
-        			}).start();
-        			
-        			myMotionTimer.start();
-        			
-        			break;
+                    // 이동 속도 계산
+                    int MU_steps = 7 * MU_totalFrames; // 이동할 스텝 수
+                    int MU_stepSize = (MU_endY - MU_startY) / MU_steps; // 한 스텝당 이동 거리
+
+                    // 프레임별 애니메이션 실행
+                    Timer myMotionTimer = new Timer(myFrameDelay, null);
+                    myMotionTimer.addActionListener(e -> {
+                        // 현재 프레임 업데이트
+                        myCurrentFrame = (myCurrentFrame + 1) % MU_totalFrames;
+
+                        // 현재 위치 업데이트
+                        int currentY = myCharacter.getCurrentY();
+                        if (Math.abs(currentY - MU_endY) > Math.abs(MU_stepSize)) {
+                            myCharacter.setCurrentY(currentY + MU_stepSize); // Y 위치 업데이트
+                        }
+
+                        // 화면 갱신
+                        repaint();
+                    });
+
+                    // 애니메이션 종료 시 처리
+                    new Timer(myDuration, e -> {
+                        myMotionTimer.stop();
+                        myCharacter.setCurrentY(MU_endY); // 최종 위치 보정
+                        ((Timer) e.getSource()).stop();
+                    }).start();
+
+                    myMotionTimer.start();
+
+                    break;
+                case "Move Down":
+                    // 시작 위치와 이동 거리 설정
+                    int MD_startY = myCharacter.getCurrentY(); // 시작 위치 Y
+                    int MD_endY = MD_startY + 60; // 목표 위치 (아래쪽으로 60px 이동)
+
+                    // 애니메이션 관련 설정
+                    myMotions = myCharacter.getMotions().get(myCharacter.getCurrentCard().getName());
+                    myFrameDelay = 200; // 각 프레임 간격
+                    int MD_totalFrames = myMotions.length; // 애니메이션 총 프레임 수
+                    myDuration = 7 * myFrameDelay * MD_totalFrames; // 애니메이션 총 시간
+
+                    myCurrentFrame = 0;
+
+                    // 이동 속도 계산
+                    int MD_steps = 7 * MD_totalFrames; // 이동할 스텝 수
+                    int MD_stepSize = (MD_endY - MD_startY) / MD_steps; // 한 스텝당 이동 거리
+
+                    // 프레임별 애니메이션 실행
+                    myMotionTimer = new Timer(myFrameDelay, null);
+                    myMotionTimer.addActionListener(e -> {
+                        // 현재 프레임 업데이트
+                        myCurrentFrame = (myCurrentFrame + 1) % MD_totalFrames;
+
+                        // 현재 위치 업데이트
+                        int currentY = myCharacter.getCurrentY();
+                        if (Math.abs(currentY - MD_endY) > Math.abs(MD_stepSize)) {
+                            myCharacter.setCurrentY(currentY + MD_stepSize); // Y 위치 업데이트
+                        }
+
+                        // 화면 갱신
+                        repaint();
+                    });
+
+                    // 애니메이션 종료 시 처리
+                    new Timer(myDuration, e -> {
+                        myMotionTimer.stop();
+                        myCharacter.setCurrentY(MD_endY); // 최종 위치 보정
+                        ((Timer) e.getSource()).stop();
+                    }).start();
+
+                    myMotionTimer.start();
+
+                    break;
+
+                case "Move Left":
+                    // 시작 위치와 이동 거리 설정
+                    int ML_startX = myCharacter.getCurrentX(); // 시작 위치 X
+                    int ML_endX = ML_startX - 150; // 목표 위치 (왼쪽으로 150px 이동)
+
+                    // 애니메이션 관련 설정
+                    myMotions = myCharacter.getMotions().get(myCharacter.getCurrentCard().getName());
+                    myFrameDelay = 200; // 각 프레임 간격
+                    int ML_totalFrames = myMotions.length; // 애니메이션 총 프레임 수
+                    myDuration = 7 * myFrameDelay * ML_totalFrames; // 애니메이션 총 시간
+
+                    myCurrentFrame = 0;
+
+                    // 이동 속도 계산
+                    int ML_steps = 7 * ML_totalFrames; // 이동할 스텝 수
+                    int ML_stepSize = (ML_endX - ML_startX) / ML_steps; // 한 스텝당 이동 거리
+
+                    // 프레임별 애니메이션 실행
+                    myMotionTimer = new Timer(myFrameDelay, null);
+                    myMotionTimer.addActionListener(e -> {
+                        // 현재 프레임 업데이트
+                        myCurrentFrame = (myCurrentFrame + 1) % ML_totalFrames;
+
+                        // 현재 위치 업데이트
+                        int currentX = myCharacter.getCurrentX();
+                        if (Math.abs(currentX - ML_endX) > Math.abs(ML_stepSize)) {
+                            myCharacter.setCurrentX(currentX + ML_stepSize); // X 위치 업데이트
+                        }
+
+                        // 화면 갱신
+                        repaint();
+                    });
+
+                    // 애니메이션 종료 시 처리
+                    new Timer(myDuration, e -> {
+                        myMotionTimer.stop();
+                        myCharacter.setCurrentX(ML_endX); // 최종 위치 보정
+                        ((Timer) e.getSource()).stop();
+                    }).start();
+
+                    myMotionTimer.start();
+
+                    break;
+
+                case "Move Right":
+                    // 시작 위치와 이동 거리 설정
+                    int MR_startX = myCharacter.getCurrentX(); // 시작 위치 X
+                    int MR_endX = MR_startX + 150; // 목표 위치 (오른쪽으로 150px 이동)
+
+                    // 애니메이션 관련 설정
+                    myMotions = myCharacter.getMotions().get(myCharacter.getCurrentCard().getName());
+                    myFrameDelay = 200; // 각 프레임 간격
+                    int MR_totalFrames = myMotions.length; // 애니메이션 총 프레임 수
+                    myDuration = 7 * myFrameDelay * MR_totalFrames; // 애니메이션 총 시간
+
+                    myCurrentFrame = 0;
+
+                    // 이동 속도 계산
+                    int MR_steps = 7 * MR_totalFrames; // 이동할 스텝 수
+                    int MR_stepSize = (MR_endX - MR_startX) / MR_steps; // 한 스텝당 이동 거리
+
+                    // 프레임별 애니메이션 실행
+                    myMotionTimer = new Timer(myFrameDelay, null);
+                    myMotionTimer.addActionListener(e -> {
+                        // 현재 프레임 업데이트
+                        myCurrentFrame = (myCurrentFrame + 1) % MR_totalFrames;
+
+                        // 현재 위치 업데이트
+                        int currentX = myCharacter.getCurrentX();
+                        if (Math.abs(currentX - MR_endX) > Math.abs(MR_stepSize)) {
+                            myCharacter.setCurrentX(currentX + MR_stepSize); // X 위치 업데이트
+                        }
+
+                        // 화면 갱신
+                        repaint();
+                    });
+
+                    // 애니메이션 종료 시 처리
+                    new Timer(myDuration, e -> {
+                        myMotionTimer.stop();
+                        myCharacter.setCurrentX(MR_endX); // 최종 위치 보정
+                        ((Timer) e.getSource()).stop();
+                    }).start();
+
+                    myMotionTimer.start();
+
+                    break;
+                }
+                break;
+
+            case "ATTACK":
+                switch (myCharacter.getCurrentCard().getName()) {
+                case "Air Cannon!":
+                    myMotions = myCharacter.getMotions().get(myCharacter.getCurrentCard().getName());
+                    myFrameDelay = 200; // 각 프레임 간격
+                    myDuration = myFrameDelay * myMotions.length * 8; // 애니메이션 총 시간
+
+                    myCurrentFrame = 0;
+
+                    myMotionTimer = new Timer(myFrameDelay, null);
+                    myMotionTimer.addActionListener(e -> {
+                        myCurrentFrame = (myCurrentFrame + 1) % myMotions.length;
+                        repaint();
+                    });
+
+                    new Timer(myDuration, e -> {
+                        myMotionTimer.stop();
+                        ((Timer) e.getSource()).stop();
+                    }).start();
+
+                    myMotionTimer.start();
+
+                    break;
+                    
+            	case "Bamboo Helicopter!":
+           		    int MR_startX = myCharacter.getCurrentX(); // 시작 위치 X
+        		    int MR_endX = MR_startX + 150*4; // 목표 위치 (오른쪽으로 150px 이동)
+
+        		    // 애니메이션 관련 설정
+        		    myMotions = myCharacter.getMotions().get(myCharacter.getCurrentCard().getName());
+        		    myFrameDelay = 100; // 각 프레임 간격
+        		    int MR_totalFrames = myMotions.length; // 애니메이션 총 프레임 수
+        		    myDuration = 8 * myFrameDelay * MR_totalFrames; // 애니메이션 총 시간
+
+        		    myCurrentFrame = 0;
+
+        		    // 이동 속도 계산
+        		    int MR_steps = 4 * MR_totalFrames; // 이동할 스텝 수
+        		    int MR_stepSize = (MR_endX - MR_startX) / MR_steps; // 한 스텝당 이동 거리
+
+        		    // 프레임별 애니메이션 실행
+        		    myMotionTimer = new Timer(enemyFrameDelay, null);
+        		    myMotionTimer.addActionListener(e -> {
+        		        // 현재 프레임 업데이트
+        		        myCurrentFrame = (myCurrentFrame + 1) % MR_totalFrames;
+
+        		        // 현재 위치 업데이트
+        		        int currentX = myCharacter.getCurrentX();
+        		        if (Math.abs(currentX - MR_endX) > Math.abs(MR_stepSize)) {
+        		            myCharacter.setCurrentX(currentX + MR_stepSize); // X 위치 업데이트
+        		        }else if (Math.abs(currentX - MR_endX) < Math.abs(MR_stepSize)) {
+        		        	myCharacter.setCurrentX(currentX - MR_stepSize);
+        		        }
+
+        		        // 화면 갱신
+        		        repaint();
+        		    });
+
+        		    // 애니메이션 종료 시 처리
+        		    new Timer(enemyDuration, e -> {
+        		        myMotionTimer.stop();
+        		        myCharacter.setCurrentX(MR_startX); // 최종 위치 보정
+        		        ((Timer) e.getSource()).stop();
+        		    }).start();
+
+        		    myMotionTimer.start();
+
+        		    break;
         		}
-        		break;
-        	case "ATTACK":
-        		switch (myCharacter.getCurrentCard().getName()) {
-        		case "Skill1" :
-        			myMotions = myCharacter.getMotions().get(myCharacter.getCurrentCard().getName());
-        			myFrameDelay = 200;	// 각 프레임 간격
-        			myDuration = myFrameDelay * myMotions.length * 8;	// 해당 모션의 총 시간
-        			
-        			myCurrentFrame = 0;
-        			myMotionTimer = new Timer(myFrameDelay, null);
-        			myMotionTimer.addActionListener(e -> {
-        				myCurrentFrame = (myCurrentFrame + 1) % myMotions.length;
-        			    repaint();
-        			});
-        			
-        			new Timer(myDuration, e -> {
-        				myMotionTimer.stop();
-        			    ((Timer) e.getSource()).stop();
-        			}).start();
-        			
-        			myMotionTimer.start();
-        		        			
-        			break;
-        		}
-        		break;
+
+                
         	case "HIT":
         		
         		break;
@@ -648,12 +786,12 @@ public class PlayingGameScreen extends JPanel {
                     myMotions = myCharacter.getMotions().get(myCharacter.getCurrentCard().getName());
                     myFrameDelay = 100; // 각 프레임 간격
                     int MU_totalFrames = myMotions.length; // 애니메이션 총 프레임 수
-                    myDuration = 6 * myFrameDelay * MU_totalFrames; // 애니메이션 총 시간
+                    myDuration = 5 * myFrameDelay * MU_totalFrames; // 애니메이션 총 시간
 
                     myCurrentFrame = 0;
 
                     // 이동 속도 계산
-                    int MU_steps = 6 * MU_totalFrames; // 이동할 스텝 수
+                    int MU_steps = 5 * MU_totalFrames; // 이동할 스텝 수
                     int MU_stepSize = (MU_endY - MU_startY) / MU_steps; // 한 스텝당 이동 거리
 
                     // 프레임별 애니메이션 실행
@@ -865,12 +1003,50 @@ public class PlayingGameScreen extends JPanel {
 
             case "HIT":
                 // HIT 관련 처리
+                myMotions = myCharacter.getMotions().get(myCharacter.getCurrentCard().getName());
+                myFrameDelay = 100; // 각 프레임 간격
+                myDuration = myFrameDelay * myMotions.length ; // 애니메이션 총 시간
+
+                myCurrentFrame = 0;
+
+                myMotionTimer = new Timer(myFrameDelay, null);
+                myMotionTimer.addActionListener(e -> {
+                    myCurrentFrame = (myCurrentFrame + 1) % myMotions.length;
+                    repaint();
+                });
+
+                new Timer(myDuration, e -> {
+                    myMotionTimer.stop();
+                    ((Timer) e.getSource()).stop();
+                }).start();
+
+                myMotionTimer.start();
+
                 break;
 
             case "DEAD":
                 // DEAD 관련 처리
-                break;
+                myMotions = myCharacter.getMotions().get(myCharacter.getCurrentCard().getName());
+                myFrameDelay = 200; // 각 프레임 간격
+                myDuration = myFrameDelay * myMotions.length ; // 애니메이션 총 시간
 
+                myCurrentFrame = 0;
+
+                myMotionTimer = new Timer(myFrameDelay, null);
+                myMotionTimer.addActionListener(e -> {
+                    myCurrentFrame = (myCurrentFrame + 1) % myMotions.length;
+                    repaint();
+                });
+
+                new Timer(myDuration, e -> {
+                    myMotionTimer.stop();
+                    ((Timer) e.getSource()).stop();
+                }).start();
+
+                myMotionTimer.start();
+
+                break;
+                
             case "IDLE":
                 myMotions = myCharacter.getMotions().get("IDLE");
                 myFrameDelay = 100; // 각 프레임 간격
@@ -988,99 +1164,190 @@ public class PlayingGameScreen extends JPanel {
         	
         // Doraemon ------------------------------------------------------------	
         case "Doraemon":
-         	switch (enemyCharacter.getCurrentMotion()) {
+        	switch (enemyCharacter.getCurrentMotion()) {
         	case "MOVE":
         		switch (enemyCharacter.getCurrentCard().getName()) {
         		case "Move Up":
+        		    // 시작 위치와 이동 거리 설정
+        		    int MU_startY = enemyCharacter.getCurrentY(); // 시작 위치 Y
+        		    int MU_endY = MU_startY - 60; // 목표 위치 (위쪽으로 60px 이동)
 
-        			enemyMotions = enemyCharacter.getMotions().get(enemyCharacter.getCurrentCard().getName());
-        			enemyFrameDelay = 200;	// 각 프레임 간격
-        			enemyDuration = enemyFrameDelay * enemyMotions.length * 8;	// 해당 모션의 총 시간
-        			
-        			enemyCurrentFrame = 0;
-        			enemyMotionTimer = new Timer(enemyFrameDelay, null);
-        			enemyMotionTimer.addActionListener(e -> {
-        				enemyCurrentFrame = (enemyCurrentFrame + 1) % enemyMotions.length;
-        			    repaint();
-        			});
-        			
-        			new Timer(enemyDuration, e -> {
-        				enemyMotionTimer.stop();
-        			    ((Timer) e.getSource()).stop();
-        			}).start();
-        			
-        			enemyMotionTimer.start();
-        			
-        			break;
+        		    // 애니메이션 관련 설정
+        		    enemyMotions = enemyCharacter.getMotions().get(enemyCharacter.getCurrentCard().getName());
+        		    enemyFrameDelay = 200; // 각 프레임 간격
+        		    int MU_totalFrames = enemyMotions.length; // 애니메이션 총 프레임 수
+        		    enemyDuration = 7 * enemyFrameDelay * enemyMotions.length; // 애니메이션 총 시간
+
+        		    enemyCurrentFrame = 0;
+
+        		    // 이동 속도 계산
+        		    int MU_steps = 7 * MU_totalFrames; // 이동할 스텝 수
+        		    int MU_stepSize = (MU_endY - MU_startY) / MU_steps; // 한 스텝당 이동 거리
+
+        		    // 프레임별 애니메이션 실행
+        		    enemyMotionTimer = new Timer(enemyFrameDelay, null);
+        		    enemyMotionTimer.addActionListener(e -> {
+        		        // 현재 프레임 업데이트
+        		        enemyCurrentFrame = (enemyCurrentFrame + 1) % MU_totalFrames;
+
+        		        // 현재 위치 업데이트
+        		        int currentY = enemyCharacter.getCurrentY();
+        		        if (Math.abs(currentY - MU_endY) > Math.abs(MU_stepSize)) {
+        		            enemyCharacter.setCurrentY(currentY + MU_stepSize); // Y 위치 업데이트
+        		        }
+
+        		        // 화면 갱신
+        		        repaint();
+        		    });
+
+        		    // 애니메이션 종료 시 처리
+        		    new Timer(enemyDuration, e -> {
+        		        enemyMotionTimer.stop();
+        		        enemyCharacter.setCurrentY(MU_endY); // 최종 위치 보정
+        		        ((Timer) e.getSource()).stop();
+        		    }).start();
+
+        		    enemyMotionTimer.start();
+
+        		    break;
         		case "Move Down":
+        		    // 시작 위치와 이동 거리 설정
+        		    int MD_startY = enemyCharacter.getCurrentY(); // 시작 위치 Y
+        		    int MD_endY = MD_startY + 60; // 목표 위치 (아래쪽으로 60px 이동)
 
-        			enemyMotions = enemyCharacter.getMotions().get(enemyCharacter.getCurrentCard().getName());
-        			enemyFrameDelay = 200;	// 각 프레임 간격
-        			enemyDuration = enemyFrameDelay * enemyMotions.length * 8;	// 해당 모션의 총 시간
-        			
-        			enemyCurrentFrame = 0;
-        			enemyMotionTimer = new Timer(enemyFrameDelay, null);
-        			enemyMotionTimer.addActionListener(e -> {
-        				enemyCurrentFrame = (enemyCurrentFrame + 1) % enemyMotions.length;
-        			    repaint();
-        			});
-        			
-        			new Timer(enemyDuration, e -> {
-        				enemyMotionTimer.stop();
-        			    ((Timer) e.getSource()).stop();
-        			}).start();
-        			
-        			enemyMotionTimer.start();
-        			
-        			break;
+        		    // 애니메이션 관련 설정
+        		    enemyMotions = enemyCharacter.getMotions().get(enemyCharacter.getCurrentCard().getName());
+        		    enemyFrameDelay = 200; // 각 프레임 간격
+        		    int MD_totalFrames = enemyMotions.length; // 애니메이션 총 프레임 수
+        		    enemyDuration = 7 * enemyFrameDelay * MD_totalFrames; // 애니메이션 총 시간
+
+        		    enemyCurrentFrame = 0;
+
+        		    // 이동 속도 계산
+        		    int MD_steps = 7 * MD_totalFrames; // 이동할 스텝 수
+        		    int MD_stepSize = (MD_endY - MD_startY) / MD_steps; // 한 스텝당 이동 거리
+
+        		    // 프레임별 애니메이션 실행
+        		    enemyMotionTimer = new Timer(enemyFrameDelay, null);
+        		    enemyMotionTimer.addActionListener(e -> {
+        		        // 현재 프레임 업데이트
+        		        enemyCurrentFrame = (enemyCurrentFrame + 1) % MD_totalFrames;
+
+        		        // 현재 위치 업데이트
+        		        int currentY = enemyCharacter.getCurrentY();
+        		        if (Math.abs(currentY - MD_endY) > Math.abs(MD_stepSize)) {
+        		            enemyCharacter.setCurrentY(currentY + MD_stepSize); // Y 위치 업데이트
+        		        }
+
+        		        // 화면 갱신
+        		        repaint();
+        		    });
+
+        		    // 애니메이션 종료 시 처리
+        		    new Timer(enemyDuration, e -> {
+        		        enemyMotionTimer.stop();
+        		        enemyCharacter.setCurrentY(MD_endY); // 최종 위치 보정
+        		        ((Timer) e.getSource()).stop();
+        		    }).start();
+
+        		    enemyMotionTimer.start();
+
+        		    break;
+
         		case "Move Left":
+        		    // 시작 위치와 이동 거리 설정
+        		    int ML_startX = enemyCharacter.getCurrentX(); // 시작 위치 X
+        		    int ML_endX = ML_startX - 150; // 목표 위치 (왼쪽으로 100px 이동)
 
-        			enemyMotions = enemyCharacter.getMotions().get(enemyCharacter.getCurrentCard().getName());
-        			enemyFrameDelay = 200;	// 각 프레임 간격
-        			enemyDuration = enemyFrameDelay * enemyMotions.length * 8;	// 해당 모션의 총 시간
-        			
-        			enemyCurrentFrame = 0;
-        			enemyMotionTimer = new Timer(enemyFrameDelay, null);
-        			enemyMotionTimer.addActionListener(e -> {
-        				enemyCurrentFrame = (enemyCurrentFrame + 1) % enemyMotions.length;
-        			    repaint();
-        			});
-        			
-        			new Timer(enemyDuration, e -> {
-        				enemyMotionTimer.stop();
-        			    ((Timer) e.getSource()).stop();
-        			}).start();
-        			
-        			enemyMotionTimer.start();
-        			
-        			break;
+        		    // 애니메이션 관련 설정
+        		    enemyMotions = enemyCharacter.getMotions().get(enemyCharacter.getCurrentCard().getName());
+        		    enemyFrameDelay = 200; // 각 프레임 간격
+        		    int ML_totalFrames = enemyMotions.length; // 애니메이션 총 프레임 수
+        		    enemyDuration = 7*enemyFrameDelay * ML_totalFrames; // 애니메이션 총 시간
+
+        		    enemyCurrentFrame = 0;
+
+        		    // 이동 속도 계산
+        		    int ML_steps = 7*ML_totalFrames; // 이동할 스텝 수 (프레임 수와 동일)
+        		    int ML_stepSize = (ML_endX - ML_startX) / ML_steps; // 한 스텝당 이동 거리
+
+        		    // 프레임별 애니메이션 실행
+        		    enemyMotionTimer = new Timer(enemyFrameDelay, null);
+        		    enemyMotionTimer.addActionListener(e -> {
+        		        // 현재 프레임 업데이트
+        		        enemyCurrentFrame = (enemyCurrentFrame + 1) % ML_totalFrames;
+
+        		        // 현재 위치 업데이트
+        		        int currentX = enemyCharacter.getCurrentX();
+        		        if (Math.abs(currentX - ML_endX) > Math.abs(ML_stepSize)) {
+        		            enemyCharacter.setCurrentX(currentX + ML_stepSize); // X 위치 업데이트
+        		        }
+
+        		        // 화면 갱신
+        		        repaint();
+        		    });
+
+        		    // 애니메이션 종료 시 처리
+        		    new Timer(enemyDuration, e -> {
+        		        enemyMotionTimer.stop();
+        		        enemyCharacter.setCurrentX(ML_endX); // 최종 위치 보정
+        		        ((Timer) e.getSource()).stop();
+        		    }).start();
+
+        		    enemyMotionTimer.start();
+
+        		    break;
+
         		case "Move Right":
+        		    // 시작 위치와 이동 거리 설정
+        		    int MR_startX = enemyCharacter.getCurrentX(); // 시작 위치 X
+        		    int MR_endX = MR_startX + 150; // 목표 위치 (오른쪽으로 150px 이동)
 
-        			enemyMotions = enemyCharacter.getMotions().get(enemyCharacter.getCurrentCard().getName());
-        			enemyFrameDelay = 200;	// 각 프레임 간격
-        			enemyDuration = enemyFrameDelay * enemyMotions.length * 8;	// 해당 모션의 총 시간
-        			
-        			enemyCurrentFrame = 0;
-        			enemyMotionTimer = new Timer(enemyFrameDelay, null);
-        			enemyMotionTimer.addActionListener(e -> {
-        				enemyCurrentFrame = (enemyCurrentFrame + 1) % enemyMotions.length;
-        			    repaint();
-        			});
-        			
-        			new Timer(enemyDuration, e -> {
-        				enemyMotionTimer.stop();
-        			    ((Timer) e.getSource()).stop();
-        			}).start();
-        			
-        			enemyMotionTimer.start();
-        			
-        			break;
+        		    // 애니메이션 관련 설정
+        		    enemyMotions = enemyCharacter.getMotions().get(enemyCharacter.getCurrentCard().getName());
+        		    enemyFrameDelay = 200; // 각 프레임 간격
+        		    int MR_totalFrames = enemyMotions.length; // 애니메이션 총 프레임 수
+        		    enemyDuration = 7 * enemyFrameDelay * MR_totalFrames; // 애니메이션 총 시간
+
+        		    enemyCurrentFrame = 0;
+
+        		    // 이동 속도 계산
+        		    int MR_steps = 7 * MR_totalFrames; // 이동할 스텝 수
+        		    int MR_stepSize = (MR_endX - MR_startX) / MR_steps; // 한 스텝당 이동 거리
+
+        		    // 프레임별 애니메이션 실행
+        		    enemyMotionTimer = new Timer(enemyFrameDelay, null);
+        		    enemyMotionTimer.addActionListener(e -> {
+        		        // 현재 프레임 업데이트
+        		        enemyCurrentFrame = (enemyCurrentFrame + 1) % MR_totalFrames;
+
+        		        // 현재 위치 업데이트
+        		        int currentX = enemyCharacter.getCurrentX();
+        		        if (Math.abs(currentX - MR_endX) > Math.abs(MR_stepSize)) {
+        		            enemyCharacter.setCurrentX(currentX + MR_stepSize); // X 위치 업데이트
+        		        }
+
+        		        // 화면 갱신
+        		        repaint();
+        		    });
+
+        		    // 애니메이션 종료 시 처리
+        		    new Timer(enemyDuration, e -> {
+        		        enemyMotionTimer.stop();
+        		        enemyCharacter.setCurrentX(MR_endX); // 최종 위치 보정
+        		        ((Timer) e.getSource()).stop();
+        		    }).start();
+
+        		    enemyMotionTimer.start();
+
+        		    break;
         		}
+
         		break;
+        		
         	case "ATTACK":
         		switch (enemyCharacter.getCurrentCard().getName()) {
-        		// ... skill들 넣으셈
-        		case "Skill1" :
+        		case "Air Cannon!" :
         			
         			enemyMotions = enemyCharacter.getMotions().get(enemyCharacter.getCurrentCard().getName());
         			enemyFrameDelay = 200;	// 각 프레임 간격
@@ -1101,9 +1368,53 @@ public class PlayingGameScreen extends JPanel {
         			enemyMotionTimer.start();
         			
         			break;
-        			
+        		case "Bamboo Helicopter!":
+           		    int MR_startX = enemyCharacter.getCurrentX(); // 시작 위치 X
+        		    int MR_endX = MR_startX + 150*4; // 목표 위치 (오른쪽으로 150px 이동)
+
+        		    // 애니메이션 관련 설정
+        		    enemyMotions = enemyCharacter.getMotions().get(enemyCharacter.getCurrentCard().getName());
+        		    enemyFrameDelay = 100; // 각 프레임 간격
+        		    int MR_totalFrames = enemyMotions.length; // 애니메이션 총 프레임 수
+        		    enemyDuration = 8 * enemyFrameDelay * MR_totalFrames; // 애니메이션 총 시간
+
+        		    enemyCurrentFrame = 0;
+
+        		    // 이동 속도 계산
+        		    int MR_steps = 4 * MR_totalFrames; // 이동할 스텝 수
+        		    int MR_stepSize = (MR_endX - MR_startX) / MR_steps; // 한 스텝당 이동 거리
+
+        		    // 프레임별 애니메이션 실행
+        		    enemyMotionTimer = new Timer(enemyFrameDelay, null);
+        		    enemyMotionTimer.addActionListener(e -> {
+        		        // 현재 프레임 업데이트
+        		        enemyCurrentFrame = (enemyCurrentFrame + 1) % MR_totalFrames;
+
+        		        // 현재 위치 업데이트
+        		        int currentX = enemyCharacter.getCurrentX();
+        		        if (Math.abs(currentX - MR_endX) > Math.abs(MR_stepSize)) {
+        		            enemyCharacter.setCurrentX(currentX + MR_stepSize); // X 위치 업데이트
+        		        }else if (Math.abs(currentX - MR_endX) < Math.abs(MR_stepSize)) {
+        		        	enemyCharacter.setCurrentX(currentX - MR_stepSize);
+        		        }
+
+        		        // 화면 갱신
+        		        repaint();
+        		    });
+
+        		    // 애니메이션 종료 시 처리
+        		    new Timer(enemyDuration, e -> {
+        		        enemyMotionTimer.stop();
+        		        enemyCharacter.setCurrentX(MR_startX); // 최종 위치 보정
+        		        ((Timer) e.getSource()).stop();
+        		    }).start();
+
+        		    enemyMotionTimer.start();
+
+        		    break;
         		}
         		break;
+        		
         	case "HIT":
         		
         		break;
@@ -1479,12 +1790,12 @@ public class PlayingGameScreen extends JPanel {
         		    enemyMotions = enemyCharacter.getMotions().get(enemyCharacter.getCurrentCard().getName());
         		    enemyFrameDelay = 100; // 각 프레임 간격
         		    int MU_totalFrames = enemyMotions.length; // 애니메이션 총 프레임 수
-        		    enemyDuration = 6 * enemyFrameDelay * enemyMotions.length; // 애니메이션 총 시간
+        		    enemyDuration = 5 * enemyFrameDelay * enemyMotions.length; // 애니메이션 총 시간
 
         		    enemyCurrentFrame = 0;
 
         		    // 이동 속도 계산
-        		    int MU_steps = 6 * MU_totalFrames; // 이동할 스텝 수
+        		    int MU_steps = 5 * MU_totalFrames; // 이동할 스텝 수
         		    int MU_stepSize = (MU_endY - MU_startY) / MU_steps; // 한 스텝당 이동 거리
 
         		    // 프레임별 애니메이션 실행
@@ -1672,35 +1983,71 @@ public class PlayingGameScreen extends JPanel {
         			
         			break;
         		case "Stretch Punch":
-                    myMotions = myCharacter.getMotions().get(myCharacter.getCurrentCard().getName());
-                    myFrameDelay = 100; // 각 프레임 간격
-                    myDuration = myFrameDelay * myMotions.length * 4; // 애니메이션 총 시간
-
-                    myCurrentFrame = 0;
-
-                    myMotionTimer = new Timer(myFrameDelay, null);
-                    myMotionTimer.addActionListener(e -> {
-                        myCurrentFrame = (myCurrentFrame + 1) % myMotions.length;
-                        repaint();
-                    });
-
-                    new Timer(myDuration, e -> {
-                        myMotionTimer.stop();
-                        ((Timer) e.getSource()).stop();
-                    }).start();
-
-                    myMotionTimer.start();
-
-                    break;
+        			enemyMotions = enemyCharacter.getMotions().get(enemyCharacter.getCurrentCard().getName());
+        			enemyFrameDelay = 100;	// 각 프레임 간격
+        			enemyDuration = enemyFrameDelay * enemyMotions.length * 4;	// 해당 모션의 총 시간
+        			
+        			enemyCurrentFrame = 0;
+        			enemyMotionTimer = new Timer(enemyFrameDelay, null);
+        			enemyMotionTimer.addActionListener(e -> {
+        				enemyCurrentFrame = (enemyCurrentFrame + 1) % enemyMotions.length;
+        			    repaint();
+        			});
+        			
+        			new Timer(enemyDuration, e -> {
+        				enemyMotionTimer.stop();
+        			    ((Timer) e.getSource()).stop();
+        			}).start();
+        			
+        			enemyMotionTimer.start();
+        			
+        			break;
         			
         		}
         		break;
         	case "HIT":
-        		
-        		break;
-        	case "DEAD":
-        		
-        		break;
+    			enemyMotions = enemyCharacter.getMotions().get(enemyCharacter.getCurrentCard().getName());
+    			enemyFrameDelay = 150;	// 각 프레임 간격
+    			enemyDuration = enemyFrameDelay * enemyMotions.length ;	// 해당 모션의 총 시간
+    			
+    			enemyCurrentFrame = 0;
+    			enemyMotionTimer = new Timer(enemyFrameDelay, null);
+    			enemyMotionTimer.addActionListener(e -> {
+    				enemyCurrentFrame = (enemyCurrentFrame + 1) % enemyMotions.length;
+    			    repaint();
+    			});
+    			
+    			new Timer(enemyDuration, e -> {
+    				enemyMotionTimer.stop();
+    			    ((Timer) e.getSource()).stop();
+    			}).start();
+    			
+    			enemyMotionTimer.start();
+    			
+    			break;
+
+            case "DEAD":
+                // DEAD 관련 처리
+    			enemyMotions = enemyCharacter.getMotions().get(enemyCharacter.getCurrentCard().getName());
+    			enemyFrameDelay = 200;	// 각 프레임 간격
+    			enemyDuration = enemyFrameDelay * enemyMotions.length ;	// 해당 모션의 총 시간
+    			
+    			enemyCurrentFrame = 0;
+    			enemyMotionTimer = new Timer(enemyFrameDelay, null);
+    			enemyMotionTimer.addActionListener(e -> {
+    				enemyCurrentFrame = (enemyCurrentFrame + 1) % enemyMotions.length;
+    			    repaint();
+    			});
+    			
+    			new Timer(enemyDuration, e -> {
+    				enemyMotionTimer.stop();
+    			    ((Timer) e.getSource()).stop();
+    			}).start();
+    			
+    			enemyMotionTimer.start();
+    			
+    			break;
+                
         	case "IDLE":
 
     			enemyMotions = enemyCharacter.getMotions().get("IDLE");
@@ -1862,7 +2209,13 @@ public class PlayingGameScreen extends JPanel {
         	case "ATTACK":
         		switch (myCharacter.getCurrentCard().getName()) {
         		// ... skill들 넣으셈
-        		case "Skill1":
+        		case "Air Cannon!":
+        			if (myMotions != null) {
+        		        BufferedImage currentImage = myMotions[myCurrentFrame];
+        		        g.drawImage(currentImage, myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
+        			}
+        			break;
+        		case "Bamboo Helicopter!":
         			if (myMotions != null) {
         		        BufferedImage currentImage = myMotions[myCurrentFrame];
         		        g.drawImage(currentImage, myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
@@ -2094,11 +2447,19 @@ public class PlayingGameScreen extends JPanel {
         		}
         		break;
         	case "HIT":
-        		
+    			if (myMotions != null) {
+    		        BufferedImage currentImage = myMotions[myCurrentFrame];
+    		        g.drawImage(currentImage, myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
+    			}
         		break;
+        		
         	case "DEAD":
-        		
+    			if (myMotions != null) {
+    		        BufferedImage currentImage = myMotions[myCurrentFrame];
+    		        g.drawImage(currentImage, myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
+    			}
         		break;
+        		
         	case "IDLE":
         		if (myMotions != null) {
     		        BufferedImage currentImage = myMotions[myCurrentFrame];
@@ -2219,14 +2580,19 @@ public class PlayingGameScreen extends JPanel {
         	case "ATTACK":
         		switch (enemyCharacter.getCurrentCard().getName()) {
         		// ... skill들 넣으셈
-        		case "Skill1":
+        		case "Air Cannon!":
         			if (enemyMotions != null) {
         		        BufferedImage currentImage = enemyMotions[enemyCurrentFrame];
         		        g.drawImage(currentImage, enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
         			}
         			break;
         		}
-        		break;
+    		case "Bamboo Helicopter!":
+    			if (enemyMotions != null) {
+    		        BufferedImage currentImage = enemyMotions[enemyCurrentFrame];
+    		        g.drawImage(currentImage, enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
+    			}
+    			break;
         	case "HIT":
         		
         		break;
@@ -2449,11 +2815,19 @@ public class PlayingGameScreen extends JPanel {
         		}
         		break;
         	case "HIT":
-        		
+    			if (enemyMotions != null) {
+    		        BufferedImage currentImage = enemyMotions[enemyCurrentFrame];
+    		        g.drawImage(currentImage, enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
+    			}
         		break;
+        		
         	case "DEAD":
-        		
+    			if (enemyMotions != null) {
+    		        BufferedImage currentImage = enemyMotions[enemyCurrentFrame];
+    		        g.drawImage(currentImage, enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
+    			}
         		break;
+        		
         	case "IDLE":
         		if (enemyMotions != null) {
     		        BufferedImage currentImage = enemyMotions[enemyCurrentFrame];
@@ -2518,119 +2892,158 @@ public class PlayingGameScreen extends JPanel {
 
         
         if (gameState.getClientNumber() == 1) {
-        	// Player 1의 캐릭터 로고
-            JLabel player1Logo = new JLabel(new ImageIcon(gameState.getMyCharacter().getLogo()));
-            player1Logo.setBounds(30, 10, panelHeight, panelHeight);
-            healthPanel.add(player1Logo);
-        	
-        	// Player 1의 체력바
-        	JProgressBar player1HealthBar = new JProgressBar(0, gameState.getMyCharacter().getMaxHealth());
-	        player1HealthBar.setValue(gameState.getMyHealth());
-	        player1HealthBar.setBounds(90, 10, panelWidth / 2 - 100, 30);
-	        player1HealthBar.setForeground(Color.RED);
-	        healthPanel.add(player1HealthBar);
-	        
-	        // Player 1의 이름
-	        JLabel player1NameLabel = new JLabel(gameState.getMyCharacter().getName());
-	        player1NameLabel.setBounds(90, 40, panelWidth / 2 - 100, 20);
-	        player1NameLabel.setHorizontalAlignment(SwingConstants.LEFT);
-	        player1NameLabel.setForeground(Color.black); // 흰색 글씨로 이름 표시
-	        healthPanel.add(player1NameLabel);
-	        
-	        
-	        // Player 2의 캐릭터 로고
-	        JLabel player2Logo = new JLabel(new ImageIcon(gameState.getEnemyCharacter().getLogo()));
-	        player2Logo.setBounds(panelWidth - panelHeight - 10, 10, panelHeight, panelHeight);
-	        healthPanel.add(player2Logo);
-	        
-	        // Player 2의 체력바
-	        JProgressBar player2HealthBar = new JProgressBar(0, gameState.getEnemyCharacter().getMaxHealth());
-	        player2HealthBar.setValue(gameState.getEnemyHealth());
-	        player2HealthBar.setBounds(panelWidth / 2 + 20, 10, panelWidth / 2 - 100, 30);
-	        player2HealthBar.setForeground(Color.RED);
-	        healthPanel.add(player2HealthBar);
+           	// Player 1의 캐릭터 로고
+               JLabel GN_1_player1Logo = new JLabel(new ImageIcon(gameState.getMyCharacter().getLogo()));
+               GN_1_player1Logo.setBounds(30, 10, panelHeight, panelHeight);
+               healthPanel.add(GN_1_player1Logo);
+           	
+           	// Player 1의 체력바
+           	JProgressBar GN_1_player1HealthBar = new JProgressBar(0, gameState.getMyCharacter().getMaxHealth());
+    	        GN_1_player1HealthBar.setValue(gameState.getMyHealth());
+    	        GN_1_player1HealthBar.setBounds(90, 10, panelWidth / 2 - 100, 30);
+    	        GN_1_player1HealthBar.setForeground(Color.RED);
+    	        healthPanel.add(GN_1_player1HealthBar);
+    	        
+    	        // Player 1의 이름
+    	        JLabel GN_1_player1NameLabel = new JLabel("(you) "+gameState.getMyCharacter().getName());
+    	        GN_1_player1NameLabel.setBounds(90, 40, panelWidth / 2 - 100, 20);
+    	        GN_1_player1NameLabel.setHorizontalAlignment(SwingConstants.LEFT);
+    	        GN_1_player1NameLabel.setForeground(Color.black); // 흰색 글씨로 이름 표시
+    	        healthPanel.add(GN_1_player1NameLabel);
+    	        
+    	        
+    	        // Player 2의 캐릭터 로고
+    	        JLabel GN_1_player2Logo = new JLabel(new ImageIcon(gameState.getEnemyCharacter().getLogo()));
+    	        GN_1_player2Logo.setBounds(panelWidth - panelHeight - 10, 10, panelHeight, panelHeight);
+    	        healthPanel.add(GN_1_player2Logo);
+    	        
+    	        // Player 2의 체력바
+    	        JProgressBar GN_1_player2HealthBar = new JProgressBar(0, gameState.getEnemyCharacter().getMaxHealth());
+    	        GN_1_player2HealthBar.setValue(gameState.getEnemyHealth());
+    	        GN_1_player2HealthBar.setBounds(panelWidth / 2 + 20, 10, panelWidth / 2 - 100, 30);
+    	        GN_1_player2HealthBar.setForeground(Color.RED);
+    	        healthPanel.add(GN_1_player2HealthBar);
 
-	        // Player 2의 이름
-	        JLabel player2NameLabel = new JLabel(gameState.getEnemyCharacter().getName());
-	        player2NameLabel.setBounds(panelWidth / 2 + 20, 40, panelWidth / 2 - 100, 20);
-	        player2NameLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-	        player2NameLabel.setForeground(Color.black); // 흰색 글씨로 이름 표시
-	        healthPanel.add(player2NameLabel);
-        } else {
-        	// Player 1의 캐릭터 로고
-            JLabel player1Logo = new JLabel(new ImageIcon(gameState.getEnemyCharacter().getLogo()));
-            player1Logo.setBounds(30, 10, panelHeight, panelHeight);
-            healthPanel.add(player1Logo);
-        	
-            // Player 1의 체력바
-        	JProgressBar player1HealthBar = new JProgressBar(0, gameState.getEnemyCharacter().getMaxHealth());
-	        player1HealthBar.setValue(gameState.getEnemyHealth());
-	        player1HealthBar.setBounds(90, 10, panelWidth / 2 - 100, 30);
-	        player1HealthBar.setForeground(Color.RED);
-	        healthPanel.add(player1HealthBar);
-	        
-	        // Player 1의 이름
-	        JLabel player1NameLabel = new JLabel(gameState.getEnemyCharacter().getName());
-	        player1NameLabel.setBounds(90, 40, panelWidth / 2 - 100, 20);
-	        player1NameLabel.setHorizontalAlignment(SwingConstants.LEFT);
-	        player1NameLabel.setForeground(Color.black); // 흰색 글씨로 이름 표시
-	        healthPanel.add(player1NameLabel);
-	        
-	        
-	        // Player 2의 캐릭터 로고
-	        JLabel player2Logo = new JLabel(new ImageIcon(gameState.getMyCharacter().getLogo()));
-	        player2Logo.setBounds(panelWidth - panelHeight - 10, 10, panelHeight, panelHeight);
-	        healthPanel.add(player2Logo);
-	        
-	        // Player 2의 체력바
-	        JProgressBar player2HealthBar = new JProgressBar(0, gameState.getMyCharacter().getMaxHealth());
-	        player2HealthBar.setValue(gameState.getMyHealth());
-	        player2HealthBar.setBounds(panelWidth / 2 + 20, 10, panelWidth / 2 - 100, 30);
-	        player2HealthBar.setForeground(Color.RED);
-	        healthPanel.add(player2HealthBar);
+    	        // Player 2의 이름
+    	        JLabel GN_1_player2NameLabel = new JLabel("(enemy) " + gameState.getEnemyCharacter().getName());
+    	        GN_1_player2NameLabel.setBounds(panelWidth / 2 + 20, 40, panelWidth / 2 - 100, 20);
+    	        GN_1_player2NameLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+    	        GN_1_player2NameLabel.setForeground(Color.black); // 흰색 글씨로 이름 표시
+    	        healthPanel.add(GN_1_player2NameLabel);
+           }  else if(gameState.getClientNumber() == 2){
+           	// Player 1의 캐릭터 로고
+               JLabel player1Logo = new JLabel(new ImageIcon(gameState.getEnemyCharacter().getLogo()));
+               player1Logo.setBounds(30, 10, panelHeight, panelHeight);
+               healthPanel.add(player1Logo);
+           	
+               // Player 1의 체력바
+           	JProgressBar player1HealthBar = new JProgressBar(0, gameState.getEnemyCharacter().getMaxHealth());
+    	        player1HealthBar.setValue(gameState.getEnemyHealth());
+    	        player1HealthBar.setBounds(90, 10, panelWidth / 2 - 100, 30);
+    	        player1HealthBar.setForeground(Color.RED);
+    	        healthPanel.add(player1HealthBar);
+    	        
+    	        // Player 1의 이름
+    	        JLabel player1NameLabel = new JLabel("(enemy) " + gameState.getEnemyCharacter().getName());
+    	        player1NameLabel.setBounds(90, 40, panelWidth / 2 - 100, 20);
+    	        player1NameLabel.setHorizontalAlignment(SwingConstants.LEFT);
+    	        player1NameLabel.setForeground(Color.black); // 흰색 글씨로 이름 표시
+    	        healthPanel.add(player1NameLabel);
+    	        
+    	        
+    	        // Player 2의 캐릭터 로고
+    	        JLabel player2Logo = new JLabel(new ImageIcon(gameState.getMyCharacter().getLogo()));
+    	        player2Logo.setBounds(panelWidth - panelHeight - 10, 10, panelHeight, panelHeight);
+    	        healthPanel.add(player2Logo);
+    	        
+    	        // Player 2의 체력바
+    	        JProgressBar player2HealthBar = new JProgressBar(0, gameState.getMyCharacter().getMaxHealth());
+    	        player2HealthBar.setValue(gameState.getMyHealth());
+    	        player2HealthBar.setBounds(panelWidth / 2 + 20, 10, panelWidth / 2 - 100, 30);
+    	        player2HealthBar.setForeground(Color.RED);
+    	        healthPanel.add(player2HealthBar);
 
-	        // Player 2의 이름
-	        JLabel player2NameLabel = new JLabel(gameState.getMyCharacter().getName());
-	        player2NameLabel.setBounds(panelWidth / 2 + 20, 40, panelWidth / 2 - 100, 20);
-	        player2NameLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-	        player2NameLabel.setForeground(Color.black); // 흰색 글씨로 이름 표시
-	        healthPanel.add(player2NameLabel);
-        }
-
+    	        // Player 2의 이름
+    	        JLabel player2NameLabel = new JLabel("(you) " + gameState.getMyCharacter().getName());
+    	        player2NameLabel.setBounds(panelWidth / 2 + 20, 40, panelWidth / 2 - 100, 20);
+    	        player2NameLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+    	        player2NameLabel.setForeground(Color.black); // 흰색 글씨로 이름 표시
+    	        healthPanel.add(player2NameLabel);
+           }
     }
 
 
 
-    public void drawSelectedCardPanel() {
-        cardPanel.removeAll();
-        cardPanel.setLayout(new BorderLayout()); // BorderLayout으로 배치
+  public void drawSelectedCardPanel() {
+    cardPanel.removeAll();
+    cardPanel.setLayout(new BorderLayout()); // BorderLayout으로 배치
 
+    int imageWidth = 80;  // 이미지 너비
+    int imageHeight = 80; // 이미지 높이
+
+    // 공통 마진 설정
+    int horizontalMargin = 30; // 양쪽 패널의 수평 마진
+    int verticalMargin = 0;   // 양쪽 패널의 수직 마진
+
+    if (gameState.getClientNumber() == 1) {
         // Player 1의 카드 패널 (왼쪽)
-        JPanel player1CardPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+        JPanel player1CardPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 5)); // 간격 조정
         player1CardPanel.setBackground(Color.BLACK);
-        JLabel player1Label = new JLabel("Player 1 Cards");
+        player1CardPanel.setBorder(BorderFactory.createEmptyBorder(verticalMargin, horizontalMargin, verticalMargin, horizontalMargin)); // 마진 추가
+        JLabel player1Label = new JLabel("<html>Your<br>Cards</html>");
         player1Label.setForeground(Color.WHITE);
         player1CardPanel.add(player1Label);
 
         for (Card card : gameState.getSelectedCardList()) {
-            ImageIcon cardImage = new ImageIcon(gameState.getMyCharacter().getCardImage().get(card.getName()));
-            if (cardImage != null) {
-                player1CardPanel.add(new JLabel(cardImage));
-            }
+            ImageIcon originalIcon = new ImageIcon(gameState.getMyCharacter().getCardImage().get(card.getName()));
+
+            // 이미지 크기 조정
+            Image scaledImage = originalIcon.getImage().getScaledInstance(imageWidth, imageHeight, Image.SCALE_SMOOTH);
+            ImageIcon scaledIcon = new ImageIcon(scaledImage);
+
+            JPanel cardPanelWithLabel = new JPanel(new BorderLayout());
+            cardPanelWithLabel.setBackground(Color.BLACK);
+
+            JLabel cardNameLabel = new JLabel(card.getName(), JLabel.CENTER);
+            cardNameLabel.setForeground(Color.WHITE);
+
+            JLabel cardImageLabel = new JLabel(scaledIcon);
+            cardImageLabel.setBorder(BorderFactory.createEmptyBorder(3, 0, 0, 0)); // 이미지 위쪽 마진
+
+            cardPanelWithLabel.add(cardNameLabel, BorderLayout.NORTH);
+            cardPanelWithLabel.add(cardImageLabel, BorderLayout.CENTER);
+
+            player1CardPanel.add(cardPanelWithLabel);
         }
 
         // Player 2의 카드 패널 (오른쪽)
-        JPanel player2CardPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+        JPanel player2CardPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 5)); // 간격 조정
         player2CardPanel.setBackground(Color.BLACK);
-        JLabel player2Label = new JLabel("Player 2 Cards");
+        player2CardPanel.setBorder(BorderFactory.createEmptyBorder(verticalMargin, horizontalMargin, verticalMargin, horizontalMargin)); // 마진 추가
+        JLabel player2Label = new JLabel("<html>Enemy<br>Cards</html>");
         player2Label.setForeground(Color.WHITE);
         player2CardPanel.add(player2Label);
 
         for (Card card : gameState.getEnemySelectedCardList()) {
-            ImageIcon cardImage = new ImageIcon(gameState.getEnemyCharacter().getCardImage().get(card.getName()));
-            if (cardImage != null) {
-                player2CardPanel.add(new JLabel(cardImage));
-            }
+            ImageIcon originalIcon = new ImageIcon(gameState.getEnemyCharacter().getCardImage().get(card.getName()));
+
+            // 이미지 크기 조정
+            Image scaledImage = originalIcon.getImage().getScaledInstance(imageWidth, imageHeight, Image.SCALE_SMOOTH);
+            ImageIcon scaledIcon = new ImageIcon(scaledImage);
+
+            JPanel cardPanelWithLabel = new JPanel(new BorderLayout());
+            cardPanelWithLabel.setBackground(Color.BLACK);
+
+            JLabel cardNameLabel = new JLabel(card.getName(), JLabel.CENTER);
+            cardNameLabel.setForeground(Color.WHITE);
+
+            JLabel cardImageLabel = new JLabel(scaledIcon);
+            cardImageLabel.setBorder(BorderFactory.createEmptyBorder(3, 0, 0, 0)); // 이미지 위쪽 마진
+
+            cardPanelWithLabel.add(cardNameLabel, BorderLayout.NORTH);
+            cardPanelWithLabel.add(cardImageLabel, BorderLayout.CENTER);
+
+            player2CardPanel.add(cardPanelWithLabel);
         }
 
         // 중앙 빈 패널
@@ -2639,12 +3052,81 @@ public class PlayingGameScreen extends JPanel {
 
         // 패널 추가
         cardPanel.add(player1CardPanel, BorderLayout.WEST);
-        cardPanel.add(emptyCenterPanel, BorderLayout.CENTER); // 중앙 빈 공간
+        cardPanel.add(emptyCenterPanel, BorderLayout.CENTER);
         cardPanel.add(player2CardPanel, BorderLayout.EAST);
 
-        cardPanel.revalidate();
-        cardPanel.repaint();
+    } else if(gameState.getClientNumber() == 2){
+        // Player 2와 Player 1 역할 전환
+        JPanel player1CardPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 5)); // 간격 조정
+        player1CardPanel.setBackground(Color.BLACK);
+        player1CardPanel.setBorder(BorderFactory.createEmptyBorder(verticalMargin, horizontalMargin, verticalMargin, horizontalMargin)); // 마진 추가
+        JLabel player1Label = new JLabel("<html>Enemy<br>Cards</html>");
+        player1Label.setForeground(Color.WHITE);
+        player1CardPanel.add(player1Label);
+
+        for (Card card : gameState.getSelectedCardList()) {
+            ImageIcon originalIcon = new ImageIcon(gameState.getMyCharacter().getCardImage().get(card.getName()));
+
+            // 이미지 크기 조정
+            Image scaledImage = originalIcon.getImage().getScaledInstance(imageWidth, imageHeight, Image.SCALE_SMOOTH);
+            ImageIcon scaledIcon = new ImageIcon(scaledImage);
+
+            JPanel cardPanelWithLabel = new JPanel(new BorderLayout());
+            cardPanelWithLabel.setBackground(Color.BLACK);
+
+            JLabel cardNameLabel = new JLabel(card.getName(), JLabel.CENTER);
+            cardNameLabel.setForeground(Color.WHITE);
+
+            JLabel cardImageLabel = new JLabel(scaledIcon);
+            cardImageLabel.setBorder(BorderFactory.createEmptyBorder(3, 0, 0, 0)); // 이미지 위쪽 마진
+
+            cardPanelWithLabel.add(cardNameLabel, BorderLayout.NORTH);
+            cardPanelWithLabel.add(cardImageLabel, BorderLayout.CENTER);
+
+            player1CardPanel.add(cardPanelWithLabel);
+        }
+
+        JPanel player2CardPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 5)); // 간격 조정
+        player2CardPanel.setBackground(Color.BLACK);
+        player2CardPanel.setBorder(BorderFactory.createEmptyBorder(verticalMargin, horizontalMargin, verticalMargin, horizontalMargin)); // 마진 추가
+        JLabel player2Label = new JLabel("<html>Your<br>Cards</html>");
+        player2Label.setForeground(Color.WHITE);
+        player2CardPanel.add(player2Label);
+
+        for (Card card : gameState.getEnemySelectedCardList()) {
+            ImageIcon originalIcon = new ImageIcon(gameState.getEnemyCharacter().getCardImage().get(card.getName()));
+
+            // 이미지 크기 조정
+            Image scaledImage = originalIcon.getImage().getScaledInstance(imageWidth, imageHeight, Image.SCALE_SMOOTH);
+            ImageIcon scaledIcon = new ImageIcon(scaledImage);
+
+            JPanel cardPanelWithLabel = new JPanel(new BorderLayout());
+            cardPanelWithLabel.setBackground(Color.BLACK);
+
+            JLabel cardNameLabel = new JLabel(card.getName(), JLabel.CENTER);
+            cardNameLabel.setForeground(Color.WHITE);
+
+            JLabel cardImageLabel = new JLabel(scaledIcon);
+            cardImageLabel.setBorder(BorderFactory.createEmptyBorder(3, 0, 0, 0)); // 이미지 위쪽 마진
+
+            cardPanelWithLabel.add(cardNameLabel, BorderLayout.NORTH);
+            cardPanelWithLabel.add(cardImageLabel, BorderLayout.CENTER);
+
+            player2CardPanel.add(cardPanelWithLabel);
+        }
+
+        JPanel emptyCenterPanel = new JPanel();
+        emptyCenterPanel.setBackground(Color.BLACK);
+
+        cardPanel.add(player1CardPanel, BorderLayout.WEST);
+        cardPanel.add(emptyCenterPanel, BorderLayout.CENTER);
+        cardPanel.add(player2CardPanel, BorderLayout.EAST);
     }
+
+    cardPanel.revalidate();
+    cardPanel.repaint();
+}
+
 
 
     private void drawDashedGrid(Graphics2D g2d, int rows, int cols, int cellWidth, int cellHeight) {

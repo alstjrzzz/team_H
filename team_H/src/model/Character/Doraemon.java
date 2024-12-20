@@ -147,15 +147,21 @@ private int character_size = 100;
       
       tempArr = new BufferedImage[3];
       for (int i = 0; i < 3; i++) {
-         tempArr[i] = resizeImage(sprite.getSubimage(i * 32, 656, 32, 48), character_size, character_size, true);
+         tempArr[i] = resizeImage(sprite.getSubimage(i * 32, 656, 32, 48), 150, 150, true);
       }
-      motions.put("Skill1", tempArr.clone());
+      for (int i = 0; i < 3; i++) {
+          tempArr[i] = flipHorizontally(tempArr[i]);
+      }
+      motions.put("Air Cannon!", tempArr.clone());
       
       tempArr = new BufferedImage[8];
       for (int i = 0; i < 8; i++) {
-         tempArr[i] = resizeImage(sprite.getSubimage(i * 48, 592, 48, 64), character_size, character_size, true);
+         tempArr[i] = resizeImage(sprite.getSubimage(i * 48, 592, 48, 64), 200, 200, true);
       }
-      motions.put("Skill2", tempArr.clone());
+      for (int i = 0; i < 3; i++) {
+          tempArr[i] = flipHorizontally(tempArr[i]);
+      }
+      motions.put("Bamboo Helicopter!", tempArr.clone());
    }
    
    protected BufferedImage TransformColorToTransparency(BufferedImage image, Color c1) {
