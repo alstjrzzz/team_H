@@ -627,149 +627,245 @@ public class PlayingGameScreen extends JPanel {
         	
         // Finn ------------------------------------------------------------	
         case "Finn":
-        	switch (myCharacter.getCurrentMotion()) {
-        	case "MOVE":
-        		switch (myCharacter.getCurrentCard().getName()) {
-        		case "Move Up":
-        			
-        			myMotions = myCharacter.getMotions().get(myCharacter.getCurrentCard().getName());
-        			myFrameDelay = 100;	// 각 프레임 간격
-        			myDuration = myFrameDelay * myMotions.length * 4;	// 해당 모션의 총 시간
-        			
-        			myCurrentFrame = 0;
-        			myMotionTimer = new Timer(myFrameDelay, null);
-        			myMotionTimer.addActionListener(e -> {
-        				myCurrentFrame = (myCurrentFrame + 1) % myMotions.length;
-        			    repaint();
-        			});
-        			
-        			new Timer(myDuration, e -> {
-        				myMotionTimer.stop();
-        			    ((Timer) e.getSource()).stop();
-        			}).start();
-        			
-        			myMotionTimer.start();
-        			
-        			break;
-        		case "Move Down":
+            switch (myCharacter.getCurrentMotion()) {
+            case "MOVE":
+                switch (myCharacter.getCurrentCard().getName()) {
+                case "Move Up":
+                    // 시작 위치와 이동 거리 설정
+                    int MU_startY = myCharacter.getCurrentY(); // 시작 위치 Y
+                    int MU_endY = MU_startY - 60; // 목표 위치 (위쪽으로 60px 이동)
 
-        			myMotions = myCharacter.getMotions().get(myCharacter.getCurrentCard().getName());
-        			myFrameDelay = 100;	// 각 프레임 간격
-        			myDuration = myFrameDelay * myMotions.length * 4;	// 해당 모션의 총 시간
-        			
-        			myCurrentFrame = 0;
-        			myMotionTimer = new Timer(myFrameDelay, null);
-        			myMotionTimer.addActionListener(e -> {
-        				myCurrentFrame = (myCurrentFrame + 1) % myMotions.length;
-        			    repaint();
-        			});
-        			
-        			new Timer(myDuration, e -> {
-        				myMotionTimer.stop();
-        			    ((Timer) e.getSource()).stop();
-        			}).start();
-        			
-        			myMotionTimer.start();
-        			
-        			break;
-        		case "Move Left":
+                    // 애니메이션 관련 설정
+                    myMotions = myCharacter.getMotions().get(myCharacter.getCurrentCard().getName());
+                    myFrameDelay = 100; // 각 프레임 간격
+                    int MU_totalFrames = myMotions.length; // 애니메이션 총 프레임 수
+                    myDuration = 6 * myFrameDelay * MU_totalFrames; // 애니메이션 총 시간
 
-        			myMotions = myCharacter.getMotions().get(myCharacter.getCurrentCard().getName());
-        			myFrameDelay = 100;	// 각 프레임 간격
-        			myDuration = myFrameDelay * myMotions.length * 4;	// 해당 모션의 총 시간
-        			
-        			myCurrentFrame = 0;
-        			myMotionTimer = new Timer(myFrameDelay, null);
-        			myMotionTimer.addActionListener(e -> {
-        				myCurrentFrame = (myCurrentFrame + 1) % myMotions.length;
-        			    repaint();
-        			});
-        			
-        			new Timer(myDuration, e -> {
-        				myMotionTimer.stop();
-        			    ((Timer) e.getSource()).stop();
-        			}).start();
-        			
-        			myMotionTimer.start();
-        			
-        			break;
-        		case "Move Right":
+                    myCurrentFrame = 0;
 
-        			myMotions = myCharacter.getMotions().get(myCharacter.getCurrentCard().getName());
-        			myFrameDelay = 100;	// 각 프레임 간격
-        			myDuration = myFrameDelay * myMotions.length * 4;	// 해당 모션의 총 시간
-        			
-        			myCurrentFrame = 0;
-        			myMotionTimer = new Timer(myFrameDelay, null);
-        			myMotionTimer.addActionListener(e -> {
-        				myCurrentFrame = (myCurrentFrame + 1) % myMotions.length;
-        			    repaint();
-        			});
-        			
-        			new Timer(myDuration, e -> {
-        				myMotionTimer.stop();
-        			    ((Timer) e.getSource()).stop();
-        			}).start();
-        			
-        			myMotionTimer.start();
-        			
-        			break;
-        		}
-        		break;
-        	case "ATTACK":
-        		switch (myCharacter.getCurrentCard().getName()) {
-        		case "Skill1" :
-        			myMotions = myCharacter.getMotions().get(myCharacter.getCurrentCard().getName());
-        			myFrameDelay = 100;	// 각 프레임 간격
-        			myDuration = myFrameDelay * myMotions.length * 4;	// 해당 모션의 총 시간
-        			
-        			myCurrentFrame = 0;
-        			myMotionTimer = new Timer(myFrameDelay, null);
-        			myMotionTimer.addActionListener(e -> {
-        				myCurrentFrame = (myCurrentFrame + 1) % myMotions.length;
-        			    repaint();
-        			});
-        			
-        			new Timer(myDuration, e -> {
-        				myMotionTimer.stop();
-        			    ((Timer) e.getSource()).stop();
-        			}).start();
-        			
-        			myMotionTimer.start();
-        		        			
-        			break;
-        		}
-        		break;
-        	case "HIT":
-        		
-        		break;
-        	case "DEAD":
-        		
-        		break;
-        	case "IDLE":
+                    // 이동 속도 계산
+                    int MU_steps = 6 * MU_totalFrames; // 이동할 스텝 수
+                    int MU_stepSize = (MU_endY - MU_startY) / MU_steps; // 한 스텝당 이동 거리
 
-    			myMotions = myCharacter.getMotions().get("IDLE");
-    			myFrameDelay = 100;	// 각 프레임 간격
-    			myDuration = Integer.MAX_VALUE;	// 해당 모션의 총 시간
-    			
-    			myCurrentFrame = 0;
-    			myMotionTimer = new Timer(myFrameDelay, null);
-    			myMotionTimer.addActionListener(e -> {
-    				myCurrentFrame = (myCurrentFrame + 1) % myMotions.length;
-    			    repaint();
-    			});
-    			
-    			new Timer(myDuration, e -> {
-    				myMotionTimer.stop();
-    			    ((Timer) e.getSource()).stop();
-    			}).start();
-    			
-    			myMotionTimer.start();
-    			
-    			break;
-        	}
-        	
-        	break;
+                    // 프레임별 애니메이션 실행
+                    Timer myMotionTimer = new Timer(myFrameDelay, null);
+                    myMotionTimer.addActionListener(e -> {
+                        // 현재 프레임 업데이트
+                        myCurrentFrame = (myCurrentFrame + 1) % MU_totalFrames;
+
+                        // 현재 위치 업데이트
+                        int currentY = myCharacter.getCurrentY();
+                        if (Math.abs(currentY - MU_endY) > Math.abs(MU_stepSize)) {
+                            myCharacter.setCurrentY(currentY + MU_stepSize); // Y 위치 업데이트
+                        }
+
+                        // 화면 갱신
+                        repaint();
+                    });
+
+                    // 애니메이션 종료 시 처리
+                    new Timer(myDuration, e -> {
+                        myMotionTimer.stop();
+                        myCharacter.setCurrentY(MU_endY); // 최종 위치 보정
+                        ((Timer) e.getSource()).stop();
+                    }).start();
+
+                    myMotionTimer.start();
+
+                    break;
+                case "Move Down":
+                    // 시작 위치와 이동 거리 설정
+                    int MD_startY = myCharacter.getCurrentY(); // 시작 위치 Y
+                    int MD_endY = MD_startY + 60; // 목표 위치 (아래쪽으로 60px 이동)
+
+                    // 애니메이션 관련 설정
+                    myMotions = myCharacter.getMotions().get(myCharacter.getCurrentCard().getName());
+                    myFrameDelay = 100; // 각 프레임 간격
+                    int MD_totalFrames = myMotions.length; // 애니메이션 총 프레임 수
+                    myDuration = 6 * myFrameDelay * MD_totalFrames; // 애니메이션 총 시간
+
+                    myCurrentFrame = 0;
+
+                    // 이동 속도 계산
+                    int MD_steps = 6 * MD_totalFrames; // 이동할 스텝 수
+                    int MD_stepSize = (MD_endY - MD_startY) / MD_steps; // 한 스텝당 이동 거리
+
+                    // 프레임별 애니메이션 실행
+                    myMotionTimer = new Timer(myFrameDelay, null);
+                    myMotionTimer.addActionListener(e -> {
+                        // 현재 프레임 업데이트
+                        myCurrentFrame = (myCurrentFrame + 1) % MD_totalFrames;
+
+                        // 현재 위치 업데이트
+                        int currentY = myCharacter.getCurrentY();
+                        if (Math.abs(currentY - MD_endY) > Math.abs(MD_stepSize)) {
+                            myCharacter.setCurrentY(currentY + MD_stepSize); // Y 위치 업데이트
+                        }
+
+                        // 화면 갱신
+                        repaint();
+                    });
+
+                    // 애니메이션 종료 시 처리
+                    new Timer(myDuration, e -> {
+                        myMotionTimer.stop();
+                        myCharacter.setCurrentY(MD_endY); // 최종 위치 보정
+                        ((Timer) e.getSource()).stop();
+                    }).start();
+
+                    myMotionTimer.start();
+
+                    break;
+
+                case "Move Left":
+                    // 시작 위치와 이동 거리 설정
+                    int ML_startX = myCharacter.getCurrentX(); // 시작 위치 X
+                    int ML_endX = ML_startX - 150; // 목표 위치 (왼쪽으로 150px 이동)
+
+                    // 애니메이션 관련 설정
+                    myMotions = myCharacter.getMotions().get(myCharacter.getCurrentCard().getName());
+                    myFrameDelay = 100; // 각 프레임 간격
+                    int ML_totalFrames = myMotions.length; // 애니메이션 총 프레임 수
+                    myDuration = 4 * myFrameDelay * ML_totalFrames; // 애니메이션 총 시간
+
+                    myCurrentFrame = 0;
+
+                    // 이동 속도 계산
+                    int ML_steps = 4 * ML_totalFrames; // 이동할 스텝 수
+                    int ML_stepSize = (ML_endX - ML_startX) / ML_steps; // 한 스텝당 이동 거리
+
+                    // 프레임별 애니메이션 실행
+                    myMotionTimer = new Timer(myFrameDelay, null);
+                    myMotionTimer.addActionListener(e -> {
+                        // 현재 프레임 업데이트
+                        myCurrentFrame = (myCurrentFrame + 1) % ML_totalFrames;
+
+                        // 현재 위치 업데이트
+                        int currentX = myCharacter.getCurrentX();
+                        if (Math.abs(currentX - ML_endX) > Math.abs(ML_stepSize)) {
+                            myCharacter.setCurrentX(currentX + ML_stepSize); // X 위치 업데이트
+                        }
+
+                        // 화면 갱신
+                        repaint();
+                    });
+
+                    // 애니메이션 종료 시 처리
+                    new Timer(myDuration, e -> {
+                        myMotionTimer.stop();
+                        myCharacter.setCurrentX(ML_endX); // 최종 위치 보정
+                        ((Timer) e.getSource()).stop();
+                    }).start();
+
+                    myMotionTimer.start();
+
+                    break;
+
+                case "Move Right":
+                    // 시작 위치와 이동 거리 설정
+                    int MR_startX = myCharacter.getCurrentX(); // 시작 위치 X
+                    int MR_endX = MR_startX + 150; // 목표 위치 (오른쪽으로 150px 이동)
+
+                    // 애니메이션 관련 설정
+                    myMotions = myCharacter.getMotions().get(myCharacter.getCurrentCard().getName());
+                    myFrameDelay = 100; // 각 프레임 간격
+                    int MR_totalFrames = myMotions.length; // 애니메이션 총 프레임 수
+                    myDuration = 4 * myFrameDelay * MR_totalFrames; // 애니메이션 총 시간
+
+                    myCurrentFrame = 0;
+
+                    // 이동 속도 계산
+                    int MR_steps = 4 * MR_totalFrames; // 이동할 스텝 수
+                    int MR_stepSize = (MR_endX - MR_startX) / MR_steps; // 한 스텝당 이동 거리
+
+                    // 프레임별 애니메이션 실행
+                    myMotionTimer = new Timer(myFrameDelay, null);
+                    myMotionTimer.addActionListener(e -> {
+                        // 현재 프레임 업데이트
+                        myCurrentFrame = (myCurrentFrame + 1) % MR_totalFrames;
+
+                        // 현재 위치 업데이트
+                        int currentX = myCharacter.getCurrentX();
+                        if (Math.abs(currentX - MR_endX) > Math.abs(MR_stepSize)) {
+                            myCharacter.setCurrentX(currentX + MR_stepSize); // X 위치 업데이트
+                        }
+
+                        // 화면 갱신
+                        repaint();
+                    });
+
+                    // 애니메이션 종료 시 처리
+                    new Timer(myDuration, e -> {
+                        myMotionTimer.stop();
+                        myCharacter.setCurrentX(MR_endX); // 최종 위치 보정
+                        ((Timer) e.getSource()).stop();
+                    }).start();
+
+                    myMotionTimer.start();
+
+                    break;
+                }
+                break;
+
+            case "ATTACK":
+                switch (myCharacter.getCurrentCard().getName()) {
+                case "Skill1":
+                    myMotions = myCharacter.getMotions().get(myCharacter.getCurrentCard().getName());
+                    myFrameDelay = 100; // 각 프레임 간격
+                    myDuration = myFrameDelay * myMotions.length * 4; // 애니메이션 총 시간
+
+                    myCurrentFrame = 0;
+
+                    myMotionTimer = new Timer(myFrameDelay, null);
+                    myMotionTimer.addActionListener(e -> {
+                        myCurrentFrame = (myCurrentFrame + 1) % myMotions.length;
+                        repaint();
+                    });
+
+                    new Timer(myDuration, e -> {
+                        myMotionTimer.stop();
+                        ((Timer) e.getSource()).stop();
+                    }).start();
+
+                    myMotionTimer.start();
+
+                    break;
+                }
+                break;
+
+            case "HIT":
+                // HIT 관련 처리
+                break;
+
+            case "DEAD":
+                // DEAD 관련 처리
+                break;
+
+            case "IDLE":
+                myMotions = myCharacter.getMotions().get("IDLE");
+                myFrameDelay = 100; // 각 프레임 간격
+                myDuration = Integer.MAX_VALUE; // 해당 모션의 총 시간
+
+                myCurrentFrame = 0;
+
+                myMotionTimer = new Timer(myFrameDelay, null);
+                myMotionTimer.addActionListener(e -> {
+                    myCurrentFrame = (myCurrentFrame + 1) % myMotions.length;
+                    repaint();
+                });
+
+                new Timer(myDuration, e -> {
+                    myMotionTimer.stop();
+                    ((Timer) e.getSource()).stop();
+                }).start();
+
+                myMotionTimer.start();
+
+                break;
+            }
+
+            break;
+
         	
         // Luffy ------------------------------------------------------------	
         case "Luffy":
@@ -1345,91 +1441,183 @@ public class PlayingGameScreen extends JPanel {
         	case "MOVE":
         		switch (enemyCharacter.getCurrentCard().getName()) {
         		case "Move Up":
+        		    // 시작 위치와 이동 거리 설정
+        		    int MU_startY = enemyCharacter.getCurrentY(); // 시작 위치 Y
+        		    int MU_endY = MU_startY - 60; // 목표 위치 (위쪽으로 60px 이동)
 
-        			enemyMotions = enemyCharacter.getMotions().get(enemyCharacter.getCurrentCard().getName());
-        			enemyFrameDelay = 100;	// 각 프레임 간격
-        			enemyDuration = enemyFrameDelay * enemyMotions.length * 4;	// 해당 모션의 총 시간
-        			
-        			enemyCurrentFrame = 0;
-        			enemyMotionTimer = new Timer(enemyFrameDelay, null);
-        			enemyMotionTimer.addActionListener(e -> {
-        				enemyCurrentFrame = (enemyCurrentFrame + 1) % enemyMotions.length;
-        			    repaint();
-        			});
-        			
-        			new Timer(enemyDuration, e -> {
-        				enemyMotionTimer.stop();
-        			    ((Timer) e.getSource()).stop();
-        			}).start();
-        			
-        			enemyMotionTimer.start();
-        			
-        			break;
+        		    // 애니메이션 관련 설정
+        		    enemyMotions = enemyCharacter.getMotions().get(enemyCharacter.getCurrentCard().getName());
+        		    enemyFrameDelay = 100; // 각 프레임 간격
+        		    int MU_totalFrames = enemyMotions.length; // 애니메이션 총 프레임 수
+        		    enemyDuration = 6 * enemyFrameDelay * enemyMotions.length; // 애니메이션 총 시간
+
+        		    enemyCurrentFrame = 0;
+
+        		    // 이동 속도 계산
+        		    int MU_steps = 6 * MU_totalFrames; // 이동할 스텝 수
+        		    int MU_stepSize = (MU_endY - MU_startY) / MU_steps; // 한 스텝당 이동 거리
+
+        		    // 프레임별 애니메이션 실행
+        		    enemyMotionTimer = new Timer(enemyFrameDelay, null);
+        		    enemyMotionTimer.addActionListener(e -> {
+        		        // 현재 프레임 업데이트
+        		        enemyCurrentFrame = (enemyCurrentFrame + 1) % MU_totalFrames;
+
+        		        // 현재 위치 업데이트
+        		        int currentY = enemyCharacter.getCurrentY();
+        		        if (Math.abs(currentY - MU_endY) > Math.abs(MU_stepSize)) {
+        		            enemyCharacter.setCurrentY(currentY + MU_stepSize); // Y 위치 업데이트
+        		        }
+
+        		        // 화면 갱신
+        		        repaint();
+        		    });
+
+        		    // 애니메이션 종료 시 처리
+        		    new Timer(enemyDuration, e -> {
+        		        enemyMotionTimer.stop();
+        		        enemyCharacter.setCurrentY(MU_endY); // 최종 위치 보정
+        		        ((Timer) e.getSource()).stop();
+        		    }).start();
+
+        		    enemyMotionTimer.start();
+
+        		    break;
         		case "Move Down":
+        		    // 시작 위치와 이동 거리 설정
+        		    int MD_startY = enemyCharacter.getCurrentY(); // 시작 위치 Y
+        		    int MD_endY = MD_startY + 60; // 목표 위치 (아래쪽으로 60px 이동)
 
-        			enemyMotions = enemyCharacter.getMotions().get(enemyCharacter.getCurrentCard().getName());
-        			enemyFrameDelay = 100;	// 각 프레임 간격
-        			enemyDuration = enemyFrameDelay * enemyMotions.length * 4;	// 해당 모션의 총 시간
-        			
-        			enemyCurrentFrame = 0;
-        			enemyMotionTimer = new Timer(enemyFrameDelay, null);
-        			enemyMotionTimer.addActionListener(e -> {
-        				enemyCurrentFrame = (enemyCurrentFrame + 1) % enemyMotions.length;
-        			    repaint();
-        			});
-        			
-        			new Timer(enemyDuration, e -> {
-        				enemyMotionTimer.stop();
-        			    ((Timer) e.getSource()).stop();
-        			}).start();
-        			
-        			enemyMotionTimer.start();
-        			
-        			break;
+        		    // 애니메이션 관련 설정
+        		    enemyMotions = enemyCharacter.getMotions().get(enemyCharacter.getCurrentCard().getName());
+        		    enemyFrameDelay = 100; // 각 프레임 간격
+        		    int MD_totalFrames = enemyMotions.length; // 애니메이션 총 프레임 수
+        		    enemyDuration = 6 * enemyFrameDelay * MD_totalFrames; // 애니메이션 총 시간
+
+        		    enemyCurrentFrame = 0;
+
+        		    // 이동 속도 계산
+        		    int MD_steps = 6 * MD_totalFrames; // 이동할 스텝 수
+        		    int MD_stepSize = (MD_endY - MD_startY) / MD_steps; // 한 스텝당 이동 거리
+
+        		    // 프레임별 애니메이션 실행
+        		    enemyMotionTimer = new Timer(enemyFrameDelay, null);
+        		    enemyMotionTimer.addActionListener(e -> {
+        		        // 현재 프레임 업데이트
+        		        enemyCurrentFrame = (enemyCurrentFrame + 1) % MD_totalFrames;
+
+        		        // 현재 위치 업데이트
+        		        int currentY = enemyCharacter.getCurrentY();
+        		        if (Math.abs(currentY - MD_endY) > Math.abs(MD_stepSize)) {
+        		            enemyCharacter.setCurrentY(currentY + MD_stepSize); // Y 위치 업데이트
+        		        }
+
+        		        // 화면 갱신
+        		        repaint();
+        		    });
+
+        		    // 애니메이션 종료 시 처리
+        		    new Timer(enemyDuration, e -> {
+        		        enemyMotionTimer.stop();
+        		        enemyCharacter.setCurrentY(MD_endY); // 최종 위치 보정
+        		        ((Timer) e.getSource()).stop();
+        		    }).start();
+
+        		    enemyMotionTimer.start();
+
+        		    break;
+
         		case "Move Left":
+        		    // 시작 위치와 이동 거리 설정
+        		    int ML_startX = enemyCharacter.getCurrentX(); // 시작 위치 X
+        		    int ML_endX = ML_startX - 150; // 목표 위치 (왼쪽으로 100px 이동)
 
-        			enemyMotions = enemyCharacter.getMotions().get(enemyCharacter.getCurrentCard().getName());
-        			enemyFrameDelay = 100;	// 각 프레임 간격
-        			enemyDuration = enemyFrameDelay * enemyMotions.length * 4;	// 해당 모션의 총 시간
-        			
-        			enemyCurrentFrame = 0;
-        			enemyMotionTimer = new Timer(enemyFrameDelay, null);
-        			enemyMotionTimer.addActionListener(e -> {
-        				enemyCurrentFrame = (enemyCurrentFrame + 1) % enemyMotions.length;
-        			    repaint();
-        			});
-        			
-        			new Timer(enemyDuration, e -> {
-        				enemyMotionTimer.stop();
-        			    ((Timer) e.getSource()).stop();
-        			}).start();
-        			
-        			enemyMotionTimer.start();
-        			
-        			break;
+        		    // 애니메이션 관련 설정
+        		    enemyMotions = enemyCharacter.getMotions().get(enemyCharacter.getCurrentCard().getName());
+        		    enemyFrameDelay = 100; // 각 프레임 간격
+        		    int ML_totalFrames = enemyMotions.length; // 애니메이션 총 프레임 수
+        		    enemyDuration = 4*enemyFrameDelay * ML_totalFrames; // 애니메이션 총 시간
+
+        		    enemyCurrentFrame = 0;
+
+        		    // 이동 속도 계산
+        		    int ML_steps = 4*ML_totalFrames; // 이동할 스텝 수 (프레임 수와 동일)
+        		    int ML_stepSize = (ML_endX - ML_startX) / ML_steps; // 한 스텝당 이동 거리
+
+        		    // 프레임별 애니메이션 실행
+        		    enemyMotionTimer = new Timer(enemyFrameDelay, null);
+        		    enemyMotionTimer.addActionListener(e -> {
+        		        // 현재 프레임 업데이트
+        		        enemyCurrentFrame = (enemyCurrentFrame + 1) % ML_totalFrames;
+
+        		        // 현재 위치 업데이트
+        		        int currentX = enemyCharacter.getCurrentX();
+        		        if (Math.abs(currentX - ML_endX) > Math.abs(ML_stepSize)) {
+        		            enemyCharacter.setCurrentX(currentX + ML_stepSize); // X 위치 업데이트
+        		        }
+
+        		        // 화면 갱신
+        		        repaint();
+        		    });
+
+        		    // 애니메이션 종료 시 처리
+        		    new Timer(enemyDuration, e -> {
+        		        enemyMotionTimer.stop();
+        		        enemyCharacter.setCurrentX(ML_endX); // 최종 위치 보정
+        		        ((Timer) e.getSource()).stop();
+        		    }).start();
+
+        		    enemyMotionTimer.start();
+
+        		    break;
+
         		case "Move Right":
+        		    // 시작 위치와 이동 거리 설정
+        		    int MR_startX = enemyCharacter.getCurrentX(); // 시작 위치 X
+        		    int MR_endX = MR_startX + 150; // 목표 위치 (오른쪽으로 150px 이동)
 
-        			enemyMotions = enemyCharacter.getMotions().get(enemyCharacter.getCurrentCard().getName());
-        			enemyFrameDelay = 100;	// 각 프레임 간격
-        			enemyDuration = enemyFrameDelay * enemyMotions.length * 4;	// 해당 모션의 총 시간
-        			
-        			enemyCurrentFrame = 0;
-        			enemyMotionTimer = new Timer(enemyFrameDelay, null);
-        			enemyMotionTimer.addActionListener(e -> {
-        				enemyCurrentFrame = (enemyCurrentFrame + 1) % enemyMotions.length;
-        			    repaint();
-        			});
-        			
-        			new Timer(enemyDuration, e -> {
-        				enemyMotionTimer.stop();
-        			    ((Timer) e.getSource()).stop();
-        			}).start();
-        			
-        			enemyMotionTimer.start();
-        			
-        			break;
+        		    // 애니메이션 관련 설정
+        		    enemyMotions = enemyCharacter.getMotions().get(enemyCharacter.getCurrentCard().getName());
+        		    enemyFrameDelay = 100; // 각 프레임 간격
+        		    int MR_totalFrames = enemyMotions.length; // 애니메이션 총 프레임 수
+        		    enemyDuration = 4 * enemyFrameDelay * MR_totalFrames; // 애니메이션 총 시간
+
+        		    enemyCurrentFrame = 0;
+
+        		    // 이동 속도 계산
+        		    int MR_steps = 4 * MR_totalFrames; // 이동할 스텝 수
+        		    int MR_stepSize = (MR_endX - MR_startX) / MR_steps; // 한 스텝당 이동 거리
+
+        		    // 프레임별 애니메이션 실행
+        		    enemyMotionTimer = new Timer(enemyFrameDelay, null);
+        		    enemyMotionTimer.addActionListener(e -> {
+        		        // 현재 프레임 업데이트
+        		        enemyCurrentFrame = (enemyCurrentFrame + 1) % MR_totalFrames;
+
+        		        // 현재 위치 업데이트
+        		        int currentX = enemyCharacter.getCurrentX();
+        		        if (Math.abs(currentX - MR_endX) > Math.abs(MR_stepSize)) {
+        		            enemyCharacter.setCurrentX(currentX + MR_stepSize); // X 위치 업데이트
+        		        }
+
+        		        // 화면 갱신
+        		        repaint();
+        		    });
+
+        		    // 애니메이션 종료 시 처리
+        		    new Timer(enemyDuration, e -> {
+        		        enemyMotionTimer.stop();
+        		        enemyCharacter.setCurrentX(MR_endX); // 최종 위치 보정
+        		        ((Timer) e.getSource()).stop();
+        		    }).start();
+
+        		    enemyMotionTimer.start();
+
+        		    break;
         		}
+
         		break;
+        		
         	case "ATTACK":
         		switch (enemyCharacter.getCurrentCard().getName()) {
         		// ... skill들 넣으셈
