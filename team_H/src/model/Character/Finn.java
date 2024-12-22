@@ -2,6 +2,9 @@ package model.Character;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+
+import javazoom.jl.player.Player;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.FilteredImageSource;
@@ -9,6 +12,8 @@ import java.awt.image.ImageFilter;
 import java.awt.image.ImageProducer;
 import java.awt.image.RGBImageFilter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,7 +26,7 @@ public class Finn extends Character {
    
 	private int character_size = 100;
 	private int character_skill_size = 300;
-   
+	private Map<String, String> cardSounds;
     public Finn() {
        
         name = "Finn";
@@ -42,6 +47,7 @@ public class Finn extends Character {
          
          initCardImage();
          initMotions();
+         initCardSounds();
     }
     
     
@@ -93,7 +99,31 @@ public class Finn extends Character {
             e.printStackTrace();
         }
     }
+    
+    private void initCardSounds() {
+        cardSounds = new HashMap<>();
+        cardSounds.put("Sword Slash", "res/sound/sfx/finn_swordSlash.mp3");
+        cardSounds.put("Stretch Punch", "res/sound/sfx/finn_stretchPunch.mp3");
+    }
 
+    @Override
+    public void playCardSound(String cardName) {
+        String soundPath = cardSounds.get(cardName);
+        if (soundPath != null) {
+            new Thread(() -> {
+                try (FileInputStream fis = new FileInputStream(soundPath)) {
+                    Player player = new Player(fis);
+                    player.play();
+                } catch (FileNotFoundException e) {
+                    System.err.println("Sound file not found: " + soundPath);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }).start();
+        } else {
+            System.err.println("Sound for card " + cardName + " not found.");
+        }
+    }
 
 
    @Override
@@ -155,6 +185,8 @@ public class Finn extends Character {
       }
       motions.put("Stretch Punch", tempArr.clone());
    }
+   
+  
    
     private  BufferedImage resizeImage(BufferedImage image, int newWidth, int newHeight, boolean keepRatio) {
         int imageWidth = image.getWidth();

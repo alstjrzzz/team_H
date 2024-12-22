@@ -2,6 +2,9 @@ package model.Character;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+
+import javazoom.jl.player.Player;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.FilteredImageSource;
@@ -9,6 +12,8 @@ import java.awt.image.ImageFilter;
 import java.awt.image.ImageProducer;
 import java.awt.image.RGBImageFilter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,7 +25,7 @@ import model.Card;
 public class Zoro extends Character {
    
 	private int character_size = 110;
-   
+	private Map<String, String> cardSounds;
     public Zoro() {
        
         name = "Zoro";
@@ -42,6 +47,7 @@ public class Zoro extends Character {
          
          initCardImage();
          initMotions();
+         initCardSounds();
     }
     
     
@@ -93,7 +99,30 @@ public class Zoro extends Character {
         }
     }
 
+    private void initCardSounds() {
+        cardSounds = new HashMap<>();
+        cardSounds.put("Tiger Trap", "res/sound/sfx/zoro_tigerTrap.mp3");
+        cardSounds.put("Onigiri", "res/sound/sfx/zoro_onigiri.mp3");
+    }
 
+    @Override
+    public void playCardSound(String cardName) {
+        String soundPath = cardSounds.get(cardName);
+        if (soundPath != null) {
+            new Thread(() -> {
+                try (FileInputStream fis = new FileInputStream(soundPath)) {
+                    Player player = new Player(fis);
+                    player.play();
+                } catch (FileNotFoundException e) {
+                    System.err.println("Sound file not found: " + soundPath);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }).start();
+        } else {
+            System.err.println("Sound for card " + cardName + " not found.");
+        }
+    }
 
    @Override
    public void initMotions() {
@@ -143,6 +172,8 @@ public class Zoro extends Character {
       motions.put("Skill1", null);
       motions.put("Skill2", null);
    }
+   
+   
    
     private  BufferedImage resizeImage(BufferedImage image, int newWidth, int newHeight, boolean keepRatio) {
         int imageWidth = image.getWidth();

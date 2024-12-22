@@ -18,12 +18,9 @@ import javax.swing.Timer;
 import controller.GameController;
 import model.Card;
 import model.GameState;
-import model.Character.Ace;
 import model.Character.Cygnus;
 import model.Character.Doraemon;
 import model.Character.Finn;
-import model.Character.Luffy;
-import model.Character.SuperMan;
 import model.Character.Zoro;
 import network.NetworkManager;
 
@@ -42,12 +39,9 @@ public class SelectCharacterScreen extends JPanel {
     private Image backgroundImage;
     
     // 캐릭터 버튼 이미지 변수
-    private ImageIcon supermanIcon;
     private ImageIcon doraemonIcon;
     private ImageIcon zoroIcon;
     private ImageIcon CygnusIcon;
-    private ImageIcon AceIcon;
-    private ImageIcon LuffyIcon;
     private ImageIcon FinnIcon;
     
     // 캐릭터 배경 이미지 관련 변수
@@ -145,21 +139,16 @@ public class SelectCharacterScreen extends JPanel {
         setLayout(null);
         
         // 캐릭터 이미지 로드
-        supermanIcon = new ImageIcon("res/character/superman_face.png");
         doraemonIcon = new ImageIcon("res/character/Doraemon_face.png");
         zoroIcon = new ImageIcon("res/character/Zoro_face.png");
         CygnusIcon = new ImageIcon("res/character/Cygnus_face.png");
-        AceIcon = new ImageIcon("res/character/Ace_face.png");
-        LuffyIcon = new ImageIcon("res/character/Luffy_face.png");
         FinnIcon = new ImageIcon("res/character/Finn_face.png");
         
         // 캐릭터별 배경 이미지 로드
-        characterBackgrounds.put("SuperMan", new ImageIcon("res/character/superman_background.png").getImage());
+       
         characterBackgrounds.put("Doraemon", new ImageIcon("res/character/doraemon_background.png").getImage());
         characterBackgrounds.put("Zoro", new ImageIcon("res/character/Zoro_background2.png").getImage());
         characterBackgrounds.put("Cygnus", new ImageIcon("res/character/Cygnus_background.png").getImage());
-        characterBackgrounds.put("Ace", new ImageIcon("res/character/Ace_background.png").getImage());
-        characterBackgrounds.put("Luffy", new ImageIcon("res/character/Luffy_background.png").getImage());
         characterBackgrounds.put("Finn", new ImageIcon("res/character/Finn_background.png").getImage());
         
         // 수동으로 캐릭터 버튼 추가
@@ -167,20 +156,9 @@ public class SelectCharacterScreen extends JPanel {
         int buttonHeight = 100;
         int gap = 30;
 
-        // SuperMan 버튼
-        JButton supermanButton = new JButton(supermanIcon);
-        supermanButton.setBounds(100, 100, buttonWidth, buttonHeight);
-        supermanButton.addActionListener(e -> {
-            startAnimation("SuperMan"); // 애니메이션 시작
-            gameState.setMyCharacter(gameState.createCharacter("SuperMan"));
-            gameState.setMyHealth(SuperMan.maxHealth);
-            System.out.println("선택된 캐릭터: SuperMan");
-        });
-        add(supermanButton);
-        
         // Doraemon 버튼
         JButton doraemonButton = new JButton(doraemonIcon);
-        doraemonButton.setBounds(250, 100, buttonWidth, buttonHeight);
+        doraemonButton.setBounds(217, 100, buttonWidth, buttonHeight);
         doraemonButton.addActionListener(e -> {
             startAnimation("Doraemon"); // 애니메이션 시작
             gameState.setMyCharacter(gameState.createCharacter("Doraemon"));
@@ -191,7 +169,7 @@ public class SelectCharacterScreen extends JPanel {
         
         // Zoro 버튼
         JButton zoroButton = new JButton(zoroIcon);
-        zoroButton.setBounds(400, 100, buttonWidth, buttonHeight);
+        zoroButton.setBounds(367, 100, buttonWidth, buttonHeight);
         zoroButton.addActionListener(e -> {
             startAnimation("Zoro"); // 애니메이션 시작
             gameState.setMyCharacter(gameState.createCharacter("Zoro"));
@@ -202,7 +180,7 @@ public class SelectCharacterScreen extends JPanel {
         
         // Cygnus 버튼
         JButton CygnusButton = new JButton(CygnusIcon);
-        CygnusButton.setBounds(550, 100, buttonWidth, buttonHeight);
+        CygnusButton.setBounds(517, 100, buttonWidth, buttonHeight);
         CygnusButton.addActionListener(e -> {
             startAnimation("Cygnus"); // 애니메이션 시작
             gameState.setMyCharacter(gameState.createCharacter("Cygnus"));
@@ -210,32 +188,10 @@ public class SelectCharacterScreen extends JPanel {
             System.out.println("선택된 캐릭터: Cygnus");
         });
         add(CygnusButton);
-        
-        // Ace 버튼
-        JButton AceButton = new JButton(AceIcon);
-        AceButton.setBounds(700, 100, buttonWidth, buttonHeight);
-        AceButton.addActionListener(e -> {
-            startAnimation("Ace"); // 애니메이션 시작
-            gameState.setMyCharacter(gameState.createCharacter("Ace"));
-            gameState.setMyHealth(Ace.maxHealth);
-            System.out.println("선택된 캐릭터: Ace");
-        });
-        add(AceButton);
-        
-        // Luffy 버튼
-        JButton LuffyButton = new JButton(LuffyIcon);
-        LuffyButton.setBounds(100, 250, buttonWidth, buttonHeight);
-        LuffyButton.addActionListener(e -> {
-            startAnimation("Luffy"); // 애니메이션 시작
-            gameState.setMyCharacter(gameState.createCharacter("Luffy"));
-            gameState.setMyHealth(Luffy.maxHealth);
-            System.out.println("선택된 캐릭터: Luffy");
-        });
-        add(LuffyButton);
-        
+         
         // Finn 버튼
         JButton FinnButton = new JButton(FinnIcon);
-        FinnButton.setBounds(250, 250, buttonWidth, buttonHeight);
+        FinnButton.setBounds(667, 100, buttonWidth, buttonHeight);
         FinnButton.addActionListener(e -> {
             startAnimation("Finn"); // 애니메이션 시작
             gameState.setMyCharacter(gameState.createCharacter("Finn"));

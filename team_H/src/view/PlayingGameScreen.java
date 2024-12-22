@@ -10,6 +10,7 @@ import java.util.LinkedList;
 import controller.GameController;
 import model.Card;
 import model.Character.Character;
+import model.Character.Doraemon;
 import model.GameState;
 import network.NetworkManager;
 
@@ -125,43 +126,9 @@ public class PlayingGameScreen extends JPanel {
     		myCharacter.setCurrentX(gridStartX + gameState.getMyPosition()[0] * gridWidth + gridClient2X);
     		myCharacter.setCurrentY(gridStartY + gameState.getMyPosition()[1] * gridHeight + gridClient2Y-60);
     	}
-    	// 이 주석 지우면 ㅈ버그나는데 왜 그런지는 모르겠음 ㅅㅂ
+    	// 이 주석 지우면 버그나는데 왜 그런지는 모르겠음 
 		switch (myCharacter.getName()) {
         
-        // SuperMan ------------------------------------------------------------
-        case "SuperMan":
-        	switch (myCharacter.getCurrentMotion()) {
-        	case "MOVE":
-        		switch (myCharacter.getCurrentCard().getName()) {
-        		case "Move Up":
-        			
-        			break;
-        		case "Move Down":
-        			
-        			break;
-        		case "Move Left":
-        			
-        			break;
-        		case "Move Right":
-        			
-        			break;
-        		}
-        		break;
-        	case "ATTACK":
-        		switch (myCharacter.getCurrentCard().getName()) {
-        		// ... skill들 넣으셈
-        		}
-        		break;
-        	case "HIT":
-        		
-        		break;
-        	case "DEAD":
-        		
-        		break;
-        	}
-        	
-        	break;
-        	
         // Doraemon ------------------------------------------------------------	
         case "Doraemon":
             switch (myCharacter.getCurrentMotion()) {
@@ -347,6 +314,7 @@ public class PlayingGameScreen extends JPanel {
             case "ATTACK":
                 switch (myCharacter.getCurrentCard().getName()) {
                 case "Air Cannon!":
+                	myCharacter.playCardSound("Air Cannon!");
                     myMotions = myCharacter.getMotions().get(myCharacter.getCurrentCard().getName());
                     myFrameDelay = 200; // 각 프레임 간격
                     myDuration = myFrameDelay * myMotions.length * 8; // 애니메이션 총 시간
@@ -365,10 +333,11 @@ public class PlayingGameScreen extends JPanel {
                     }).start();
 
                     myMotionTimer.start();
-
+                    
                     break;
                     
             	case "Bamboo Helicopter!":
+            		myCharacter.playCardSound("Bamboo Helicopter!");
            		    int MR_startX = myCharacter.getCurrentX(); // 시작 위치 X
         		    int MR_endX = MR_startX + 150*4; // 목표 위치 (오른쪽으로 150px 이동)
 
@@ -538,7 +507,8 @@ public class PlayingGameScreen extends JPanel {
         		break;
         	case "ATTACK":
         		switch (myCharacter.getCurrentCard().getName()) {
-        		case "Skill1" :
+        		case "Tiger Trap" :
+        			myCharacter.playCardSound("Tiger Trap");
         			myMotions = myCharacter.getMotions().get(myCharacter.getCurrentCard().getName());
         			myFrameDelay = 200;	// 각 프레임 간격
         			myDuration = myFrameDelay * myMotions.length * 8;	// 해당 모션의 총 시간
@@ -557,6 +527,9 @@ public class PlayingGameScreen extends JPanel {
         			
         			myMotionTimer.start();
         		        			
+        			break;
+        		case "Onigiri" :
+        			myCharacter.playCardSound("Onigiri");
         			break;
         		}
         		break;
@@ -684,8 +657,8 @@ public class PlayingGameScreen extends JPanel {
         		break;
         	case "ATTACK":
         		switch (myCharacter.getCurrentCard().getName()) {
-        		case "Skill1":
-
+        		case "Galactic Burst":
+        			myCharacter.playCardSound("Galactic Burst");
         			myMotions = myCharacter.getMotions().get(myCharacter.getCurrentCard().getName());
         			myFrameDelay = 200;	// 각 프레임 간격
         			myDuration = myFrameDelay * myMotions.length * 8;	// 해당 모션의 총 시간
@@ -704,6 +677,9 @@ public class PlayingGameScreen extends JPanel {
         			
         			myMotionTimer.start();
         			
+        			break;
+        		case "Phoenix Breath":
+        			myCharacter.playCardSound("Phoenix Breath");
         			break;
         		}
         		break;
@@ -738,39 +714,6 @@ public class PlayingGameScreen extends JPanel {
         	
         	break;
         	
-        // Ace ------------------------------------------------------------	
-        case "Ace":
-        	switch (myCharacter.getCurrentMotion()) {
-        	case "MOVE":
-        		switch (myCharacter.getCurrentCard().getName()) {
-        		case "Move Up":
-        			
-        			break;
-        		case "Move Down":
-        			
-        			break;
-        		case "Move Left":
-        			
-        			break;
-        		case "Move Right":
-        			
-        			break;
-        		}
-        		break;
-        	case "ATTACK":
-        		switch (myCharacter.getCurrentCard().getName()) {
-        		// ... skill들 넣으셈
-        		}
-        		break;
-        	case "HIT":
-        		
-        		break;
-        	case "DEAD":
-        		
-        		break;
-        	}
-        	
-        	break;
         	
         // Finn ------------------------------------------------------------	
         case "Finn":
@@ -957,6 +900,7 @@ public class PlayingGameScreen extends JPanel {
             case "ATTACK":
                 switch (myCharacter.getCurrentCard().getName()) {
                 case "Sword Slash":
+                	myCharacter.playCardSound("Sword Slash");
                     myMotions = myCharacter.getMotions().get(myCharacter.getCurrentCard().getName());
                     myFrameDelay = 100; // 각 프레임 간격
                     myDuration = myFrameDelay * myMotions.length * 4; // 애니메이션 총 시간
@@ -978,6 +922,7 @@ public class PlayingGameScreen extends JPanel {
 
                     break;
                 case "Stretch Punch":
+                	myCharacter.playCardSound("Stretch Punch");
                     myMotions = myCharacter.getMotions().get(myCharacter.getCurrentCard().getName());
                     myFrameDelay = 100; // 각 프레임 간격
                     myDuration = myFrameDelay * myMotions.length * 4; // 애니메이션 총 시간
@@ -1073,39 +1018,7 @@ public class PlayingGameScreen extends JPanel {
             break;
 
         	
-        // Luffy ------------------------------------------------------------	
-        case "Luffy":
-        	switch (myCharacter.getCurrentMotion()) {
-        	case "MOVE":
-        		switch (myCharacter.getCurrentCard().getName()) {
-        		case "Move Up":
-        			
-        			break;
-        		case "Move Down":
-        			
-        			break;
-        		case "Move Left":
-        			
-        			break;
-        		case "Move Right":
-        			
-        			break;
-        		}
-        		break;
-        	case "ATTACK":
-        		switch (myCharacter.getCurrentCard().getName()) {
-        		// ... skill들 넣으셈
-        		}
-        		break;
-        	case "HIT":
-        		
-        		break;
-        	case "DEAD":
-        		
-        		break;
-        	}
-        	
-        	break;
+        
         	
         default:
         	System.out.println("엄준식");
@@ -1128,39 +1041,6 @@ public class PlayingGameScreen extends JPanel {
         
         switch (enemyCharacter.getName()) {
         
-        // SuperMan ------------------------------------------------------------
-        case "SuperMan":
-        	switch (enemyCharacter.getCurrentMotion()) {
-        	case "MOVE":
-        		switch (enemyCharacter.getCurrentCard().getName()) {
-        		case "Move Up":
-        			
-        			break;
-        		case "Move Down":
-        			
-        			break;
-        		case "Move Left":
-        			
-        			break;
-        		case "Move Right":
-        			
-        			break;
-        		}
-        		break;
-        	case "ATTACK":
-        		switch (enemyCharacter.getCurrentCard().getName()) {
-        		// ... skill들 넣으셈
-        		}
-        		break;
-        	case "HIT":
-        		
-        		break;
-        	case "DEAD":
-        		
-        		break;
-        	}
-        	
-        	break;
         	
         // Doraemon ------------------------------------------------------------	
         case "Doraemon":
@@ -1348,7 +1228,7 @@ public class PlayingGameScreen extends JPanel {
         	case "ATTACK":
         		switch (enemyCharacter.getCurrentCard().getName()) {
         		case "Air Cannon!" :
-        			
+        			enemyCharacter.playCardSound("Air Cannon!");
         			enemyMotions = enemyCharacter.getMotions().get(enemyCharacter.getCurrentCard().getName());
         			enemyFrameDelay = 200;	// 각 프레임 간격
         			enemyDuration = enemyFrameDelay * enemyMotions.length * 8;	// 해당 모션의 총 시간
@@ -1369,6 +1249,7 @@ public class PlayingGameScreen extends JPanel {
         			
         			break;
         		case "Bamboo Helicopter!":
+        			enemyCharacter.playCardSound("Bamboo Helicopter!");
            		    int MR_startX = enemyCharacter.getCurrentX(); // 시작 위치 X
         		    int MR_endX = MR_startX + 150*4; // 목표 위치 (오른쪽으로 150px 이동)
 
@@ -1540,8 +1421,8 @@ public class PlayingGameScreen extends JPanel {
         	case "ATTACK":
         		switch (enemyCharacter.getCurrentCard().getName()) {
         		// ... skill들 넣으셈
-        		case "Skill1" :
-        			
+        		case "Tiger Trap" :
+        			enemyCharacter.playCardSound("Tiger Trap");
         			enemyMotions = enemyCharacter.getMotions().get(enemyCharacter.getCurrentCard().getName());
         			enemyFrameDelay = 200;	// 각 프레임 간격
         			enemyDuration = enemyFrameDelay * enemyMotions.length * 8;	// 해당 모션의 총 시간
@@ -1561,7 +1442,9 @@ public class PlayingGameScreen extends JPanel {
         			enemyMotionTimer.start();
         			
         			break;
-        			
+        		case "Onigiri" :
+        			enemyCharacter.playCardSound("Onigiri");
+        			break;
         		}
         		break;
         	case "HIT":
@@ -1688,8 +1571,8 @@ public class PlayingGameScreen extends JPanel {
         		break;
         	case "ATTACK":
         		switch (enemyCharacter.getCurrentCard().getName()) {
-        		case "Skill1":
-
+        		case "Galactic Burst":
+        			enemyCharacter.playCardSound("Galactic Burst");
         			enemyMotions = enemyCharacter.getMotions().get(enemyCharacter.getCurrentCard().getName());
         			enemyFrameDelay = 200;	// 각 프레임 간격
         			enemyDuration = enemyFrameDelay * enemyMotions.length * 8;	// 해당 모션의 총 시간
@@ -1708,6 +1591,9 @@ public class PlayingGameScreen extends JPanel {
         			
         			enemyMotionTimer.start();
         			
+        			break;
+        		case "Phoenix Breath":
+        			enemyCharacter.playCardSound("Phoenix Breath");
         			break;
         		}
         		break;
@@ -1742,39 +1628,6 @@ public class PlayingGameScreen extends JPanel {
         	
         	break;
         	
-        // Ace ------------------------------------------------------------	
-        case "Ace":
-        	switch (enemyCharacter.getCurrentMotion()) {
-        	case "MOVE":
-        		switch (enemyCharacter.getCurrentCard().getName()) {
-        		case "Move Up":
-        			
-        			break;
-        		case "Move Down":
-        			
-        			break;
-        		case "Move Left":
-        			
-        			break;
-        		case "Move Right":
-        			
-        			break;
-        		}
-        		break;
-        	case "ATTACK":
-        		switch (enemyCharacter.getCurrentCard().getName()) {
-        		// ... skill들 넣으셈
-        		}
-        		break;
-        	case "HIT":
-        		
-        		break;
-        	case "DEAD":
-        		
-        		break;
-        	}
-        	
-        	break;
         	
         // Finn ------------------------------------------------------------	
         case "Finn":
@@ -1962,7 +1815,7 @@ public class PlayingGameScreen extends JPanel {
         	case "ATTACK":
         		switch (enemyCharacter.getCurrentCard().getName()) {
         		case "Sword Slash" :
-        			
+        			enemyCharacter.playCardSound("Sword Slash");
         			enemyMotions = enemyCharacter.getMotions().get(enemyCharacter.getCurrentCard().getName());
         			enemyFrameDelay = 100;	// 각 프레임 간격
         			enemyDuration = enemyFrameDelay * enemyMotions.length * 4;	// 해당 모션의 총 시간
@@ -1983,6 +1836,7 @@ public class PlayingGameScreen extends JPanel {
         			
         			break;
         		case "Stretch Punch":
+        			enemyCharacter.playCardSound("Stretch Punch");
         			enemyMotions = enemyCharacter.getMotions().get(enemyCharacter.getCurrentCard().getName());
         			enemyFrameDelay = 100;	// 각 프레임 간격
         			enemyDuration = enemyFrameDelay * enemyMotions.length * 4;	// 해당 모션의 총 시간
@@ -2073,39 +1927,6 @@ public class PlayingGameScreen extends JPanel {
         	
         	break;
         	
-        // Luffy ------------------------------------------------------------	
-        case "Luffy":
-        	switch (enemyCharacter.getCurrentMotion()) {
-        	case "MOVE":
-        		switch (enemyCharacter.getCurrentCard().getName()) {
-        		case "Move Up":
-        			
-        			break;
-        		case "Move Down":
-        			
-        			break;
-        		case "Move Left":
-        			
-        			break;
-        		case "Move Right":
-        			
-        			break;
-        		}
-        		break;
-        	case "ATTACK":
-        		switch (enemyCharacter.getCurrentCard().getName()) {
-        		// ... skill들 넣으셈
-        		}
-        		break;
-        	case "HIT":
-        		
-        		break;
-        	case "DEAD":
-        		
-        		break;
-        	}
-        	
-        	break;
         	
         default:
         	System.out.println("엄준식");
@@ -2141,39 +1962,6 @@ public class PlayingGameScreen extends JPanel {
         // 내 캐릭터 그리기
         switch (myCharacter.getName()) {
         
-        // SuperMan ------------------------------------------------------------
-        case "SuperMan":
-        	switch (myCharacter.getCurrentMotion()) {
-        	case "MOVE":
-        		switch (myCharacter.getCurrentCard().getName()) {
-        		case "Move Up":
-        			
-        			break;
-        		case "Move Down":
-        			
-        			break;
-        		case "Move Left":
-        			
-        			break;
-        		case "Move Right":
-        			
-        			break;
-        		}
-        		break;
-        	case "ATTACK":
-        		switch (myCharacter.getCurrentCard().getName()) {
-        		// ... skill들 넣으셈
-        		}
-        		break;
-        	case "HIT":
-        		
-        		break;
-        	case "DEAD":
-        		
-        		break;
-        	}
-        	
-        	break;
         	
         // Doraemon ------------------------------------------------------------	
         case "Doraemon":
@@ -2211,6 +1999,7 @@ public class PlayingGameScreen extends JPanel {
         		// ... skill들 넣으셈
         		case "Air Cannon!":
         			if (myMotions != null) {
+        				
         		        BufferedImage currentImage = myMotions[myCurrentFrame];
         		        g.drawImage(currentImage, myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
         			}
@@ -2364,39 +2153,6 @@ public class PlayingGameScreen extends JPanel {
         	
         	break;
         	
-        // Ace ------------------------------------------------------------	
-        case "Ace":
-        	switch (myCharacter.getCurrentMotion()) {
-        	case "MOVE":
-        		switch (myCharacter.getCurrentCard().getName()) {
-        		case "Move Up":
-        			
-        			break;
-        		case "Move Down":
-        			
-        			break;
-        		case "Move Left":
-        			
-        			break;
-        		case "Move Right":
-        			
-        			break;
-        		}
-        		break;
-        	case "ATTACK":
-        		switch (myCharacter.getCurrentCard().getName()) {
-        		// ... skill들 넣으셈
-        		}
-        		break;
-        	case "HIT":
-        		
-        		break;
-        	case "DEAD":
-        		
-        		break;
-        	}
-        	
-        	break;
         	
         // Finn ------------------------------------------------------------	
         case "Finn":
@@ -2473,78 +2229,13 @@ public class PlayingGameScreen extends JPanel {
         	
         	break;
         	
-        // Luffy ------------------------------------------------------------	
-        case "Luffy":
-        	switch (myCharacter.getCurrentMotion()) {
-        	case "MOVE":
-        		switch (myCharacter.getCurrentCard().getName()) {
-        		case "Move Up":
-        			
-        			break;
-        		case "Move Down":
-        			
-        			break;
-        		case "Move Left":
-        			
-        			break;
-        		case "Move Right":
-        			
-        			break;
-        		}
-        		break;
-        	case "ATTACK":
-        		switch (myCharacter.getCurrentCard().getName()) {
-        		// ... skill들 넣으셈
-        		}
-        		break;
-        	case "HIT":
-        		
-        		break;
-        	case "DEAD":
-        		
-        		break;
-        	}
-        	
-        	break;
 		}
 
 
 		// 상대 캐릭터 그리기
         switch (enemyCharacter.getName()) {
         
-        // SuperMan ------------------------------------------------------------
-        case "SuperMan":
-        	switch (enemyCharacter.getCurrentMotion()) {
-        	case "MOVE":
-        		switch (enemyCharacter.getCurrentCard().getName()) {
-        		case "Move Up":
-        			
-        			break;
-        		case "Move Down":
-        			
-        			break;
-        		case "Move Left":
-        			
-        			break;
-        		case "Move Right":
-        			
-        			break;
-        		}
-        		break;
-        	case "ATTACK":
-        		switch (enemyCharacter.getCurrentCard().getName()) {
-        		// ... skill들 넣으셈
-        		}
-        		break;
-        	case "HIT":
-        		
-        		break;
-        	case "DEAD":
-        		
-        		break;
-        	}
-        	
-        	break;
+       
         	
         // Doraemon ------------------------------------------------------------	
         case "Doraemon":
@@ -2733,39 +2424,7 @@ public class PlayingGameScreen extends JPanel {
         	
         	break;
         	
-        // Ace ------------------------------------------------------------	
-        case "Ace":
-        	switch (enemyCharacter.getCurrentMotion()) {
-        	case "MOVE":
-        		switch (enemyCharacter.getCurrentCard().getName()) {
-        		case "Move Up":
-        			
-        			break;
-        		case "Move Down":
-        			
-        			break;
-        		case "Move Left":
-        			
-        			break;
-        		case "Move Right":
-        			
-        			break;
-        		}
-        		break;
-        	case "ATTACK":
-        		switch (enemyCharacter.getCurrentCard().getName()) {
-        		// ... skill들 넣으셈
-        		}
-        		break;
-        	case "HIT":
-        		
-        		break;
-        	case "DEAD":
-        		
-        		break;
-        	}
-        	
-        	break;
+        
         	
         // Finn ------------------------------------------------------------	
         case "Finn":
@@ -2842,39 +2501,7 @@ public class PlayingGameScreen extends JPanel {
         	
         	break;
         	
-        // Luffy ------------------------------------------------------------	
-        case "Luffy":
-        	switch (enemyCharacter.getCurrentMotion()) {
-        	case "MOVE":
-        		switch (enemyCharacter.getCurrentCard().getName()) {
-        		case "Move Up":
-        			
-        			break;
-        		case "Move Down":
-        			
-        			break;
-        		case "Move Left":
-        			
-        			break;
-        		case "Move Right":
-        			
-        			break;
-        		}
-        		break;
-        	case "ATTACK":
-        		switch (enemyCharacter.getCurrentCard().getName()) {
-        		// ... skill들 넣으셈
-        		}
-        		break;
-        	case "HIT":
-        		
-        		break;
-        	case "DEAD":
-        		
-        		break;
-        	}
-        	
-        	break;
+        
         }
     }
 

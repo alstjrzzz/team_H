@@ -2,9 +2,11 @@ package model.Character;
 
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 
 import javax.imageio.ImageIO;
 
+import javazoom.jl.player.Player;
 import model.Card;
 
 import java.awt.Color;
@@ -18,12 +20,15 @@ import java.awt.image.ImageFilter;
 import java.awt.image.ImageProducer;
 import java.awt.image.RGBImageFilter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 
 public class Doraemon extends Character {
 	
 private int character_size = 100;
+private Map<String, String> cardSounds; // 카드 이름과 사운드 파일 경로 매핑
 
    public Doraemon() {
       
@@ -45,6 +50,7 @@ private int character_size = 100;
       
       initCardImage();
       initMotions();
+      initCardSounds(); // 카드 사운드 초기화
    }
 
    
@@ -100,7 +106,33 @@ private int character_size = 100;
             e.printStackTrace();
         }
    }
-
+   
+   // 스킬 사운드
+   private void initCardSounds() {
+       cardSounds = new HashMap<>();
+       cardSounds.put("Air Cannon!", "res/sound/sfx/doraemon_air_cannon.mp3");
+       cardSounds.put("Bamboo Helicopter!", "res/sound/sfx/doreamon_bamboo_helicopter.mp3");
+   }
+   
+   @Override
+   public void playCardSound(String cardName) {
+       String soundPath = cardSounds.get(cardName);
+       if (soundPath != null) {
+           new Thread(() -> {
+               try (FileInputStream fis = new FileInputStream(soundPath)) {
+                   Player player = new Player(fis);
+                   player.play();
+               } catch (FileNotFoundException e) {
+                   System.err.println("Sound file not found: " + soundPath);
+               } catch (Exception e) {
+                   e.printStackTrace();
+               }
+           }).start();
+       } else {
+           System.err.println("Sound for card " + cardName + " not found.");
+       }
+   }
+ 
 
 
    @Override
@@ -163,6 +195,7 @@ private int character_size = 100;
       }
       motions.put("Bamboo Helicopter!", tempArr.clone());
    }
+   
    
    protected BufferedImage TransformColorToTransparency(BufferedImage image, Color c1) {
         final int r1 = c1.getRed();

@@ -3,13 +3,12 @@ package model;
 import java.awt.Dimension;
 import java.util.LinkedList;
 
-import model.Character.Ace;
+
 import model.Character.Character;
 import model.Character.Cygnus;
 import model.Character.Doraemon;
 import model.Character.Finn;
-import model.Character.Luffy;
-import model.Character.SuperMan;
+
 import model.Character.Zoro;
 
 public class GameState {
@@ -40,8 +39,7 @@ public class GameState {
     public void fillCharacterList() {
        
        characterList = new LinkedList<>();
-       
-       characterList.add("SuperMan");
+      
        characterList.add("Doraemon");
        characterList.add("Zoro");
        characterList.add("Cygnus");
@@ -51,10 +49,6 @@ public class GameState {
     
     public Character createCharacter(String character) {
         switch (character) {
-            case "SuperMan":
-                SuperMan superMan = new SuperMan();
-                superMan.initCardImage(); // 카드 이미지 초기화
-                return superMan;
             case "Doraemon":
                 Doraemon doraemon = new Doraemon();
                 doraemon.initCardImage(); // 카드 이미지 초기화
@@ -67,14 +61,6 @@ public class GameState {
             	Cygnus cygnus = new Cygnus();
             	cygnus.initCardImage(); // 카드 이미지 초기화
                 return cygnus;
-            case "Ace":
-            	Ace ace = new Ace();
-            	ace.initCardImage(); // 카드 이미지 초기화
-                return ace;
-            case "Luffy":
-            	Luffy luffy = new Luffy();
-            	luffy.initCardImage(); // 카드 이미지 초기화
-                return luffy;
             case "Finn":
             	Finn finn = new Finn();
             	finn.initCardImage(); // 카드 이미지 초기화

@@ -30,6 +30,8 @@ public abstract class Character {
     protected int currentX;
     protected int currentY;
     
+   
+
     
     public Character() {
        
@@ -105,9 +107,9 @@ public abstract class Character {
 		this.currentMotion = currentMotion;
 	}
 
+   public abstract void playCardSound(String cardName);
 
-
-public LinkedList<Card> getCardList() {
+   public LinkedList<Card> getCardList() {
         return cardList;
     }
 
