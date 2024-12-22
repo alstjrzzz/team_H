@@ -166,10 +166,9 @@ public class GameController {
 		mainFrame.setScreen(new SelectCardScreen(gameState, this, networkManager));
 	}
 	public void showEndGameScreen() {
-		System.out.println("Show EndGameScreen");
-		mainFrame.setScreen(new EndGameScreen(gameState));
-	}
-	
+        System.out.println("Show EndGameScreen");
+        mainFrame.setScreen(new EndGameScreen(mainFrame, gameState, this, networkManager));
+    }
 	
 
 	
@@ -352,13 +351,17 @@ public class GameController {
 	// 게임종료여부 확인
 	private boolean isGameOver() {
 		
-		return false;
+		// 겜 끝
+		if (gameState.getEnemyHealth() <= 0 || gameState.getMyHealth() <= 0) {
+			return true;
+		} else { // 마다마다다!!
+			return false;
+		}
 	}
 	
 	
-	// 게임 종료 로직
 	private void gameOver() {
-		
+		showEndGameScreen();
 	}
 	
 	

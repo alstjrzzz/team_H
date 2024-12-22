@@ -21,14 +21,6 @@ public class PlayingGameScreen extends JPanel {
     private NetworkManager networkManager;
     private ImageIcon backgroundImage; // 움짤을 위한 ImageIcon
 
-    /*
-    	int gridWidth = cols * cellWidth; // 전체 그리드 너비
-        int gridHeight = rows * cellHeight; // 전체 그리드 높이
-        int xOffset = (getWidth() - gridWidth) / 2; // 화면 너비를 기준으로 중앙 정렬
-        int yOffset = (getHeight() - gridHeight) / 2 + 125; // 화면 높이를 기준으로 중앙 정렬
-        gridStartX = (getWidth() - gridCols * gridWidth) / 2
-        gridStartY = (getHeight() - gridRows * gridHeight) / 2 + 125
-     */
     
     public final static int gridRows = 3; // 그리드 행 수
     public final static int gridCols = 6; // 그리드 열 수
@@ -2509,10 +2501,11 @@ public class PlayingGameScreen extends JPanel {
     
     
     public void drawHealthPanel() {
+    	
         healthPanel.setLayout(null);
         healthPanel.setPreferredSize(new Dimension(0, 70)); // 고정 높이를 늘림
         healthPanel.setOpaque(true);
-        healthPanel.setBackground(new Color(236, 237, 215)); 
+        healthPanel.setBackground(new Color(236, 237, 215));
         
         int panelWidth = 950; // 패널의 예상 너비를 설정
         int panelHeight = 50;

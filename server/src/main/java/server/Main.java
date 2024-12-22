@@ -44,7 +44,7 @@ public class Main {
             System.out.println("Server error: " + e.getMessage());
         } finally {
             cleanUp();
-            System.exit(0);
+            startServer();
         }
     }
 
