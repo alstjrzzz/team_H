@@ -88,6 +88,7 @@ public class EndGameScreen extends JPanel {
 	
 	public void drawRestartButtonPanel() {
 		
+		// networkManager.closeSocket(); 이것도 버튼 누를때 같이 실행해야됌 ㅋ
 		// gameController = new GameController(); 이거 하면 재시작함. 버튼 누르면 실행되게 할 것
 	}
 }

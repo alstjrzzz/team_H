@@ -108,6 +108,11 @@ public class GameController {
 		    if (gameState.getMyCharacter() != null) {
 		        System.out.println("내 캐릭터가 설정되었습니다: " + gameState.getMyCharacter().getName());
 		        while (true) {
+		        	
+		        	if (isGameOver()) {
+		        		break;
+		        	}
+		        	
 		            System.out.println("selectCard() 호출 시작");
 
 		            selectCard();
