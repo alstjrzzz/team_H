@@ -56,6 +56,9 @@ public class PlayingGameScreen extends JPanel {
     private JPanel fieldPanel;
     private JPanel cardPanel;
     
+    public static JProgressBar GN_1_player1HealthBar;
+    public static JProgressBar GN_1_player2HealthBar;
+    
     public PlayingGameScreen(GameState gameState, GameController gameController, NetworkManager networkManager) {
 
         this.gameState = gameState;
@@ -1944,9 +1947,6 @@ public class PlayingGameScreen extends JPanel {
         // 그리드 그리기
         drawDashedGrid(g2d, 3, 6, 150, 60);
         
-        // 체력바 그리기
-        drawHealthPanel();
-        
         // 캐릭터 그리기
         
         if (enemyCharacter == null || myCharacter == null) return;
@@ -2518,7 +2518,7 @@ public class PlayingGameScreen extends JPanel {
                healthPanel.add(GN_1_player1Logo);
            	
            	// Player 1의 체력바
-           	JProgressBar GN_1_player1HealthBar = new JProgressBar(0, gameState.getMyCharacter().getMaxHealth());
+           		GN_1_player1HealthBar = new JProgressBar(0, gameState.getMyCharacter().getMaxHealth());
     	        GN_1_player1HealthBar.setValue(gameState.getMyHealth());
     	        GN_1_player1HealthBar.setBounds(90, 10, panelWidth / 2 - 100, 30);
     	        GN_1_player1HealthBar.setForeground(Color.RED);
@@ -2538,7 +2538,7 @@ public class PlayingGameScreen extends JPanel {
     	        healthPanel.add(GN_1_player2Logo);
     	        
     	        // Player 2의 체력바
-    	        JProgressBar GN_1_player2HealthBar = new JProgressBar(0, gameState.getEnemyCharacter().getMaxHealth());
+    	        GN_1_player2HealthBar = new JProgressBar(0, gameState.getEnemyCharacter().getMaxHealth());
     	        GN_1_player2HealthBar.setValue(gameState.getEnemyHealth());
     	        GN_1_player2HealthBar.setBounds(panelWidth / 2 + 20, 10, panelWidth / 2 - 100, 30);
     	        GN_1_player2HealthBar.setForeground(Color.RED);
@@ -2557,11 +2557,11 @@ public class PlayingGameScreen extends JPanel {
                healthPanel.add(player1Logo);
            	
                // Player 1의 체력바
-           	JProgressBar player1HealthBar = new JProgressBar(0, gameState.getEnemyCharacter().getMaxHealth());
-    	        player1HealthBar.setValue(gameState.getEnemyHealth());
-    	        player1HealthBar.setBounds(90, 10, panelWidth / 2 - 100, 30);
-    	        player1HealthBar.setForeground(Color.RED);
-    	        healthPanel.add(player1HealthBar);
+               GN_1_player1HealthBar = new JProgressBar(0, gameState.getEnemyCharacter().getMaxHealth());
+               GN_1_player1HealthBar.setValue(gameState.getEnemyHealth());
+               GN_1_player1HealthBar.setBounds(90, 10, panelWidth / 2 - 100, 30);
+               GN_1_player1HealthBar.setForeground(Color.RED);
+    	        healthPanel.add(GN_1_player1HealthBar);
     	        
     	        // Player 1의 이름
     	        JLabel player1NameLabel = new JLabel("(enemy) " + gameState.getEnemyCharacter().getName());
@@ -2577,11 +2577,11 @@ public class PlayingGameScreen extends JPanel {
     	        healthPanel.add(player2Logo);
     	        
     	        // Player 2의 체력바
-    	        JProgressBar player2HealthBar = new JProgressBar(0, gameState.getMyCharacter().getMaxHealth());
-    	        player2HealthBar.setValue(gameState.getMyHealth());
-    	        player2HealthBar.setBounds(panelWidth / 2 + 20, 10, panelWidth / 2 - 100, 30);
-    	        player2HealthBar.setForeground(Color.RED);
-    	        healthPanel.add(player2HealthBar);
+    	        GN_1_player2HealthBar = new JProgressBar(0, gameState.getMyCharacter().getMaxHealth());
+    	        GN_1_player2HealthBar.setValue(gameState.getMyHealth());
+    	        GN_1_player2HealthBar.setBounds(panelWidth / 2 + 20, 10, panelWidth / 2 - 100, 30);
+    	        GN_1_player2HealthBar.setForeground(Color.RED);
+    	        healthPanel.add(GN_1_player2HealthBar);
 
     	        // Player 2의 이름
     	        JLabel player2NameLabel = new JLabel("(you) " + gameState.getMyCharacter().getName());

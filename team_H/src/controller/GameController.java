@@ -448,6 +448,14 @@ public class GameController {
 							
 							gameState.setEnemyHealth(gameState.getEnemyHealth() - card.getValue());
 							
+							if (gameState.getClientNumber() == 1) {
+								playingGameScreen.GN_1_player1HealthBar.setValue(gameState.getMyHealth());
+								playingGameScreen.GN_1_player2HealthBar.setValue(gameState.getEnemyHealth());
+							} else {
+								playingGameScreen.GN_1_player1HealthBar.setValue(gameState.getEnemyHealth());
+								playingGameScreen.GN_1_player2HealthBar.setValue(gameState.getMyHealth());
+							}
+							
 							gameState.getEnemyCharacter().setCurrentMotion("HIT");
 							playingGameScreen.drawMotion();
 							try {
@@ -484,6 +492,14 @@ public class GameController {
 						if (Arrays.equals(range, gameState.getMyPosition())) {
 							
 							gameState.setMyHealth(gameState.getMyHealth() - card.getValue());
+							
+							if (gameState.getClientNumber() == 1) {
+								playingGameScreen.GN_1_player1HealthBar.setValue(gameState.getMyHealth());
+								playingGameScreen.GN_1_player2HealthBar.setValue(gameState.getEnemyHealth());
+							} else {
+								playingGameScreen.GN_1_player1HealthBar.setValue(gameState.getEnemyHealth());
+								playingGameScreen.GN_1_player2HealthBar.setValue(gameState.getMyHealth());
+							}
 
 							gameState.getMyCharacter().setCurrentMotion("HIT");
 							playingGameScreen.drawMotion();
