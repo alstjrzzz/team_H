@@ -40,7 +40,7 @@ public class GameController {
 	private GameState gameState;
 	private NetworkManager networkManager;
 	
-	private boolean isConnected = false; // 서버 연결 상태 확인
+	public static boolean isConnected = false; // 서버 연결 상태 확인
 	
 	private PlayingGameScreen playingGameScreen;
 	private CountDownLatch characterLatch = new CountDownLatch(1); // 동기화 도구 추가
@@ -529,6 +529,16 @@ public class GameController {
 				
 		}
 	}
+	
+	public void restartProgram() {
+		
+        gameState = new GameState(mainFrame.getSize());
+        networkManager = new NetworkManager(gameState, this);
+
+           // 초기 화면: SelectUserScreen 표시
+           showSelectUserScreen();
+           mainFrame.setVisible(true);
+    }
 	
     // 브금 재생 메서드
     public void playBGM(String filePath) {

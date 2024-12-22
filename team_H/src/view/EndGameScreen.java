@@ -7,6 +7,7 @@ import java.awt.Font;
 import java.io.FileInputStream;
 
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
@@ -33,62 +34,73 @@ public class EndGameScreen extends JPanel {
 		setLayout(new BorderLayout());
 
 	    drawResultPanel();
-	    drawRestartButtonPanel();
+	
 	}
 	
-	
-	
+
 	public void drawResultPanel() {
-		 JLabel resultLabel = new JLabel();
-	        resultLabel.setHorizontalAlignment(SwingConstants.CENTER);
+	    JLabel backgroundLabel = new JLabel();
+	    backgroundLabel.setLayout(new BorderLayout()); // 레이아웃 설정
 
-	        if (gameState.getMyHealth() <= 0 && gameState.getEnemyHealth() <= 0) {
-	            resultLabel.setIcon(new ImageIcon("res/img/무승부.jpg")); // 무승부 이미지 경로
-	            
-	            gameController.playBGM("res/sound/bgm/무승부_브금.mp3"); // 캐릭터 선택창 브금
-	            new Thread(() -> {
-	                try (FileInputStream fis = new FileInputStream("res/sound/sfx/무승부.mp3")) {
-	                    new Player(fis).play(); // FileInputStream을 바로 사용
-	                } catch (Exception e) {
-	                    System.err.println("Error playing sound: " + e.getMessage());
-	                }
-	            }).start();
-	            resultLabel.setText("무승부");
-	        } else if (gameState.getMyHealth() <= 0) {
-	            resultLabel.setIcon(new ImageIcon("res/img/패배.jpg")); // 패배 이미지 경로
-	            gameController.playBGM("res/sound/bgm/패배_브금.mp3"); // 캐릭터 선택창 브금
-	            new Thread(() -> {
-	                try (FileInputStream fis = new FileInputStream("res/sound/sfx/패배효과음.mp3")) {
-	                    new Player(fis).play(); // FileInputStream을 바로 사용
-	                } catch (Exception e) {
-	                    System.err.println("Error playing sound: " + e.getMessage());
-	                }
-	            }).start();
-	            resultLabel.setText("패배");
-	        } else if (gameState.getEnemyHealth() <= 0) {
-	            resultLabel.setIcon(new ImageIcon("res/img/승리.jpg")); // 승리 이미지 경로
-	            gameController.playBGM("res/sound/bgm/승리_브금.mp3"); // 캐릭터 선택창 브금
-	            new Thread(() -> {
-	                try (FileInputStream fis = new FileInputStream("res/sound/sfx/승리효과음.mp3")) {
-	                    new Player(fis).play(); // FileInputStream을 바로 사용
-	                } catch (Exception e) {
-	                    System.err.println("Error playing sound: " + e.getMessage());
-	                }
-	            }).start();
-	            resultLabel.setText("승리");
-	        }
+	    JLabel resultLabel = new JLabel();
+	    resultLabel.setHorizontalAlignment(SwingConstants.CENTER);
+	    resultLabel.setVerticalAlignment(SwingConstants.CENTER);
+	    resultLabel.setFont(new Font("Arial", Font.BOLD, 64)); // 텍스트 크기 조정
+	    resultLabel.setForeground(java.awt.Color.WHITE); // 텍스트 색상 설정
 
-	        resultLabel.setFont(new Font("Arial", Font.BOLD, 24));
-	        resultLabel.setVerticalTextPosition(SwingConstants.BOTTOM);
-	        resultLabel.setHorizontalTextPosition(SwingConstants.CENTER);
+	    if (gameState.getMyHealth() <= 0 && gameState.getEnemyHealth() <= 0) {
+	        backgroundLabel.setIcon(new ImageIcon("res/img/무승부.png")); // 무승부 이미지 경로
+	        gameController.playBGM("res/sound/bgm/무승부_브금.mp3");
+	        resultLabel.setText("DRAW");
+	    } else if (gameState.getMyHealth() <= 0) {
+	        backgroundLabel.setIcon(new ImageIcon("res/img/패배.png")); // 패배 이미지 경로
+	        gameController.playBGM("res/sound/bgm/패배_브금.mp3");
+	        new Thread(() -> {
+	            try (FileInputStream fis = new FileInputStream("res/sound/sfx/패배효과음.mp3")) {
+	                new Player(fis).play();
+	            } catch (Exception e) {
+	                System.err.println("Error playing sound: " + e.getMessage());
+	            }
+	        }).start();
+	        resultLabel.setText("LOSE");
+	    } else if (gameState.getEnemyHealth() <= 0) {
+	        backgroundLabel.setIcon(new ImageIcon("res/img/승리.jpg")); // 승리 이미지 경로
+	        gameController.playBGM("res/sound/bgm/승리_브금.mp3");
+	        new Thread(() -> {
+	            try (FileInputStream fis = new FileInputStream("res/sound/sfx/승리효과음.mp3")) {
+	                new Player(fis).play();
+	            } catch (Exception e) {
+	                System.err.println("Error playing sound: " + e.getMessage());
+	            }
+	        }).start();
+	        resultLabel.setText("WIN");
+	    }
 
-	        add(resultLabel, BorderLayout.CENTER);
+	    // 텍스트를 배경 이미지 위에 추가
+	    backgroundLabel.add(resultLabel, BorderLayout.CENTER);
+
+	    // 버튼을 배경 이미지 위에 추가
+	    JButton restartButton = new JButton("RESTART");
+	    restartButton.setFont(new Font("Arial", Font.BOLD, 24));
+	    restartButton.addActionListener(e -> {
+
+	    	gameController.isConnected = false;
+	        // 소켓 닫기
+	        networkManager.closeSocket();
+	       
+	        // 게임 컨트롤러 초기화
+	        gameController.restartProgram();
+	        
+	        // 화면 갱신
+	        mainFrame.revalidate();
+	        mainFrame.repaint();
+	    });
+
+	    // 버튼은 배경 이미지 아래쪽에 위치
+	    backgroundLabel.add(restartButton, BorderLayout.SOUTH);
+
+	    // 배경 라벨을 패널에 추가
+	    add(backgroundLabel, BorderLayout.CENTER);
 	}
 	
-	
-	public void drawRestartButtonPanel() {
-		
-		// networkManager.closeSocket(); 이것도 버튼 누를때 같이 실행해야됌 ㅋ
-		// gameController = new GameController(); 이거 하면 재시작함. 버튼 누르면 실행되게 할 것
-	}
 }
