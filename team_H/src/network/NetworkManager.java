@@ -125,4 +125,13 @@ public class NetworkManager {
 
         return in.readLine();
     }
+    
+    
+    public void closeSocket() {
+    	try {
+			clientSocket.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+    }
 }

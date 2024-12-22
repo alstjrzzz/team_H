@@ -121,10 +121,6 @@ public class GameController {
 		            System.out.println("selectCard() 호출 완료");
 
 		            fight();
-		            if (isGameOver()) {
-		                gameOver();
-		                break;
-		            }
 		        }
 		    } else {
 		        System.out.println("내 캐릭터가 설정되지 않았습니다.");
@@ -339,8 +335,12 @@ public class GameController {
 					// 내 i번째 카드 사용
 					useCard(gameState.getSelectedCardList().get(i), gameState.getMyCharacter());
 				}
-				
 			}
+			
+            if (isGameOver()) {
+                gameOver();
+                break;
+            }
 		}
 		
 		// 카드 전부 사용하면 다음 카드 선택 페이지로 이동하는 버튼 setVisible = true, 서버와 연동해서 두 클라이언트가 동시에 카드 선택되도록 해야 함
@@ -402,7 +402,7 @@ public class GameController {
 						newPosition[1] += card.getRange().get(0)[1];
 					gameState.setEnemyPosition(newPosition.clone());
 				}
-				
+
 				// 기본 자세로 변경
 				character.setCurrentMotion("IDLE");
 				character.setCurrentCard(card);
@@ -427,19 +427,21 @@ public class GameController {
 				if (character == gameState.getMyCharacter()) { // 내 캐릭터가 공격함
 					for (int i = 0; i < card.getRange().size(); i++) {
 						int[] range = new int[2];
-						if (!gameState.isMyCharacterIsFlip()) {
+						if (gameState.getMyPosition()[0] <= gameState.getEnemyPosition()[0]) { // 상대가 오른쪽일때
 							range[0] = gameState.getMyPosition()[0] + card.getRange().get(i)[0];
 							range[1] = gameState.getMyPosition()[1] + card.getRange().get(i)[1];
 						} else {
 							range[0] = gameState.getMyPosition()[0] - card.getRange().get(i)[0];
 							range[1] = gameState.getMyPosition()[1] + card.getRange().get(i)[1];
 						}
-						System.out.println("공격 위치: "+range[0]+","+range[1]);
-						System.out.println("상대 캐릭터 위치: "+gameState.getEnemyPosition()[0]+","+gameState.getEnemyPosition()[1]);
-						if (Arrays.equals(range, gameState.getMyPosition())) {
-							System.out.println("내 캐릭터("+gameState.getMyCharacter().getName()+")가 공격, 대미지: "+card.getValue());
+						
+						System.out.println("공격 범위 배열: " + Arrays.toString(range));
+						System.out.println("상대 위치 배열: " + Arrays.toString(gameState.getEnemyPosition()));
+						System.out.println("비교 결과: " + Arrays.equals(range, gameState.getEnemyPosition()));
+						
+						if (Arrays.equals(range, gameState.getEnemyPosition())) {
+							
 							gameState.setEnemyHealth(gameState.getEnemyHealth() - card.getValue());
-							System.out.println("상대 캐릭터("+gameState.getEnemyCharacter().getName()+")가 피격, [현재 체력/최대 체력]: ["+gameState.getEnemyHealth()+"/"+gameState.getEnemyCharacter().getMaxHealth()+"]");
 							
 							gameState.getEnemyCharacter().setCurrentMotion("HIT");
 							playingGameScreen.drawMotion();
@@ -462,19 +464,21 @@ public class GameController {
 					
 					for (int i = 0; i < card.getRange().size(); i++) {
 						int[] range = new int[2];
-						if (!gameState.isEnemyCharacterIsFlip()) {
+						if (gameState.getMyPosition()[0] >= gameState.getEnemyPosition()[0]) {
 							range[0] = gameState.getEnemyPosition()[0] + card.getRange().get(i)[0];
 							range[1] = gameState.getEnemyPosition()[1] + card.getRange().get(i)[1];
 						} else {
 							range[0] = gameState.getEnemyPosition()[0] - card.getRange().get(i)[0];
 							range[1] = gameState.getEnemyPosition()[1] + card.getRange().get(i)[1];
 						}
-						System.out.println("공격 위치: "+range[0]+","+range[1]);
-						System.out.println("상대 캐릭터 위치: "+gameState.getEnemyPosition()[0]+","+gameState.getEnemyPosition()[1]);
+						
+						System.out.println("공격 범위 배열: " + Arrays.toString(range));
+						System.out.println("상대 위치 배열: " + Arrays.toString(gameState.getMyPosition()));
+						System.out.println("비교 결과: " + Arrays.equals(range, gameState.getMyPosition()));
+						
 						if (Arrays.equals(range, gameState.getMyPosition())) {
-							System.out.println("상대 캐릭터("+gameState.getEnemyCharacter().getName()+")가 공격, 대미지: "+card.getValue());
+							
 							gameState.setMyHealth(gameState.getMyHealth() - card.getValue());
-							System.out.println("내 캐릭터("+gameState.getMyCharacter().getName()+")가 피격, [현재 체력/최대 체력]: ["+gameState.getMyHealth()+"/"+gameState.getMyCharacter().getMaxHealth()+"]");
 
 							gameState.getMyCharacter().setCurrentMotion("HIT");
 							playingGameScreen.drawMotion();
