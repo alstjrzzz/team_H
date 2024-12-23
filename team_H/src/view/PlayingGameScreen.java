@@ -497,7 +497,7 @@ public class PlayingGameScreen extends JPanel {
                     myCurrentFrame = 0;
 
                     // 이동 속도 계산
-                    int MU_steps = 3 * MU_totalFrames; // 이동할 스텝 수
+                    int MU_steps = 2 * MU_totalFrames; // 이동할 스텝 수
                     int MU_stepSize = (MU_endY - MU_startY) / MU_steps; // 한 스텝당 이동 거리
 
                     // 프레임별 애니메이션 실행
@@ -540,7 +540,7 @@ public class PlayingGameScreen extends JPanel {
                     myCurrentFrame = 0;
 
                     // 이동 속도 계산
-                    int MD_steps = 6 * MD_totalFrames; // 이동할 스텝 수
+                    int MD_steps = 2 * MD_totalFrames; // 이동할 스텝 수
                     int MD_stepSize = (MD_endY - MD_startY) / MD_steps; // 한 스텝당 이동 거리
 
                     // 프레임별 애니메이션 실행
@@ -584,7 +584,7 @@ public class PlayingGameScreen extends JPanel {
                     myCurrentFrame = 0;
 
                     // 이동 속도 계산
-                    int ML_steps = 7 * ML_totalFrames; // 이동할 스텝 수
+                    int ML_steps = 3 * ML_totalFrames; // 이동할 스텝 수
                     int ML_stepSize = (ML_endX - ML_startX) / ML_steps; // 한 스텝당 이동 거리
 
                     // 프레임별 애니메이션 실행
@@ -628,7 +628,7 @@ public class PlayingGameScreen extends JPanel {
                     myCurrentFrame = 0;
 
                     // 이동 속도 계산
-                    int MR_steps = 7 * MR_totalFrames; // 이동할 스텝 수
+                    int MR_steps = 3 * MR_totalFrames; // 이동할 스텝 수
                     int MR_stepSize = (MR_endX - MR_startX) / MR_steps; // 한 스텝당 이동 거리
 
                     // 프레임별 애니메이션 실행
@@ -1568,12 +1568,12 @@ public class PlayingGameScreen extends JPanel {
         		    enemyMotions = enemyCharacter.getMotions().get(enemyCharacter.getCurrentCard().getName());
         		    enemyFrameDelay = 200; // 각 프레임 간격
         		    int MU_totalFrames = enemyMotions.length; // 애니메이션 총 프레임 수
-        		    enemyDuration = 7 * enemyFrameDelay * enemyMotions.length; // 애니메이션 총 시간
+        		    enemyDuration = 6 * enemyFrameDelay * enemyMotions.length; // 애니메이션 총 시간
 
         		    enemyCurrentFrame = 0;
 
         		    // 이동 속도 계산
-        		    int MU_steps = 7 * MU_totalFrames; // 이동할 스텝 수
+        		    int MU_steps = 2 * MU_totalFrames; // 이동할 스텝 수
         		    int MU_stepSize = (MU_endY - MU_startY) / MU_steps; // 한 스텝당 이동 거리
 
         		    // 프레임별 애니메이션 실행
@@ -1611,12 +1611,12 @@ public class PlayingGameScreen extends JPanel {
         		    enemyMotions = enemyCharacter.getMotions().get(enemyCharacter.getCurrentCard().getName());
         		    enemyFrameDelay = 200; // 각 프레임 간격
         		    int MD_totalFrames = enemyMotions.length; // 애니메이션 총 프레임 수
-        		    enemyDuration = 7 * enemyFrameDelay * MD_totalFrames; // 애니메이션 총 시간
+        		    enemyDuration = 6 * enemyFrameDelay * MD_totalFrames; // 애니메이션 총 시간
 
         		    enemyCurrentFrame = 0;
 
         		    // 이동 속도 계산
-        		    int MD_steps = 7 * MD_totalFrames; // 이동할 스텝 수
+        		    int MD_steps = 2 * MD_totalFrames; // 이동할 스텝 수
         		    int MD_stepSize = (MD_endY - MD_startY) / MD_steps; // 한 스텝당 이동 거리
 
         		    // 프레임별 애니메이션 실행
@@ -1660,7 +1660,7 @@ public class PlayingGameScreen extends JPanel {
         		    enemyCurrentFrame = 0;
 
         		    // 이동 속도 계산
-        		    int ML_steps = 7*ML_totalFrames; // 이동할 스텝 수 (프레임 수와 동일)
+        		    int ML_steps = 3*ML_totalFrames; // 이동할 스텝 수 (프레임 수와 동일)
         		    int ML_stepSize = (ML_endX - ML_startX) / ML_steps; // 한 스텝당 이동 거리
 
         		    // 프레임별 애니메이션 실행
@@ -1704,7 +1704,7 @@ public class PlayingGameScreen extends JPanel {
         		    enemyCurrentFrame = 0;
 
         		    // 이동 속도 계산
-        		    int MR_steps = 7 * MR_totalFrames; // 이동할 스텝 수
+        		    int MR_steps = 3 * MR_totalFrames; // 이동할 스텝 수
         		    int MR_stepSize = (MR_endX - MR_startX) / MR_steps; // 한 스텝당 이동 거리
 
         		    // 프레임별 애니메이션 실행
