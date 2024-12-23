@@ -2374,6 +2374,7 @@ public class PlayingGameScreen extends JPanel {
         	
         // Zoro ------------------------------------------------------------		
         case "Zoro":
+        	int move = -80;
         	switch (myCharacter.getCurrentMotion()) {
         	case "MOVE":
         		switch (myCharacter.getCurrentCard().getName()) {
@@ -2409,13 +2410,13 @@ public class PlayingGameScreen extends JPanel {
         		case "Three Thousand Worlds":
         			if (myMotions != null) {
         		        BufferedImage currentImage = myMotions[myCurrentFrame];
-        		        g.drawImage(currentImage, myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
+        		        g.drawImage(currentImage, myCharacter.getCurrentX()+move, myCharacter.getCurrentY()+move, null);
         			}
         			break;
         		case "Onigiri":
         			if (myMotions != null) {
         		        BufferedImage currentImage = myMotions[myCurrentFrame];
-        		        g.drawImage(currentImage, myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
+        		        g.drawImage(currentImage, myCharacter.getCurrentX()+move, myCharacter.getCurrentY()+move, null);
         			}
         			break;
         		}
@@ -2659,6 +2660,7 @@ public class PlayingGameScreen extends JPanel {
         	
         // Zoro ------------------------------------------------------------		
         case "Zoro":
+        	int move = -80;
         	switch (enemyCharacter.getCurrentMotion()) {
         	case "MOVE":
         		switch (enemyCharacter.getCurrentCard().getName()) {
@@ -2694,13 +2696,13 @@ public class PlayingGameScreen extends JPanel {
         		case "Three Thousand Worlds":
         			if (enemyMotions != null) {
         		        BufferedImage currentImage = enemyMotions[enemyCurrentFrame];
-        		        g.drawImage(currentImage, enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
+        		        g.drawImage(currentImage, enemyCharacter.getCurrentX()+move, enemyCharacter.getCurrentY()+move, null);
         			}
         			break;
         		case "Onigiri":
         			if (enemyMotions != null) {
         		        BufferedImage currentImage = enemyMotions[enemyCurrentFrame];
-        		        g.drawImage(currentImage, enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
+        		        g.drawImage(currentImage, enemyCharacter.getCurrentX()+move, enemyCharacter.getCurrentY()+move, null);
         			}
         			break;
         		}

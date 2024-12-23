@@ -177,7 +177,7 @@ public class Zoro extends Character {
       
       tempArr = new BufferedImage[9];
       for (int i = 0; i < 9; i++) {
-         tempArr[i] = resizeImage(sprite.getSubimage(i * 352,7169,352,287), 200, 200, true);
+         tempArr[i] = resizeImage(sprite.getSubimage(i * 352,7169,352,287), 250, 250, true);
       }
       for (int i = 0; i < 9; i++) {
           tempArr[i] = flipHorizontally(tempArr[i]);
@@ -185,7 +185,7 @@ public class Zoro extends Character {
       motions.put("Three Thousand Worlds", tempArr.clone());
       tempArr = new BufferedImage[6];
       for (int i = 0; i < 6; i++) {
-         tempArr[i] = resizeImage(sprite.getSubimage(i * 368, 5970,368,311), 200, 200, true);
+         tempArr[i] = resizeImage(sprite.getSubimage(i * 368, 5970,368,311), 250, 250, true);
       }
       for (int i = 0; i < 6; i++) {
           tempArr[i] = flipHorizontally(tempArr[i]);
