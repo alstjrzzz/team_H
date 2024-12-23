@@ -57,7 +57,7 @@ public class Zoro extends Character {
     public void addUniqueCard() {
         
        cardList.add(new Card(
-             /*name:*/ "Tiger Trap", 
+             /*name:*/ "Three Thousand Worlds", 
              /*category:*/ "ATTACK", 
              /*range:*/ new LinkedList<>() {{
                       add(new int[]{0, -1});}}, 
@@ -91,7 +91,7 @@ public class Zoro extends Character {
             cardImage.put("Move Down", ImageIO.read(moveImage));
             cardImage.put("Move Left", ImageIO.read(moveImage));
             cardImage.put("Move Right", ImageIO.read(moveImage));
-            cardImage.put("Tiger Trap", ImageIO.read(tiger_TrapImage));
+            cardImage.put("Three Thousand Worlds", ImageIO.read(tiger_TrapImage));
             cardImage.put("Onigiri", ImageIO.read(onigiriImage));
 
         } catch (IOException e) {
@@ -101,7 +101,7 @@ public class Zoro extends Character {
 
     private void initCardSounds() {
         cardSounds = new HashMap<>();
-        cardSounds.put("Tiger Trap", "res/sound/sfx/zoro_tigerTrap.mp3");
+        cardSounds.put("Three Thousand Worlds", "res/sound/sfx/zoro_tigerTrap.mp3");
         cardSounds.put("Onigiri", "res/sound/sfx/zoro_onigiri.mp3");
     }
 
@@ -150,12 +150,18 @@ public class Zoro extends Character {
       for (int i = 0; i < 8; i++) {
          tempArr[i] = resizeImage(sprite.getSubimage(i * 145, 924,145,162), character_size, character_size, true);
       }
+      for (int i = 0; i < 8; i++) {
+          tempArr[i] = flipHorizontally(tempArr[i]);
+       }
       motions.put("Move Up", tempArr.clone());
       
       tempArr = new BufferedImage[8];
       for (int i = 0; i < 8; i++) {
          tempArr[i] = resizeImage(sprite.getSubimage(i * 145, 924,145,162), character_size, character_size, true);
       }
+      for (int i = 0; i < 8; i++) {
+          tempArr[i] = flipHorizontally(tempArr[i]);
+       }
       motions.put("Move Down", tempArr.clone());
       
       tempArr = new BufferedImage[8];
@@ -169,8 +175,22 @@ public class Zoro extends Character {
       }
       motions.put("Move Right", tempArr.clone());
       
-      motions.put("Skill1", null);
-      motions.put("Skill2", null);
+      tempArr = new BufferedImage[9];
+      for (int i = 0; i < 9; i++) {
+         tempArr[i] = resizeImage(sprite.getSubimage(i * 352,7169,352,287), 200, 200, true);
+      }
+      for (int i = 0; i < 9; i++) {
+          tempArr[i] = flipHorizontally(tempArr[i]);
+       }
+      motions.put("Three Thousand Worlds", tempArr.clone());
+      tempArr = new BufferedImage[6];
+      for (int i = 0; i < 6; i++) {
+         tempArr[i] = resizeImage(sprite.getSubimage(i * 368, 5970,368,311), 200, 200, true);
+      }
+      for (int i = 0; i < 6; i++) {
+          tempArr[i] = flipHorizontally(tempArr[i]);
+       }
+      motions.put("Onigiri", tempArr.clone());
    }
    
    
