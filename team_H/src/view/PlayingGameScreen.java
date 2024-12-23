@@ -63,6 +63,7 @@ public class PlayingGameScreen extends JPanel {
     private JPanel healthPanel;
     private JPanel fieldPanel;
     private JPanel cardPanel;
+    
 	private BufferedImage[] enemyEffects;
 	private int enemyEffectFrameDelay;
 	private int enemyCurrentEffectFrame;
@@ -350,8 +351,18 @@ public class PlayingGameScreen extends JPanel {
 
                     myCurrentEffectFrame = 0;
                     int startX = myCharacter.getCurrentX(); // 시작 X 좌표
-                    int targetX = startX + (150*4); // 목표 X 좌표 (예: 4칸 이동)
-
+                    
+                    int targetX;
+                    
+    		        if(gameState.getClientNumber() == 1 && myCharacter.getCurrentX() >= enemyCharacter.getCurrentX()) {
+    		        	targetX = startX - (150*4); // 목표 X 좌표 (예: 4칸 이동)
+  
+    		        }else if(gameState.getClientNumber() == 2 && myCharacter.getCurrentX() >= enemyCharacter.getCurrentX()){
+    		        	targetX = startX - (150*4); // 목표 X 좌표 (예: 4칸 이동)
+    		        }else {
+    		        	targetX = startX + (150*4); // 목표 X 좌표 (예: 4칸 이동)
+    		        }
+              
                     // 이동 진행 상태 변수
                     class ProgressWrapper {
                         float value = 0.0f;
@@ -375,7 +386,13 @@ public class PlayingGameScreen extends JPanel {
                         }
 
                         // X 좌표 이동 계산
-                        myEffectPositionX = (int) (startX + (targetX - startX) * progress.value);
+                        if(gameState.getClientNumber() == 1 && myCharacter.getCurrentX() >= enemyCharacter.getCurrentX()) {
+        		        	myEffectPositionX = (int) (startX - (targetX - startX) * progress.value);
+        		        }else if(gameState.getClientNumber() == 2 && myCharacter.getCurrentX() >= enemyCharacter.getCurrentX()){
+        		        	myEffectPositionX = (int) (startX - (targetX - startX) * progress.value);
+        		        }else {
+        		        	myEffectPositionX = (int) (startX + (targetX - startX) * progress.value);
+        		        }
 
                         repaint(); // 이펙트 이동 상태 그리기
 
@@ -738,95 +755,186 @@ public class PlayingGameScreen extends JPanel {
         	
         // Cygnus ------------------------------------------------------------	
         case "Cygnus":
-        	switch (myCharacter.getCurrentMotion()) {
-        	case "MOVE":
-        		switch (myCharacter.getCurrentCard().getName()) {
-        		case "Move Up":
+        	  switch (myCharacter.getCurrentMotion()) {
+              case "MOVE":
+                  switch (myCharacter.getCurrentCard().getName()) {
+                  case "Move Up":
+                      // 시작 위치와 이동 거리 설정
+                      int MU_startY = myCharacter.getCurrentY(); // 시작 위치 Y
+                      int MU_endY = MU_startY - 60; // 목표 위치 (위쪽으로 60px 이동)
 
-        			myMotions = myCharacter.getMotions().get(myCharacter.getCurrentCard().getName());
-        			myFrameDelay = 200;	// 각 프레임 간격
-        			myDuration = myFrameDelay * myMotions.length * 8;	// 해당 모션의 총 시간
-        			
-        			myCurrentFrame = 0;
-        			myMotionTimer = new Timer(myFrameDelay, null);
-        			myMotionTimer.addActionListener(e -> {
-        				myCurrentFrame = (myCurrentFrame + 1) % myMotions.length;
-        			    repaint();
-        			});
-        			
-        			new Timer(myDuration, e -> {
-        				myMotionTimer.stop();
-        			    ((Timer) e.getSource()).stop();
-        			}).start();
-        			
-        			myMotionTimer.start();
-        			
-        			break;
-        		case "Move Down":
+                      // 애니메이션 관련 설정
+                      myMotions = myCharacter.getMotions().get(myCharacter.getCurrentCard().getName());
+                      myFrameDelay = 200; // 각 프레임 간격
+                      int MU_totalFrames = myMotions.length; // 애니메이션 총 프레임 수
+                      myDuration = 6 * myFrameDelay * MU_totalFrames; // 애니메이션 총 시간
 
-        			myMotions = myCharacter.getMotions().get(myCharacter.getCurrentCard().getName());
-        			myFrameDelay = 200;	// 각 프레임 간격
-        			myDuration = myFrameDelay * myMotions.length * 8;	// 해당 모션의 총 시간
-        			
-        			myCurrentFrame = 0;
-        			myMotionTimer = new Timer(myFrameDelay, null);
-        			myMotionTimer.addActionListener(e -> {
-        				myCurrentFrame = (myCurrentFrame + 1) % myMotions.length;
-        			    repaint();
-        			});
-        			
-        			new Timer(myDuration, e -> {
-        				myMotionTimer.stop();
-        			    ((Timer) e.getSource()).stop();
-        			}).start();
-        			
-        			myMotionTimer.start();
-        			
-        			break;
-        		case "Move Left":
+                      myCurrentFrame = 0;
 
-        			myMotions = myCharacter.getMotions().get(myCharacter.getCurrentCard().getName());
-        			myFrameDelay = 200;	// 각 프레임 간격
-        			myDuration = myFrameDelay * myMotions.length * 8;	// 해당 모션의 총 시간
-        			
-        			myCurrentFrame = 0;
-        			myMotionTimer = new Timer(myFrameDelay, null);
-        			myMotionTimer.addActionListener(e -> {
-        				myCurrentFrame = (myCurrentFrame + 1) % myMotions.length;
-        			    repaint();
-        			});
-        			
-        			new Timer(myDuration, e -> {
-        				myMotionTimer.stop();
-        			    ((Timer) e.getSource()).stop();
-        			}).start();
-        			
-        			myMotionTimer.start();
-        			
-        			break;
-        		case "Move Right":
+                      // 이동 속도 계산
+                      int MU_steps = 2 * MU_totalFrames; // 이동할 스텝 수
+                      int MU_stepSize = (MU_endY - MU_startY) / MU_steps; // 한 스텝당 이동 거리
 
-        			myMotions = myCharacter.getMotions().get(myCharacter.getCurrentCard().getName());
-        			myFrameDelay = 200;	// 각 프레임 간격
-        			myDuration = myFrameDelay * myMotions.length * 8;	// 해당 모션의 총 시간
-        			
-        			myCurrentFrame = 0;
-        			myMotionTimer = new Timer(myFrameDelay, null);
-        			myMotionTimer.addActionListener(e -> {
-        				myCurrentFrame = (myCurrentFrame + 1) % myMotions.length;
-        			    repaint();
-        			});
-        			
-        			new Timer(myDuration, e -> {
-        				myMotionTimer.stop();
-        			    ((Timer) e.getSource()).stop();
-        			}).start();
-        			
-        			myMotionTimer.start();
-        			
-        			break;
-        		}
-        		break;
+                      // 프레임별 애니메이션 실행
+                      Timer myMotionTimer = new Timer(myFrameDelay, null);
+                      myMotionTimer.addActionListener(e -> {
+                          // 현재 프레임 업데이트
+                          myCurrentFrame = (myCurrentFrame + 1) % MU_totalFrames;
+
+                          // 현재 위치 업데이트
+                          int currentY = myCharacter.getCurrentY();
+                          if (Math.abs(currentY - MU_endY) > Math.abs(MU_stepSize)) {
+                              myCharacter.setCurrentY(currentY + MU_stepSize); // Y 위치 업데이트
+                          }
+
+                          // 화면 갱신
+                          repaint();
+                      });
+
+                      // 애니메이션 종료 시 처리
+                      new Timer(myDuration, e -> {
+                          myMotionTimer.stop();
+                          myCharacter.setCurrentY(MU_endY); // 최종 위치 보정
+                          ((Timer) e.getSource()).stop();
+                      }).start();
+
+                      myMotionTimer.start();
+
+                      break;
+                  case "Move Down":
+                      // 시작 위치와 이동 거리 설정
+                      int MD_startY = myCharacter.getCurrentY(); // 시작 위치 Y
+                      int MD_endY = MD_startY + 60; // 목표 위치 (아래쪽으로 60px 이동)
+
+                      // 애니메이션 관련 설정
+                      myMotions = myCharacter.getMotions().get(myCharacter.getCurrentCard().getName());
+                      myFrameDelay = 200; // 각 프레임 간격
+                      int MD_totalFrames = myMotions.length; // 애니메이션 총 프레임 수
+                      myDuration = 6 * myFrameDelay * MD_totalFrames; // 애니메이션 총 시간
+
+                      myCurrentFrame = 0;
+
+                      // 이동 속도 계산
+                      int MD_steps = 2 * MD_totalFrames; // 이동할 스텝 수
+                      int MD_stepSize = (MD_endY - MD_startY) / MD_steps; // 한 스텝당 이동 거리
+
+                      // 프레임별 애니메이션 실행
+                      myMotionTimer = new Timer(myFrameDelay, null);
+                      myMotionTimer.addActionListener(e -> {
+                          // 현재 프레임 업데이트
+                          myCurrentFrame = (myCurrentFrame + 1) % MD_totalFrames;
+
+                          // 현재 위치 업데이트
+                          int currentY = myCharacter.getCurrentY();
+                          if (Math.abs(currentY - MD_endY) > Math.abs(MD_stepSize)) {
+                              myCharacter.setCurrentY(currentY + MD_stepSize); // Y 위치 업데이트
+                          }
+
+                          // 화면 갱신
+                          repaint();
+                      });
+
+                      // 애니메이션 종료 시 처리
+                      new Timer(myDuration, e -> {
+                          myMotionTimer.stop();
+                          myCharacter.setCurrentY(MD_endY); // 최종 위치 보정
+                          ((Timer) e.getSource()).stop();
+                      }).start();
+
+                      myMotionTimer.start();
+
+                      break;
+
+                  case "Move Left":
+                      // 시작 위치와 이동 거리 설정
+                      int ML_startX = myCharacter.getCurrentX(); // 시작 위치 X
+                      int ML_endX = ML_startX - 150; // 목표 위치 (왼쪽으로 150px 이동)
+
+                      // 애니메이션 관련 설정
+                      myMotions = myCharacter.getMotions().get(myCharacter.getCurrentCard().getName());
+                      myFrameDelay = 200; // 각 프레임 간격
+                      int ML_totalFrames = myMotions.length; // 애니메이션 총 프레임 수
+                      myDuration = 6 * myFrameDelay * ML_totalFrames; // 애니메이션 총 시간
+
+                      myCurrentFrame = 0;
+
+                      // 이동 속도 계산
+                      int ML_steps = 3 * ML_totalFrames; // 이동할 스텝 수
+                      int ML_stepSize = (ML_endX - ML_startX) / ML_steps; // 한 스텝당 이동 거리
+
+                      // 프레임별 애니메이션 실행
+                      myMotionTimer = new Timer(myFrameDelay, null);
+                      myMotionTimer.addActionListener(e -> {
+                          // 현재 프레임 업데이트
+                          myCurrentFrame = (myCurrentFrame + 1) % ML_totalFrames;
+
+                          // 현재 위치 업데이트
+                          int currentX = myCharacter.getCurrentX();
+                          if (Math.abs(currentX - ML_endX) > Math.abs(ML_stepSize)) {
+                              myCharacter.setCurrentX(currentX + ML_stepSize); // X 위치 업데이트
+                          }
+
+                          // 화면 갱신
+                          repaint();
+                      });
+
+                      // 애니메이션 종료 시 처리
+                      new Timer(myDuration, e -> {
+                          myMotionTimer.stop();
+                          myCharacter.setCurrentX(ML_endX); // 최종 위치 보정
+                          ((Timer) e.getSource()).stop();
+                      }).start();
+
+                      myMotionTimer.start();
+
+                      break;
+
+                  case "Move Right":
+                      // 시작 위치와 이동 거리 설정
+                      int MR_startX = myCharacter.getCurrentX(); // 시작 위치 X
+                      int MR_endX = MR_startX + 150; // 목표 위치 (오른쪽으로 150px 이동)
+
+                      // 애니메이션 관련 설정
+                      myMotions = myCharacter.getMotions().get(myCharacter.getCurrentCard().getName());
+                      myFrameDelay = 200; // 각 프레임 간격
+                      int MR_totalFrames = myMotions.length; // 애니메이션 총 프레임 수
+                      myDuration = 6 * myFrameDelay * MR_totalFrames; // 애니메이션 총 시간
+
+                      myCurrentFrame = 0;
+
+                      // 이동 속도 계산
+                      int MR_steps = 3 * MR_totalFrames; // 이동할 스텝 수
+                      int MR_stepSize = (MR_endX - MR_startX) / MR_steps; // 한 스텝당 이동 거리
+
+                      // 프레임별 애니메이션 실행
+                      myMotionTimer = new Timer(myFrameDelay, null);
+                      myMotionTimer.addActionListener(e -> {
+                          // 현재 프레임 업데이트
+                          myCurrentFrame = (myCurrentFrame + 1) % MR_totalFrames;
+
+                          // 현재 위치 업데이트
+                          int currentX = myCharacter.getCurrentX();
+                          if (Math.abs(currentX - MR_endX) > Math.abs(MR_stepSize)) {
+                              myCharacter.setCurrentX(currentX + MR_stepSize); // X 위치 업데이트
+                          }
+
+                          // 화면 갱신
+                          repaint();
+                      });
+
+                      // 애니메이션 종료 시 처리
+                      new Timer(myDuration, e -> {
+                          myMotionTimer.stop();
+                          myCharacter.setCurrentX(MR_endX); // 최종 위치 보정
+                          ((Timer) e.getSource()).stop();
+                      }).start();
+
+                      myMotionTimer.start();
+
+                      break;
+                  }
+                  break;
+                  
         	case "ATTACK":
         		switch (myCharacter.getCurrentCard().getName()) {
         		case "Galactic Burst":
@@ -852,6 +960,24 @@ public class PlayingGameScreen extends JPanel {
         			break;
         		case "Phoenix Breath":
         			myCharacter.playCardSound("Phoenix Breath");
+        			myMotions = myCharacter.getMotions().get(myCharacter.getCurrentCard().getName());
+        			myFrameDelay = 200;	// 각 프레임 간격
+        			myDuration = myFrameDelay * myMotions.length * 8;	// 해당 모션의 총 시간
+        			
+        			myCurrentFrame = 0;
+        			myMotionTimer = new Timer(myFrameDelay, null);
+        			myMotionTimer.addActionListener(e -> {
+        				myCurrentFrame = (myCurrentFrame + 1) % myMotions.length;
+        			    repaint();
+        			});
+        			
+        			new Timer(myDuration, e -> {
+        				myMotionTimer.stop();
+        			    ((Timer) e.getSource()).stop();
+        			}).start();
+        			
+        			myMotionTimer.start();
+        			
         			break;
         		}
         		break;
@@ -1426,7 +1552,16 @@ public class PlayingGameScreen extends JPanel {
 
                     enemyCurrentEffectFrame = 0;
                     int startX = enemyCharacter.getCurrentX(); // 시작 X 좌표
-                    int targetX = startX + (150*4); // 목표 X 좌표 (예: 4칸 이동)
+                    int targetX;
+                    
+    		        if(gameState.getClientNumber() == 1 && myCharacter.getCurrentX() >= enemyCharacter.getCurrentX()) {
+    		        	targetX = startX - (150*4); // 목표 X 좌표 (예: 4칸 이동)
+  
+    		        }else if(gameState.getClientNumber() == 2 && myCharacter.getCurrentX() >= enemyCharacter.getCurrentX()){
+    		        	targetX = startX - (150*4); // 목표 X 좌표 (예: 4칸 이동)
+    		        }else {
+    		        	targetX = startX + (150*4); // 목표 X 좌표 (예: 4칸 이동)
+    		        }
 
                     // 이동 진행 상태 변수
                     class ProgressWrapper {
@@ -1450,9 +1585,13 @@ public class PlayingGameScreen extends JPanel {
                             progress.value = 1.0f;
                         }
 
-                        // X 좌표 이동 계산
-                        enemyEffectPositionX = (int) (startX + (targetX - startX) * progress.value);
-
+        		        if(gameState.getClientNumber() == 1 && myCharacter.getCurrentX() >= enemyCharacter.getCurrentX()) {
+        		        	enemyEffectPositionX = (int) (startX - (targetX - startX) * progress.value);
+        		        }else if(gameState.getClientNumber() == 2 && myCharacter.getCurrentX() >= enemyCharacter.getCurrentX()){
+        		        	enemyEffectPositionX = (int) (startX - (targetX - startX) * progress.value);
+        		        }else {
+        		        	enemyEffectPositionX = (int) (startX + (targetX - startX) * progress.value);
+        		        }
                         repaint(); // 이펙트 이동 상태 그리기
 
                         // 목표 지점 도달 시 타이머 중지
@@ -1820,91 +1959,183 @@ public class PlayingGameScreen extends JPanel {
         	case "MOVE":
         		switch (enemyCharacter.getCurrentCard().getName()) {
         		case "Move Up":
+        		    // 시작 위치와 이동 거리 설정
+        		    int MU_startY = enemyCharacter.getCurrentY(); // 시작 위치 Y
+        		    int MU_endY = MU_startY - 60; // 목표 위치 (위쪽으로 60px 이동)
 
-        			enemyMotions = enemyCharacter.getMotions().get(enemyCharacter.getCurrentCard().getName());
-        			enemyFrameDelay = 200;	// 각 프레임 간격
-        			enemyDuration = enemyFrameDelay * enemyMotions.length * 8;	// 해당 모션의 총 시간
-        			
-        			enemyCurrentFrame = 0;
-        			enemyMotionTimer = new Timer(enemyFrameDelay, null);
-        			enemyMotionTimer.addActionListener(e -> {
-        				enemyCurrentFrame = (enemyCurrentFrame + 1) % enemyMotions.length;
-        			    repaint();
-        			});
-        			
-        			new Timer(enemyDuration, e -> {
-        				enemyMotionTimer.stop();
-        			    ((Timer) e.getSource()).stop();
-        			}).start();
-        			
-        			enemyMotionTimer.start();
-        			
-        			break;
+        		    // 애니메이션 관련 설정
+        		    enemyMotions = enemyCharacter.getMotions().get(enemyCharacter.getCurrentCard().getName());
+        		    enemyFrameDelay = 200; // 각 프레임 간격
+        		    int MU_totalFrames = enemyMotions.length; // 애니메이션 총 프레임 수
+        		    enemyDuration = 6 * enemyFrameDelay * enemyMotions.length; // 애니메이션 총 시간
+
+        		    enemyCurrentFrame = 0;
+
+        		    // 이동 속도 계산
+        		    int MU_steps = 2 * MU_totalFrames; // 이동할 스텝 수
+        		    int MU_stepSize = (MU_endY - MU_startY) / MU_steps; // 한 스텝당 이동 거리
+
+        		    // 프레임별 애니메이션 실행
+        		    enemyMotionTimer = new Timer(enemyFrameDelay, null);
+        		    enemyMotionTimer.addActionListener(e -> {
+        		        // 현재 프레임 업데이트
+        		        enemyCurrentFrame = (enemyCurrentFrame + 1) % MU_totalFrames;
+
+        		        // 현재 위치 업데이트
+        		        int currentY = enemyCharacter.getCurrentY();
+        		        if (Math.abs(currentY - MU_endY) > Math.abs(MU_stepSize)) {
+        		            enemyCharacter.setCurrentY(currentY + MU_stepSize); // Y 위치 업데이트
+        		        }
+
+        		        // 화면 갱신
+        		        repaint();
+        		    });
+
+        		    // 애니메이션 종료 시 처리
+        		    new Timer(enemyDuration, e -> {
+        		        enemyMotionTimer.stop();
+        		        enemyCharacter.setCurrentY(MU_endY); // 최종 위치 보정
+        		        ((Timer) e.getSource()).stop();
+        		    }).start();
+
+        		    enemyMotionTimer.start();
+
+        		    break;
         		case "Move Down":
+        		    // 시작 위치와 이동 거리 설정
+        		    int MD_startY = enemyCharacter.getCurrentY(); // 시작 위치 Y
+        		    int MD_endY = MD_startY + 60; // 목표 위치 (아래쪽으로 60px 이동)
 
-        			enemyMotions = enemyCharacter.getMotions().get(enemyCharacter.getCurrentCard().getName());
-        			enemyFrameDelay = 200;	// 각 프레임 간격
-        			enemyDuration = enemyFrameDelay * enemyMotions.length * 8;	// 해당 모션의 총 시간
-        			
-        			enemyCurrentFrame = 0;
-        			enemyMotionTimer = new Timer(enemyFrameDelay, null);
-        			enemyMotionTimer.addActionListener(e -> {
-        				enemyCurrentFrame = (enemyCurrentFrame + 1) % enemyMotions.length;
-        			    repaint();
-        			});
-        			
-        			new Timer(enemyDuration, e -> {
-        				enemyMotionTimer.stop();
-        			    ((Timer) e.getSource()).stop();
-        			}).start();
-        			
-        			enemyMotionTimer.start();
-        			
-        			break;
+        		    // 애니메이션 관련 설정
+        		    enemyMotions = enemyCharacter.getMotions().get(enemyCharacter.getCurrentCard().getName());
+        		    enemyFrameDelay = 200; // 각 프레임 간격
+        		    int MD_totalFrames = enemyMotions.length; // 애니메이션 총 프레임 수
+        		    enemyDuration = 6 * enemyFrameDelay * MD_totalFrames; // 애니메이션 총 시간
+
+        		    enemyCurrentFrame = 0;
+
+        		    // 이동 속도 계산
+        		    int MD_steps = 2 * MD_totalFrames; // 이동할 스텝 수
+        		    int MD_stepSize = (MD_endY - MD_startY) / MD_steps; // 한 스텝당 이동 거리
+
+        		    // 프레임별 애니메이션 실행
+        		    enemyMotionTimer = new Timer(enemyFrameDelay, null);
+        		    enemyMotionTimer.addActionListener(e -> {
+        		        // 현재 프레임 업데이트
+        		        enemyCurrentFrame = (enemyCurrentFrame + 1) % MD_totalFrames;
+
+        		        // 현재 위치 업데이트
+        		        int currentY = enemyCharacter.getCurrentY();
+        		        if (Math.abs(currentY - MD_endY) > Math.abs(MD_stepSize)) {
+        		            enemyCharacter.setCurrentY(currentY + MD_stepSize); // Y 위치 업데이트
+        		        }
+
+        		        // 화면 갱신
+        		        repaint();
+        		    });
+
+        		    // 애니메이션 종료 시 처리
+        		    new Timer(enemyDuration, e -> {
+        		        enemyMotionTimer.stop();
+        		        enemyCharacter.setCurrentY(MD_endY); // 최종 위치 보정
+        		        ((Timer) e.getSource()).stop();
+        		    }).start();
+
+        		    enemyMotionTimer.start();
+
+        		    break;
+
         		case "Move Left":
+        		    // 시작 위치와 이동 거리 설정
+        		    int ML_startX = enemyCharacter.getCurrentX(); // 시작 위치 X
+        		    int ML_endX = ML_startX - 150; // 목표 위치 (왼쪽으로 100px 이동)
 
-        			enemyMotions = enemyCharacter.getMotions().get(enemyCharacter.getCurrentCard().getName());
-        			enemyFrameDelay = 200;	// 각 프레임 간격
-        			enemyDuration = enemyFrameDelay * enemyMotions.length * 8;	// 해당 모션의 총 시간
-        			
-        			enemyCurrentFrame = 0;
-        			enemyMotionTimer = new Timer(enemyFrameDelay, null);
-        			enemyMotionTimer.addActionListener(e -> {
-        				enemyCurrentFrame = (enemyCurrentFrame + 1) % enemyMotions.length;
-        			    repaint();
-        			});
-        			
-        			new Timer(enemyDuration, e -> {
-        				enemyMotionTimer.stop();
-        			    ((Timer) e.getSource()).stop();
-        			}).start();
-        			
-        			enemyMotionTimer.start();
-        			
-        			break;
+        		    // 애니메이션 관련 설정
+        		    enemyMotions = enemyCharacter.getMotions().get(enemyCharacter.getCurrentCard().getName());
+        		    enemyFrameDelay = 200; // 각 프레임 간격
+        		    int ML_totalFrames = enemyMotions.length; // 애니메이션 총 프레임 수
+        		    enemyDuration = 6*enemyFrameDelay * ML_totalFrames; // 애니메이션 총 시간
+
+        		    enemyCurrentFrame = 0;
+
+        		    // 이동 속도 계산
+        		    int ML_steps = 3*ML_totalFrames; // 이동할 스텝 수 (프레임 수와 동일)
+        		    int ML_stepSize = (ML_endX - ML_startX) / ML_steps; // 한 스텝당 이동 거리
+
+        		    // 프레임별 애니메이션 실행
+        		    enemyMotionTimer = new Timer(enemyFrameDelay, null);
+        		    enemyMotionTimer.addActionListener(e -> {
+        		        // 현재 프레임 업데이트
+        		        enemyCurrentFrame = (enemyCurrentFrame + 1) % ML_totalFrames;
+
+        		        // 현재 위치 업데이트
+        		        int currentX = enemyCharacter.getCurrentX();
+        		        if (Math.abs(currentX - ML_endX) > Math.abs(ML_stepSize)) {
+        		            enemyCharacter.setCurrentX(currentX + ML_stepSize); // X 위치 업데이트
+        		        }
+
+        		        // 화면 갱신
+        		        repaint();
+        		    });
+
+        		    // 애니메이션 종료 시 처리
+        		    new Timer(enemyDuration, e -> {
+        		        enemyMotionTimer.stop();
+        		        enemyCharacter.setCurrentX(ML_endX); // 최종 위치 보정
+        		        ((Timer) e.getSource()).stop();
+        		    }).start();
+
+        		    enemyMotionTimer.start();
+
+        		    break;
+
         		case "Move Right":
+        		    // 시작 위치와 이동 거리 설정
+        		    int MR_startX = enemyCharacter.getCurrentX(); // 시작 위치 X
+        		    int MR_endX = MR_startX + 150; // 목표 위치 (오른쪽으로 150px 이동)
 
-        			enemyMotions = enemyCharacter.getMotions().get(enemyCharacter.getCurrentCard().getName());
-        			enemyFrameDelay = 200;	// 각 프레임 간격
-        			enemyDuration = enemyFrameDelay * enemyMotions.length * 8;	// 해당 모션의 총 시간
-        			
-        			enemyCurrentFrame = 0;
-        			enemyMotionTimer = new Timer(enemyFrameDelay, null);
-        			enemyMotionTimer.addActionListener(e -> {
-        				enemyCurrentFrame = (enemyCurrentFrame + 1) % enemyMotions.length;
-        			    repaint();
-        			});
-        			
-        			new Timer(enemyDuration, e -> {
-        				enemyMotionTimer.stop();
-        			    ((Timer) e.getSource()).stop();
-        			}).start();
-        			
-        			enemyMotionTimer.start();
-        			
-        			break;
+        		    // 애니메이션 관련 설정
+        		    enemyMotions = enemyCharacter.getMotions().get(enemyCharacter.getCurrentCard().getName());
+        		    enemyFrameDelay = 200; // 각 프레임 간격
+        		    int MR_totalFrames = enemyMotions.length; // 애니메이션 총 프레임 수
+        		    enemyDuration = 6 * enemyFrameDelay * MR_totalFrames; // 애니메이션 총 시간
+
+        		    enemyCurrentFrame = 0;
+
+        		    // 이동 속도 계산
+        		    int MR_steps = 3 * MR_totalFrames; // 이동할 스텝 수
+        		    int MR_stepSize = (MR_endX - MR_startX) / MR_steps; // 한 스텝당 이동 거리
+
+        		    // 프레임별 애니메이션 실행
+        		    enemyMotionTimer = new Timer(enemyFrameDelay, null);
+        		    enemyMotionTimer.addActionListener(e -> {
+        		        // 현재 프레임 업데이트
+        		        enemyCurrentFrame = (enemyCurrentFrame + 1) % MR_totalFrames;
+
+        		        // 현재 위치 업데이트
+        		        int currentX = enemyCharacter.getCurrentX();
+        		        if (Math.abs(currentX - MR_endX) > Math.abs(MR_stepSize)) {
+        		            enemyCharacter.setCurrentX(currentX + MR_stepSize); // X 위치 업데이트
+        		        }
+
+        		        // 화면 갱신
+        		        repaint();
+        		    });
+
+        		    // 애니메이션 종료 시 처리
+        		    new Timer(enemyDuration, e -> {
+        		        enemyMotionTimer.stop();
+        		        enemyCharacter.setCurrentX(MR_endX); // 최종 위치 보정
+        		        ((Timer) e.getSource()).stop();
+        		    }).start();
+
+        		    enemyMotionTimer.start();
+
+        		    break;
         		}
+
         		break;
+        		
         	case "ATTACK":
         		switch (enemyCharacter.getCurrentCard().getName()) {
         		case "Galactic Burst":
@@ -1930,6 +2161,24 @@ public class PlayingGameScreen extends JPanel {
         			break;
         		case "Phoenix Breath":
         			enemyCharacter.playCardSound("Phoenix Breath");
+        			enemyMotions = enemyCharacter.getMotions().get(enemyCharacter.getCurrentCard().getName());
+        			enemyFrameDelay = 200;	// 각 프레임 간격
+        			enemyDuration = enemyFrameDelay * enemyMotions.length * 8;	// 해당 모션의 총 시간
+        			
+        			enemyCurrentFrame = 0;
+        			enemyMotionTimer = new Timer(enemyFrameDelay, null);
+        			enemyMotionTimer.addActionListener(e -> {
+        				enemyCurrentFrame = (enemyCurrentFrame + 1) % enemyMotions.length;
+        			    repaint();
+        			});
+        			
+        			new Timer(enemyDuration, e -> {
+        				enemyMotionTimer.stop();
+        			    ((Timer) e.getSource()).stop();
+        			}).start();
+        			
+        			enemyMotionTimer.start();
+        			
         			break;
         		}
         		break;
@@ -2331,19 +2580,23 @@ public class PlayingGameScreen extends JPanel {
         		switch (myCharacter.getCurrentCard().getName()) {
         		// ... skill들 넣으셈
         		case "Air Cannon!":
-        			if (myMotions != null) {
-        				
+            		if (myMotions != null) {
         		        BufferedImage currentImage = myMotions[myCurrentFrame];
         		        BufferedImage currentEffectImage = myEffects[myCurrentEffectFrame];
-        		        if( gameState.getClientNumber() == 1 && myCharacter.getCurrentX()<=enemyCharacter.getCurrentX()) {
+        		        if(gameState.getClientNumber() == 1 && myCharacter.getCurrentX() <= enemyCharacter.getCurrentX()) {
+        		        	g.drawImage(currentImage, myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
+        		        	g.drawImage(currentEffectImage,  myEffectPositionX, myCharacter.getCurrentY(), null);
+        		        }else if(gameState.getClientNumber() == 2 && myCharacter.getCurrentX() <= enemyCharacter.getCurrentX()) {
         		        	g.drawImage(currentImage, myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
         		        	g.drawImage(currentEffectImage,  myEffectPositionX, myCharacter.getCurrentY(), null);
         		        } else {
-        		        	g.drawImage(flipHorizontally(currentImage), myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
+        		        	g.drawImage(flipHorizontally(currentEffectImage), myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
         		        	g.drawImage(currentEffectImage,  myEffectPositionX, myCharacter.getCurrentY(), null);
         		        }
-        			}
+            		}
         			break;
+        			
+
         		case "Bamboo Helicopter!":
         			if (myMotions != null) {
         		        BufferedImage currentImage = myMotions[myCurrentFrame];
@@ -2361,11 +2614,8 @@ public class PlayingGameScreen extends JPanel {
         	case "IDLE":
         		if (myMotions != null) {
     		        BufferedImage currentImage = myMotions[myCurrentFrame];
-    		        if(myCharacter.getCurrentX() <= enemyCharacter.getCurrentX()) {
-    		        g.drawImage(flipHorizontally(currentImage), myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
-    			}else
-    				g.drawImage(currentImage, myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
-        		}
+    		        	g.drawImage(currentImage, myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
+    			}
     				
         		break;
         	}
@@ -2430,10 +2680,14 @@ public class PlayingGameScreen extends JPanel {
         	case "IDLE":
         		if (myMotions != null) {
     		        BufferedImage currentImage = myMotions[myCurrentFrame];
-    		        if(myCharacter.getCurrentX() >= 500) {
-    		        	g.drawImage(flipHorizontally(currentImage), myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);	
-    		        }else
-    		        g.drawImage(currentImage, myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
+    		        if(gameState.getClientNumber() == 1 && myCharacter.getCurrentX() >= enemyCharacter.getCurrentX()) {
+    		        	g.drawImage(flipHorizontally(currentImage), myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
+  
+    		        }else if(gameState.getClientNumber() == 2 && myCharacter.getCurrentX() >= enemyCharacter.getCurrentX()){
+    		        	g.drawImage(flipHorizontally(currentImage), myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
+    		        }else {
+    		        	g.drawImage(currentImage, myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
+    		        }
     			}
         		break;
         	}
@@ -2446,15 +2700,29 @@ public class PlayingGameScreen extends JPanel {
         	case "MOVE":
         		switch (myCharacter.getCurrentCard().getName()) {
         		case "Move Up":
-        			if (myMotions != null) {
+            		if (myMotions != null) {
         		        BufferedImage currentImage = myMotions[myCurrentFrame];
-        		        g.drawImage(currentImage, myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
+        		        if(gameState.getClientNumber() == 1 && myCharacter.getCurrentX() >= enemyCharacter.getCurrentX()) {
+        		        	g.drawImage(flipHorizontally(currentImage), myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
+      
+        		        }else if(gameState.getClientNumber() == 2 && myCharacter.getCurrentX() >= enemyCharacter.getCurrentX()){
+        		        	g.drawImage(flipHorizontally(currentImage), myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
+        		        }else {
+        		        	g.drawImage(currentImage, myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
+        		        }
         			}
         			break;
         		case "Move Down":
-        			if (myMotions != null) {
+            		if (myMotions != null) {
         		        BufferedImage currentImage = myMotions[myCurrentFrame];
-        		        g.drawImage(currentImage, myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
+        		        if(gameState.getClientNumber() == 1 && myCharacter.getCurrentX() >= enemyCharacter.getCurrentX()) {
+        		        	g.drawImage(flipHorizontally(currentImage), myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
+      
+        		        }else if(gameState.getClientNumber() == 2 && myCharacter.getCurrentX() >= enemyCharacter.getCurrentX()){
+        		        	g.drawImage(flipHorizontally(currentImage), myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
+        		        }else {
+        		        	g.drawImage(currentImage, myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
+        		        }
         			}
         			break;
         		case "Move Left":
@@ -2473,10 +2741,29 @@ public class PlayingGameScreen extends JPanel {
         		break;
         	case "ATTACK":
         		switch (myCharacter.getCurrentCard().getName()) {
-        		case "Skill1":
-        			if (myMotions != null) {
+        		case "Galactic Burst":
+            		if (myMotions != null) {
         		        BufferedImage currentImage = myMotions[myCurrentFrame];
-        		        g.drawImage(currentImage, myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
+        		        if(gameState.getClientNumber() == 1 && myCharacter.getCurrentX() >= enemyCharacter.getCurrentX()) {
+        		        	g.drawImage(flipHorizontally(currentImage), myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
+      
+        		        }else if(gameState.getClientNumber() == 2 && myCharacter.getCurrentX() >= enemyCharacter.getCurrentX()){
+        		        	g.drawImage(flipHorizontally(currentImage), myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
+        		        }else {
+        		        	g.drawImage(currentImage, myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
+        		        }
+        			}
+        		case "Phoenix Breath":
+            		if (myMotions != null) {
+        		        BufferedImage currentImage = myMotions[myCurrentFrame];
+        		        if(gameState.getClientNumber() == 1 && myCharacter.getCurrentX() >= enemyCharacter.getCurrentX()) {
+        		        	g.drawImage(flipHorizontally(currentImage), myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
+      
+        		        }else if(gameState.getClientNumber() == 2 && myCharacter.getCurrentX() >= enemyCharacter.getCurrentX()){
+        		        	g.drawImage(flipHorizontally(currentImage), myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
+        		        }else {
+        		        	g.drawImage(currentImage, myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
+        		        }
         			}
         			break;
         		}
@@ -2490,10 +2777,14 @@ public class PlayingGameScreen extends JPanel {
         	case "IDLE":
         		if (myMotions != null) {
     		        BufferedImage currentImage = myMotions[myCurrentFrame];
-    		        if(myCharacter.getCurrentX() >= 500) {
-    		        	g.drawImage(flipHorizontally(currentImage), myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);	
-    		        }else
-    		        g.drawImage(currentImage, myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
+    		        if(gameState.getClientNumber() == 1 && myCharacter.getCurrentX() >= enemyCharacter.getCurrentX()) {
+    		        	g.drawImage(flipHorizontally(currentImage), myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
+  
+    		        }else if(gameState.getClientNumber() == 2 && myCharacter.getCurrentX() >= enemyCharacter.getCurrentX()){
+    		        	g.drawImage(flipHorizontally(currentImage), myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
+    		        }else {
+    		        	g.drawImage(currentImage, myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
+    		        }
     			}
         		break;
         	}
@@ -2537,13 +2828,13 @@ public class PlayingGameScreen extends JPanel {
         		case "Sword Slash":
         			if (myMotions != null) {
         		        BufferedImage currentImage = myMotions[myCurrentFrame];
-        		        g.drawImage(currentImage, myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
+        		        g.drawImage(currentImage, myCharacter.getCurrentX()- 150, myCharacter.getCurrentY()- 50, null);
         			}
         			break;
         		case "Stretch Punch":
         			if (myMotions != null) {
         		        BufferedImage currentImage = myMotions[myCurrentFrame];
-        		        g.drawImage(currentImage, myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
+        		        g.drawImage(currentImage, myCharacter.getCurrentX()- 200, myCharacter.getCurrentY()- 50, null);
         			}
         			break;
         			
@@ -2566,10 +2857,14 @@ public class PlayingGameScreen extends JPanel {
         	case "IDLE":
         		if (myMotions != null) {
     		        BufferedImage currentImage = myMotions[myCurrentFrame];
-    		        if(myCharacter.getCurrentX() >= 500) {
-    		        	g.drawImage(flipHorizontally(currentImage), myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);	
-    		        }else
-    		        g.drawImage(currentImage, myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
+    		        if(gameState.getClientNumber() == 1 && myCharacter.getCurrentX() >= enemyCharacter.getCurrentX()) {
+    		        	g.drawImage(flipHorizontally(currentImage), myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
+  
+    		        }else if(gameState.getClientNumber() == 2 && myCharacter.getCurrentX() >= enemyCharacter.getCurrentX()){
+    		        	g.drawImage(flipHorizontally(currentImage), myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
+    		        }else {
+    		        	g.drawImage(currentImage, myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
+    		        }
     			}
         		break;
         	}
@@ -2619,19 +2914,23 @@ public class PlayingGameScreen extends JPanel {
         		switch (enemyCharacter.getCurrentCard().getName()) {
         		// ... skill들 넣으셈
         		case "Air Cannon!":
-        			if (enemyMotions != null) {
+            		if (enemyMotions != null) {
         		        BufferedImage currentImage = enemyMotions[enemyCurrentFrame];
         		        BufferedImage currentEffectImage = enemyEffects[enemyCurrentEffectFrame];
-        		        if(gameState.getClientNumber() == 1 && myCharacter.getCurrentX()<=enemyCharacter.getCurrentX()) {
+        		        if(gameState.getClientNumber() == 1 && myCharacter.getCurrentX() <= enemyCharacter.getCurrentX()) {
         		        	g.drawImage(flipHorizontally(currentImage), enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
         		        	g.drawImage(currentEffectImage, enemyEffectPositionX, enemyCharacter.getCurrentY(), null);
-        		        }else {
-        		        	g.drawImage(currentImage, enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
+        		        }else if(gameState.getClientNumber() == 2 && myCharacter.getCurrentX() <= enemyCharacter.getCurrentX()) {
+        		        	g.drawImage(flipHorizontally(currentImage), enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
         		        	g.drawImage(currentEffectImage, enemyEffectPositionX, enemyCharacter.getCurrentY(), null);
+        		        } else {
+            			g.drawImage(currentImage, enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
+            			g.drawImage(currentEffectImage, enemyEffectPositionX, enemyCharacter.getCurrentY(), null);
         		        }
-        		        	
-        			}
+            		}
         			break;
+
+
         		}
     		case "Bamboo Helicopter!":
     			if (enemyMotions != null) {
@@ -2648,11 +2947,9 @@ public class PlayingGameScreen extends JPanel {
         	case "IDLE":
         		if (enemyMotions != null) {
     		        BufferedImage currentImage = enemyMotions[enemyCurrentFrame];
-    		        if(myCharacter.getCurrentX() >= enemyCharacter.getCurrentX()) {
-    		        	g.drawImage(flipHorizontally(currentImage), enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
-    		        }else
-    		        	g.drawImage(currentImage, enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
-    			}
+    		        g.drawImage(currentImage, enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
+    		        
+        		}
     			break;
         	}
         	
@@ -2716,11 +3013,14 @@ public class PlayingGameScreen extends JPanel {
         	case "IDLE":
         		if (enemyMotions != null) {
     		        BufferedImage currentImage = enemyMotions[enemyCurrentFrame];
-    		        if(enemyCharacter.getCurrentX() >= 500) {
+    		        if(gameState.getClientNumber() == 1 && myCharacter.getCurrentX() <= enemyCharacter.getCurrentX()) {
     		        	g.drawImage(flipHorizontally(currentImage), enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
-    		        }else
-    		        	g.drawImage(currentImage, enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
-    			}
+    		        }else if(gameState.getClientNumber() == 2 && myCharacter.getCurrentX() <= enemyCharacter.getCurrentX()) {
+    		        	g.drawImage(flipHorizontally(currentImage), enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
+    		        } else {
+        			g.drawImage(currentImage, enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
+    		        }
+        		}
     			break;
         	}
         	
@@ -2732,16 +3032,28 @@ public class PlayingGameScreen extends JPanel {
         	case "MOVE":
         		switch (enemyCharacter.getCurrentCard().getName()) {
         		case "Move Up":
-        			if (enemyMotions != null) {
+            		if (enemyMotions != null) {
         		        BufferedImage currentImage = enemyMotions[enemyCurrentFrame];
-        		        g.drawImage(currentImage, enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
-        			}
+        		        if(gameState.getClientNumber() == 1 && myCharacter.getCurrentX() <= enemyCharacter.getCurrentX()) {
+        		        	g.drawImage(flipHorizontally(currentImage), enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
+        		        }else if(gameState.getClientNumber() == 2 && myCharacter.getCurrentX() <= enemyCharacter.getCurrentX()) {
+        		        	g.drawImage(flipHorizontally(currentImage), enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
+        		        } else {
+            			g.drawImage(currentImage, enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
+        		        }
+            		}
         			break;
         		case "Move Down":
-        			if (enemyMotions != null) {
+            		if (enemyMotions != null) {
         		        BufferedImage currentImage = enemyMotions[enemyCurrentFrame];
-        		        g.drawImage(currentImage, enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
-        			}
+        		        if(gameState.getClientNumber() == 1 && myCharacter.getCurrentX() <= enemyCharacter.getCurrentX()) {
+        		        	g.drawImage(flipHorizontally(currentImage), enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
+        		        }else if(gameState.getClientNumber() == 2 && myCharacter.getCurrentX() <= enemyCharacter.getCurrentX()) {
+        		        	g.drawImage(flipHorizontally(currentImage), enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
+        		        } else {
+            			g.drawImage(currentImage, enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
+        		        }
+            		}
         			break;
         		case "Move Left":
         			if (enemyMotions != null) {
@@ -2759,11 +3071,28 @@ public class PlayingGameScreen extends JPanel {
         		break;
         	case "ATTACK":
         		switch (enemyCharacter.getCurrentCard().getName()) {
-        		case "Skill1":
-        			if (enemyMotions != null) {
+        		case "Galactic Burst":
+            		if (enemyMotions != null) {
         		        BufferedImage currentImage = enemyMotions[enemyCurrentFrame];
-        		        g.drawImage(currentImage, enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
-        			}
+        		        if(gameState.getClientNumber() == 1 && myCharacter.getCurrentX() <= enemyCharacter.getCurrentX()) {
+        		        	g.drawImage(flipHorizontally(currentImage), enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
+        		        }else if(gameState.getClientNumber() == 2 && myCharacter.getCurrentX() <= enemyCharacter.getCurrentX()) {
+        		        	g.drawImage(flipHorizontally(currentImage), enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
+        		        } else {
+            			g.drawImage(currentImage, enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
+        		        }
+            		}
+        		case "Phoenix Breath":
+            		if (enemyMotions != null) {
+        		        BufferedImage currentImage = enemyMotions[enemyCurrentFrame];
+        		        if(gameState.getClientNumber() == 1 && myCharacter.getCurrentX() <= enemyCharacter.getCurrentX()) {
+        		        	g.drawImage(flipHorizontally(currentImage), enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
+        		        }else if(gameState.getClientNumber() == 2 && myCharacter.getCurrentX() <= enemyCharacter.getCurrentX()) {
+        		        	g.drawImage(flipHorizontally(currentImage), enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
+        		        } else {
+            			g.drawImage(currentImage, enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
+        		        }
+            		}
         			break;
         		}
         		break;
@@ -2776,11 +3105,14 @@ public class PlayingGameScreen extends JPanel {
         	case "IDLE":
         		if (enemyMotions != null) {
     		        BufferedImage currentImage = enemyMotions[enemyCurrentFrame];
-    		        if(enemyCharacter.getCurrentX() >= 500) {
+    		        if(gameState.getClientNumber() == 1 && myCharacter.getCurrentX() <= enemyCharacter.getCurrentX()) {
     		        	g.drawImage(flipHorizontally(currentImage), enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
-    		        }else
-    		        	g.drawImage(currentImage, enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
-    			}
+    		        }else if(gameState.getClientNumber() == 2 && myCharacter.getCurrentX() <= enemyCharacter.getCurrentX()) {
+    		        	g.drawImage(flipHorizontally(currentImage), enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
+    		        } else {
+        			g.drawImage(currentImage, enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
+    		        }
+        		}
     			break;
         	}
         	
@@ -2852,12 +3184,14 @@ public class PlayingGameScreen extends JPanel {
         	case "IDLE":
         		if (enemyMotions != null) {
     		        BufferedImage currentImage = enemyMotions[enemyCurrentFrame];
-    		        
-    		        if(enemyCharacter.getCurrentX() >= 500) {
+    		        if(gameState.getClientNumber() == 1 && myCharacter.getCurrentX() <= enemyCharacter.getCurrentX()) {
     		        	g.drawImage(flipHorizontally(currentImage), enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
-    		        }else
-    		        	g.drawImage(currentImage, enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
-    			}
+    		        }else if(gameState.getClientNumber() == 2 && myCharacter.getCurrentX() <= enemyCharacter.getCurrentX()) {
+    		        	g.drawImage(flipHorizontally(currentImage), enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
+    		        } else {
+        			g.drawImage(currentImage, enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
+    		        }
+        		}
     			break;
         	}
         	
@@ -3160,5 +3494,7 @@ public class PlayingGameScreen extends JPanel {
         
         return flippedImage; // 뒤집힌 이미지 반환
     }
+    
+    
 
 }

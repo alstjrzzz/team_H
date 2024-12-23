@@ -175,7 +175,7 @@ public class Finn extends Character {
       
       tempArr = new BufferedImage[19];
       for (int i = 0; i < 19; i++) {
-         tempArr[i] = resizeImage(sprite.getSubimage(i * 176, 3663, 176, 65), character_skill_size, character_skill_size, true);
+         tempArr[i] = resizeImage(sprite.getSubimage(i * 176, 3663, 176, 65), 350, 350, true);
       }
       motions.put("Sword Slash", tempArr.clone());
       

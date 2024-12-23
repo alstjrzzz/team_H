@@ -152,12 +152,18 @@ public class Cygnus extends Character {
        for (int i = 0; i < 8; i++) {
            tempArr[i] = resizeImage(sprite.getSubimage(i * 85, 131,85,118), character_size, character_size, true);
        }
+       for (int i = 0; i < 8; i++) {
+           tempArr[i] = flipHorizontally(tempArr[i]);
+        }
        motions.put("Move Up", tempArr.clone());
        
        tempArr = new BufferedImage[8];
        for (int i = 0; i < 8; i++) {
            tempArr[i] = resizeImage(sprite.getSubimage(i * 85, 131,85,118), character_size, character_size, true);
        }
+       for (int i = 0; i < 8; i++) {
+           tempArr[i] = flipHorizontally(tempArr[i]);
+        }
        motions.put("Move Down", tempArr.clone());
        
        tempArr = new BufferedImage[8];
@@ -171,8 +177,25 @@ public class Cygnus extends Character {
        }
        motions.put("Move Right", tempArr.clone());
        
-       motions.put("Skill1", null);
-       motions.put("Skill2", null);
+       tempArr = new BufferedImage[29];
+       for (int i = 0; i < 29; i++) {
+          tempArr[i] = resizeImage(sprite.getSubimage(i * 154,225,154,154), 200, 200, true);
+       }
+       for (int i = 0; i < 29; i++) {
+           tempArr[i] = flipHorizontally(tempArr[i]);
+        }
+       motions.put("Galactic Burst", tempArr.clone());
+       
+       tempArr = new BufferedImage[21];
+       for (int i = 0; i < 21; i++) {
+          tempArr[i] = resizeImage(sprite.getSubimage(i * 329,1222,329,198), 200, 200, true);
+       }
+       for (int i = 0; i < 21; i++) {
+           tempArr[i] = flipHorizontally(tempArr[i]);
+        }
+       motions.put("Phoenix Breath", tempArr.clone());
+       
+       
     }
     
     
@@ -247,9 +270,22 @@ public class Cygnus extends Character {
 
 
 
-@Override
-public void initSkillEffect() {
-	// TODO Auto-generated method stub
-	
-}
+   @Override
+   public void initSkillEffect() {
+	  skillEffect = new HashMap<>();
+      BufferedImage[] tempArr = new BufferedImage[39];
+      for (int i = 0; i < 39; i++) {
+    	  tempArr[i] = resizeImage(sprite.getSubimage(i * 175, 570,175,322), 150, 150, true);
+      }
+      skillEffect.put("Galactic Burst Effect", tempArr.clone());
+      
+      tempArr = new BufferedImage[8];
+      for (int i = 0; i < 8; i++) {
+    	  tempArr[i] = resizeImage(sprite.getSubimage(i * 96,1632,96,48), 150, 150, true);
+      }
+      skillEffect.put("Phoenix Breath Effect", tempArr.clone());
+      
+   }
+   
+   
 }
