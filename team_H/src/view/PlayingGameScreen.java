@@ -63,6 +63,12 @@ public class PlayingGameScreen extends JPanel {
     private JPanel healthPanel;
     private JPanel fieldPanel;
     private JPanel cardPanel;
+	private BufferedImage[] enemyEffects;
+	private int enemyEffectFrameDelay;
+	private int enemyCurrentEffectFrame;
+	private int enemyEffectPositionX;
+	private int enemyEffectDuration;
+	private Timer enemyEffectTimer;
     
     public static JProgressBar GN_1_player1HealthBar;
     public static JProgressBar GN_1_player2HealthBar;
@@ -337,7 +343,7 @@ public class PlayingGameScreen extends JPanel {
 
                     myMotionTimer.start();
                     
-                 // 이펙트 설정
+                    // 이펙트 설정
                     myEffects = myCharacter.getSkillEffect().get("Air Cannon! Effect");
                     myEffectFrameDelay = 600; // 이펙트 프레임 딜레이
                     myEffectDuration = myEffectFrameDelay * myEffects.length; // 이펙트 총 시간
@@ -390,6 +396,7 @@ public class PlayingGameScreen extends JPanel {
                     // 타이머 시작
                     myEffectTimer.start();
                     myEffectMovementTimer.start();
+
 
                     break;
                     
@@ -1304,6 +1311,61 @@ public class PlayingGameScreen extends JPanel {
         			
         			enemyMotionTimer.start();
         			
+        			 // 이펙트 설정
+                    enemyEffects = enemyCharacter.getSkillEffect().get("Air Cannon! Effect");
+                    enemyEffectFrameDelay = 600; // 이펙트 프레임 딜레이
+                    enemyEffectDuration = enemyEffectFrameDelay * enemyEffects.length; // 이펙트 총 시간
+
+                    enemyCurrentEffectFrame = 0;
+                    int startX = enemyCharacter.getCurrentX(); // 시작 X 좌표
+                    int targetX = startX + (150*4); // 목표 X 좌표 (예: 4칸 이동)
+
+                    // 이동 진행 상태 변수
+                    class ProgressWrapper {
+                        float value = 0.0f;
+                    }
+                    ProgressWrapper progress = new ProgressWrapper();
+
+                    // 이펙트 애니메이션 타이머 (프레임 변경)
+                    enemyEffectTimer = new Timer(enemyEffectFrameDelay, null);
+                    enemyEffectTimer.addActionListener(e -> {
+                    	enemyCurrentEffectFrame = (enemyCurrentEffectFrame + 1) % enemyEffects.length; // 프레임 업데이트
+                        repaint(); // 이펙트 애니메이션 그리기
+                    });
+
+                    // 이펙트 이동 타이머 (X 좌표 이동)
+                    Timer enemyEffectMovementTimer = new Timer(50, e -> {
+                        // 진행 상태 업데이트
+                        progress.value += 1.0f / 100; // 예: 100단계로 나눠 이동
+
+                        if (progress.value > 1.0f) {
+                            progress.value = 1.0f;
+                        }
+
+                        // X 좌표 이동 계산
+                        enemyEffectPositionX = (int) (startX + (targetX - startX) * progress.value);
+
+                        repaint(); // 이펙트 이동 상태 그리기
+
+                        // 목표 지점 도달 시 타이머 중지
+                        if (progress.value >= 1.0f) {
+                            ((Timer) e.getSource()).stop(); // 이동 타이머 중지
+                            enemyEffectTimer.stop(); // 프레임 타이머 중지
+                        }
+                    });
+
+                    // 이펙트 종료 타이머
+                    new Timer(enemyEffectDuration, e -> {
+                    	enemyEffectTimer.stop();
+                    	enemyEffectMovementTimer.stop();
+                        ((Timer) e.getSource()).stop();
+                    }).start();
+
+                    // 타이머 시작
+                    enemyEffectTimer.start();
+                    enemyEffectMovementTimer.start();
+
+        			
         			break;
         		case "Bamboo Helicopter!":
         			enemyCharacter.playCardSound("Bamboo Helicopter!");
@@ -2055,9 +2117,14 @@ public class PlayingGameScreen extends JPanel {
         			if (myMotions != null) {
         				
         		        BufferedImage currentImage = myMotions[myCurrentFrame];
-        		        BufferedImage currentEfectImage = myEffects[myCurrentEffectFrame];
-        		        g.drawImage(currentImage, myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
-        		        g.drawImage(currentEfectImage,  myEffectPositionX, myCharacter.getCurrentY(), null);
+        		        BufferedImage currentEffectImage = myEffects[myCurrentEffectFrame];
+        		        if( gameState.getClientNumber() == 1 && myCharacter.getCurrentX()<=enemyCharacter.getCurrentX()) {
+        		        	g.drawImage(currentImage, myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
+        		        	g.drawImage(currentEffectImage,  myEffectPositionX, myCharacter.getCurrentY(), null);
+        		        } else {
+        		        	g.drawImage(flipHorizontally(currentImage), myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
+        		        	g.drawImage(currentEffectImage,  myEffectPositionX, myCharacter.getCurrentY(), null);
+        		        }
         			}
         			break;
         		case "Bamboo Helicopter!":
@@ -2077,7 +2144,7 @@ public class PlayingGameScreen extends JPanel {
         	case "IDLE":
         		if (myMotions != null) {
     		        BufferedImage currentImage = myMotions[myCurrentFrame];
-    		        if(myCharacter.getCurrentX() >= 500) {
+    		        if(myCharacter.getCurrentX() <= enemyCharacter.getCurrentX()) {
     		        g.drawImage(flipHorizontally(currentImage), myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
     			}else
     				g.drawImage(currentImage, myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
@@ -2330,7 +2397,15 @@ public class PlayingGameScreen extends JPanel {
         		case "Air Cannon!":
         			if (enemyMotions != null) {
         		        BufferedImage currentImage = enemyMotions[enemyCurrentFrame];
-        		        g.drawImage(currentImage, enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
+        		        BufferedImage currentEffectImage = enemyEffects[enemyCurrentEffectFrame];
+        		        if(gameState.getClientNumber() == 1 && myCharacter.getCurrentX()<=enemyCharacter.getCurrentX()) {
+        		        	g.drawImage(flipHorizontally(currentImage), enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
+        		        	g.drawImage(currentEffectImage, enemyEffectPositionX, enemyCharacter.getCurrentY(), null);
+        		        }else {
+        		        	g.drawImage(currentImage, enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
+        		        	g.drawImage(currentEffectImage, enemyEffectPositionX, enemyCharacter.getCurrentY(), null);
+        		        }
+        		        	
         			}
         			break;
         		}
@@ -2349,7 +2424,7 @@ public class PlayingGameScreen extends JPanel {
         	case "IDLE":
         		if (enemyMotions != null) {
     		        BufferedImage currentImage = enemyMotions[enemyCurrentFrame];
-    		        if(enemyCharacter.getCurrentX() >= 500) {
+    		        if(myCharacter.getCurrentX() >= enemyCharacter.getCurrentX()) {
     		        	g.drawImage(flipHorizontally(currentImage), enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
     		        }else
     		        	g.drawImage(currentImage, enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
