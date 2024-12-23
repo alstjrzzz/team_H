@@ -33,7 +33,7 @@ public class Zoro extends Character {
         
         try {
             sprite = ImageIO.read(new File("res/character/ZORO.png"));
-            sprite = TransformColorToTransparency(sprite, new Color(0, 128, 128));
+            sprite = TransformColorToTransparency(sprite, new Color(180, 180, 255));
             if (sprite == null) {
                  System.err.println("sprite가 초기화되지 않았습니다. initCardMotions를 실행할 수 없습니다.");
                  return;
@@ -243,4 +243,12 @@ public class Zoro extends Character {
          g.dispose();
          return dest;
       }
+
+
+
+@Override
+public void initSkillEffect() {
+	// TODO Auto-generated method stub
+	
+}
 }

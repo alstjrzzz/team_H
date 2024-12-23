@@ -230,4 +230,12 @@ public class Finn extends Character {
 
         return newImage;
     }
+
+
+
+	@Override
+	public void initSkillEffect() {
+		// TODO Auto-generated method stub
+		
+	}
 }

@@ -46,6 +46,14 @@ public class PlayingGameScreen extends JPanel {
     int myDuration;
     Timer myMotionTimer;
     
+    BufferedImage[] myEffects;
+    int myEffectFrameDelay;
+    int myEffectDuration;
+    int myCurrentEffectFrame;
+    private int myEffectPositionX;
+    Timer myEffectTimer;
+    
+    
     BufferedImage[] enemyMotions;
     int enemyCurrentFrame;
     int enemyFrameDelay;
@@ -138,12 +146,12 @@ public class PlayingGameScreen extends JPanel {
                     myMotions = myCharacter.getMotions().get(myCharacter.getCurrentCard().getName());
                     myFrameDelay = 200; // 각 프레임 간격
                     int MU_totalFrames = myMotions.length; // 애니메이션 총 프레임 수
-                    myDuration = 7 * myFrameDelay * MU_totalFrames; // 애니메이션 총 시간
+                    myDuration = 6 * myFrameDelay * MU_totalFrames; // 애니메이션 총 시간
 
                     myCurrentFrame = 0;
 
                     // 이동 속도 계산
-                    int MU_steps = 7 * MU_totalFrames; // 이동할 스텝 수
+                    int MU_steps = 6 * MU_totalFrames; // 이동할 스텝 수
                     int MU_stepSize = (MU_endY - MU_startY) / MU_steps; // 한 스텝당 이동 거리
 
                     // 프레임별 애니메이션 실행
@@ -181,12 +189,12 @@ public class PlayingGameScreen extends JPanel {
                     myMotions = myCharacter.getMotions().get(myCharacter.getCurrentCard().getName());
                     myFrameDelay = 200; // 각 프레임 간격
                     int MD_totalFrames = myMotions.length; // 애니메이션 총 프레임 수
-                    myDuration = 7 * myFrameDelay * MD_totalFrames; // 애니메이션 총 시간
+                    myDuration = 6 * myFrameDelay * MD_totalFrames; // 애니메이션 총 시간
 
                     myCurrentFrame = 0;
 
                     // 이동 속도 계산
-                    int MD_steps = 7 * MD_totalFrames; // 이동할 스텝 수
+                    int MD_steps = 6 * MD_totalFrames; // 이동할 스텝 수
                     int MD_stepSize = (MD_endY - MD_startY) / MD_steps; // 한 스텝당 이동 거리
 
                     // 프레임별 애니메이션 실행
@@ -329,6 +337,60 @@ public class PlayingGameScreen extends JPanel {
 
                     myMotionTimer.start();
                     
+                 // 이펙트 설정
+                    myEffects = myCharacter.getSkillEffect().get("Air Cannon! Effect");
+                    myEffectFrameDelay = 600; // 이펙트 프레임 딜레이
+                    myEffectDuration = myEffectFrameDelay * myEffects.length; // 이펙트 총 시간
+
+                    myCurrentEffectFrame = 0;
+                    int startX = myCharacter.getCurrentX(); // 시작 X 좌표
+                    int targetX = startX + (150*4); // 목표 X 좌표 (예: 4칸 이동)
+
+                    // 이동 진행 상태 변수
+                    class ProgressWrapper {
+                        float value = 0.0f;
+                    }
+                    ProgressWrapper progress = new ProgressWrapper();
+
+                    // 이펙트 애니메이션 타이머 (프레임 변경)
+                    myEffectTimer = new Timer(myEffectFrameDelay, null);
+                    myEffectTimer.addActionListener(e -> {
+                        myCurrentEffectFrame = (myCurrentEffectFrame + 1) % myEffects.length; // 프레임 업데이트
+                        repaint(); // 이펙트 애니메이션 그리기
+                    });
+
+                    // 이펙트 이동 타이머 (X 좌표 이동)
+                    Timer myEffectMovementTimer = new Timer(50, e -> {
+                        // 진행 상태 업데이트
+                        progress.value += 1.0f / 100; // 예: 100단계로 나눠 이동
+
+                        if (progress.value > 1.0f) {
+                            progress.value = 1.0f;
+                        }
+
+                        // X 좌표 이동 계산
+                        myEffectPositionX = (int) (startX + (targetX - startX) * progress.value);
+
+                        repaint(); // 이펙트 이동 상태 그리기
+
+                        // 목표 지점 도달 시 타이머 중지
+                        if (progress.value >= 1.0f) {
+                            ((Timer) e.getSource()).stop(); // 이동 타이머 중지
+                            myEffectTimer.stop(); // 프레임 타이머 중지
+                        }
+                    });
+
+                    // 이펙트 종료 타이머
+                    new Timer(myEffectDuration, e -> {
+                        myEffectTimer.stop();
+                        myEffectMovementTimer.stop();
+                        ((Timer) e.getSource()).stop();
+                    }).start();
+
+                    // 타이머 시작
+                    myEffectTimer.start();
+                    myEffectMovementTimer.start();
+
                     break;
                     
             	case "Bamboo Helicopter!":
@@ -349,7 +411,7 @@ public class PlayingGameScreen extends JPanel {
         		    int MR_stepSize = (MR_endX - MR_startX) / MR_steps; // 한 스텝당 이동 거리
 
         		    // 프레임별 애니메이션 실행
-        		    myMotionTimer = new Timer(enemyFrameDelay, null);
+        		    myMotionTimer = new Timer(myFrameDelay, null);
         		    myMotionTimer.addActionListener(e -> {
         		        // 현재 프레임 업데이트
         		        myCurrentFrame = (myCurrentFrame + 1) % MR_totalFrames;
@@ -367,7 +429,7 @@ public class PlayingGameScreen extends JPanel {
         		    });
 
         		    // 애니메이션 종료 시 처리
-        		    new Timer(enemyDuration, e -> {
+        		    new Timer(myFrameDelay, e -> {
         		        myMotionTimer.stop();
         		        myCharacter.setCurrentX(MR_startX); // 최종 위치 보정
         		        ((Timer) e.getSource()).stop();
@@ -1993,7 +2055,9 @@ public class PlayingGameScreen extends JPanel {
         			if (myMotions != null) {
         				
         		        BufferedImage currentImage = myMotions[myCurrentFrame];
+        		        BufferedImage currentEfectImage = myEffects[myCurrentEffectFrame];
         		        g.drawImage(currentImage, myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
+        		        g.drawImage(currentEfectImage,  myEffectPositionX, myCharacter.getCurrentY(), null);
         			}
         			break;
         		case "Bamboo Helicopter!":

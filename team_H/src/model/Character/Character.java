@@ -20,7 +20,7 @@ public abstract class Character {
    public static int maxHealth;
     protected LinkedList<Card> cardList;
     protected BufferedImage sprite;
-    protected BufferedImage skillEffect;
+    protected Map<String, BufferedImage[]> skillEffect;
     protected BufferedImage logo;
     protected Map<String, BufferedImage> cardImage;
     protected Map<String, BufferedImage[]> motions;
@@ -86,6 +86,8 @@ public abstract class Character {
     
     public abstract void initMotions();
     
+    public abstract void initSkillEffect();
+    
     public BufferedImage getLogo() {
         return this.logo;
     }
@@ -140,7 +142,7 @@ public void setCurrentY(int currentY) {
 
 
 
-public BufferedImage getSkillEffect() {
+public Map<String, BufferedImage[]> getSkillEffect() {
 	return skillEffect;
 }
 
