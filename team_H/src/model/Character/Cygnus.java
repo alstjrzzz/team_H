@@ -244,4 +244,12 @@ public class Cygnus extends Character {
 
        return newImage;
    }
+
+
+
+@Override
+public void initSkillEffect() {
+	// TODO Auto-generated method stub
+	
+}
 }

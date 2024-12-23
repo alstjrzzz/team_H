@@ -50,6 +50,7 @@ private Map<String, String> cardSounds; // 카드 이름과 사운드 파일 경
       
       initCardImage();
       initMotions();
+      initSkillEffect();
       initCardSounds(); // 카드 사운드 초기화
    }
 
@@ -186,6 +187,7 @@ private Map<String, String> cardSounds; // 카드 이름과 사운드 파일 경
       }
       motions.put("Air Cannon!", tempArr.clone());
       
+      
       tempArr = new BufferedImage[8];
       for (int i = 0; i < 8; i++) {
          tempArr[i] = resizeImage(sprite.getSubimage(i * 48, 592, 48, 64), 200, 200, true);
@@ -196,6 +198,16 @@ private Map<String, String> cardSounds; // 카드 이름과 사운드 파일 경
       motions.put("Bamboo Helicopter!", tempArr.clone());
    }
    
+   
+   @Override
+   public void initSkillEffect() {
+	  skillEffect = new HashMap<>();
+      BufferedImage[] tempArr = new BufferedImage[8];
+      for (int i = 0; i < 8; i++) {
+    	  tempArr[i] = resizeImage(sprite.getSubimage(96 + (i * 48), 656, 48, 64), 150, 150, true);
+      }
+      skillEffect.put("Air Cannon! Effect", tempArr.clone());
+   }
    
    protected BufferedImage TransformColorToTransparency(BufferedImage image, Color c1) {
         final int r1 = c1.getRed();
