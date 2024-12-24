@@ -350,18 +350,12 @@ public class PlayingGameScreen extends JPanel {
                     myEffectDuration = myEffectFrameDelay * myEffects.length; // 이펙트 총 시간
 
                     myCurrentEffectFrame = 0;
-                    int startX = myCharacter.getCurrentX(); // 시작 X 좌표
-                    
+                 // 이펙트 방향 및 목표 위치 설정
+                    int startX = myCharacter.getCurrentX();
                     int targetX;
-                    
-    		        if(gameState.getClientNumber() == 1 && myCharacter.getCurrentX() >= enemyCharacter.getCurrentX()) {
-    		        	targetX = startX - (150*4); // 목표 X 좌표 (예: 4칸 이동)
-  
-    		        }else if(gameState.getClientNumber() == 2 && myCharacter.getCurrentX() >= enemyCharacter.getCurrentX()){
-    		        	targetX = startX - (150*4); // 목표 X 좌표 (예: 4칸 이동)
-    		        }else {
-    		        	targetX = startX + (150*4); // 목표 X 좌표 (예: 4칸 이동)
-    		        }
+                    targetX = startX + (150 * 4); // 오른쪽으로 이동
+
+
               
                     // 이동 진행 상태 변수
                     class ProgressWrapper {
@@ -386,13 +380,8 @@ public class PlayingGameScreen extends JPanel {
                         }
 
                         // X 좌표 이동 계산
-                        if(gameState.getClientNumber() == 1 && myCharacter.getCurrentX() >= enemyCharacter.getCurrentX()) {
-        		        	myEffectPositionX = (int) (startX - (targetX - startX) * progress.value);
-        		        }else if(gameState.getClientNumber() == 2 && myCharacter.getCurrentX() >= enemyCharacter.getCurrentX()){
-        		        	myEffectPositionX = (int) (startX - (targetX - startX) * progress.value);
-        		        }else {
-        		        	myEffectPositionX = (int) (startX + (targetX - startX) * progress.value);
-        		        }
+                        myEffectPositionX = (int) (startX + (targetX - startX) * progress.value);
+
 
                         repaint(); // 이펙트 이동 상태 그리기
 
@@ -957,6 +946,30 @@ public class PlayingGameScreen extends JPanel {
         			
         			myMotionTimer.start();
         			
+        			// 이펙트 설정
+        			myEffects = myCharacter.getSkillEffect().get("Galactic Burst Effect");
+        			myEffectFrameDelay = 100; // 이펙트 프레임 딜레이
+        			myEffectDuration = myEffectFrameDelay * myEffects.length; // 이펙트 총 시간
+
+        			myCurrentEffectFrame = 0;
+
+        			// 이펙트 애니메이션 타이머 (프레임 변경)
+        			myEffectTimer = new Timer(myEffectFrameDelay, null);
+        			myEffectTimer.addActionListener(e -> {
+        			    myCurrentEffectFrame = (myCurrentEffectFrame + 1) % myEffects.length; // 프레임 업데이트
+        			    repaint(); // 이펙트 애니메이션 그리기
+        			});
+
+        			// 이펙트 종료 타이머
+        			new Timer(myEffectDuration, e -> {
+        			    myEffectTimer.stop();
+        			    ((Timer) e.getSource()).stop();
+        			}).start();
+
+        			// 타이머 시작
+        			myEffectTimer.start();
+
+        			
         			break;
         		case "Phoenix Breath":
         			myCharacter.playCardSound("Phoenix Breath");
@@ -978,6 +991,59 @@ public class PlayingGameScreen extends JPanel {
         			
         			myMotionTimer.start();
         			
+                    myEffects = myCharacter.getSkillEffect().get("Phoenix Breath Effect");
+                    myEffectFrameDelay = 100; // 이펙트 프레임 딜레이
+                    myEffectDuration = myEffectFrameDelay * myEffects.length; // 이펙트 총 시간
+
+                    myCurrentEffectFrame = 0;
+                    int startX2 = myCharacter.getCurrentX(); // 시작 X 좌표
+                    
+                    int targetX2;
+                    targetX2 = startX2 + (150*4); // 목표 X 좌표 (예: 4칸 이동)
+
+                    // 이동 진행 상태 변수
+                    class ProgressWrapper {
+                        float value = 0.0f;
+                    }
+                    ProgressWrapper progress2 = new ProgressWrapper();
+
+                    // 이펙트 애니메이션 타이머 (프레임 변경)
+                    myEffectTimer = new Timer(myEffectFrameDelay, null);
+                    myEffectTimer.addActionListener(e -> {
+                        myCurrentEffectFrame = (myCurrentEffectFrame + 1) % myEffects.length; // 프레임 업데이트
+                        repaint(); // 이펙트 애니메이션 그리기
+                    });
+
+                    // 이펙트 이동 타이머 (X 좌표 이동)
+                    Timer myEffectMovementTimer2 = new Timer(50, e -> {
+                        // 진행 상태 업데이트
+                        progress2.value += 1.0f / 100; // 예: 100단계로 나눠 이동
+
+                        if (progress2.value > 1.0f) {
+                            progress2.value = 1.0f;
+                        }
+
+                        // X 좌표 이동 계산
+                        myEffectPositionX = (int) (startX2 + (targetX2 - startX2) * progress2.value);
+                        repaint(); // 이펙트 이동 상태 그리기
+
+                        // 목표 지점 도달 시 타이머 중지
+                        if (progress2.value >= 1.0f) {
+                            ((Timer) e.getSource()).stop(); // 이동 타이머 중지
+                            myEffectTimer.stop(); // 프레임 타이머 중지
+                        }
+                    });
+
+                    // 이펙트 종료 타이머
+                    new Timer(myEffectDuration, e -> {
+                        myEffectTimer.stop();
+                        myEffectMovementTimer2.stop();
+                        ((Timer) e.getSource()).stop();
+                    }).start();
+
+                    // 타이머 시작
+                    myEffectTimer.start();
+                    myEffectMovementTimer2.start();
         			break;
         		}
         		break;
@@ -1553,15 +1619,8 @@ public class PlayingGameScreen extends JPanel {
                     enemyCurrentEffectFrame = 0;
                     int startX = enemyCharacter.getCurrentX(); // 시작 X 좌표
                     int targetX;
+                    targetX = startX - (150 * 4); // 왼쪽으로 이동
                     
-    		        if(gameState.getClientNumber() == 1 && myCharacter.getCurrentX() >= enemyCharacter.getCurrentX()) {
-    		        	targetX = startX - (150*4); // 목표 X 좌표 (예: 4칸 이동)
-  
-    		        }else if(gameState.getClientNumber() == 2 && myCharacter.getCurrentX() >= enemyCharacter.getCurrentX()){
-    		        	targetX = startX - (150*4); // 목표 X 좌표 (예: 4칸 이동)
-    		        }else {
-    		        	targetX = startX + (150*4); // 목표 X 좌표 (예: 4칸 이동)
-    		        }
 
                     // 이동 진행 상태 변수
                     class ProgressWrapper {
@@ -1585,13 +1644,8 @@ public class PlayingGameScreen extends JPanel {
                             progress.value = 1.0f;
                         }
 
-        		        if(gameState.getClientNumber() == 1 && myCharacter.getCurrentX() >= enemyCharacter.getCurrentX()) {
-        		        	enemyEffectPositionX = (int) (startX - (targetX - startX) * progress.value);
-        		        }else if(gameState.getClientNumber() == 2 && myCharacter.getCurrentX() >= enemyCharacter.getCurrentX()){
-        		        	enemyEffectPositionX = (int) (startX - (targetX - startX) * progress.value);
-        		        }else {
-        		        	enemyEffectPositionX = (int) (startX + (targetX - startX) * progress.value);
-        		        }
+        		    enemyEffectPositionX = (int) (startX - (targetX - startX) * progress.value);
+      
                         repaint(); // 이펙트 이동 상태 그리기
 
                         // 목표 지점 도달 시 타이머 중지
@@ -2157,6 +2211,31 @@ public class PlayingGameScreen extends JPanel {
         			}).start();
         			
         			enemyMotionTimer.start();
+
+        			// 이펙트 설정
+        			enemyEffects = enemyCharacter.getSkillEffect().get("Galactic Burst Effect");
+        			enemyEffectFrameDelay = 100; // 이펙트 프레임 딜레이
+        			enemyEffectDuration = enemyEffectFrameDelay * enemyEffects.length; // 이펙트 총 시간
+
+        			enemyCurrentEffectFrame = 0;
+
+        			// 이펙트 애니메이션 타이머 (프레임 변경)
+        			enemyEffectTimer = new Timer(enemyEffectFrameDelay, null);
+        			enemyEffectTimer.addActionListener(e -> {
+        			    enemyCurrentEffectFrame = (enemyCurrentEffectFrame + 1) % enemyEffects.length; // 프레임 업데이트
+        			    repaint(); // 이펙트 애니메이션 그리기
+        			});
+
+        			// 이펙트 종료 타이머
+        			new Timer(enemyEffectDuration, e -> {
+        			    enemyEffectTimer.stop();
+        			    ((Timer) e.getSource()).stop();
+        			}).start();
+
+        			// 타이머 시작
+        			enemyEffectTimer.start();
+
+
         			
         			break;
         		case "Phoenix Breath":
@@ -2178,6 +2257,61 @@ public class PlayingGameScreen extends JPanel {
         			}).start();
         			
         			enemyMotionTimer.start();
+        			
+       			 // 이펙트 설정
+                    enemyEffects = enemyCharacter.getSkillEffect().get("Phoenix Breath Effect");
+                    enemyEffectFrameDelay = 400; // 이펙트 프레임 딜레이
+                    enemyEffectDuration = enemyEffectFrameDelay * enemyEffects.length; // 이펙트 총 시간
+
+                    enemyCurrentEffectFrame = 0;
+                    int startX2 = enemyCharacter.getCurrentX(); // 시작 X 좌표
+                    int targetX2;
+                    targetX2 = startX2 - (150 * 4); // 왼쪽으로 이동
+                    
+
+                    // 이동 진행 상태 변수
+                    class ProgressWrapper {
+                        float value = 0.0f;
+                    }
+                    ProgressWrapper progress2 = new ProgressWrapper();
+
+                    // 이펙트 애니메이션 타이머 (프레임 변경)
+                    enemyEffectTimer = new Timer(enemyEffectFrameDelay, null);
+                    enemyEffectTimer.addActionListener(e -> {
+                    	enemyCurrentEffectFrame = (enemyCurrentEffectFrame + 1) % enemyEffects.length; // 프레임 업데이트
+                        repaint(); // 이펙트 애니메이션 그리기
+                    });
+
+                    // 이펙트 이동 타이머 (X 좌표 이동)
+                    Timer enemyEffectMovementTimer2 = new Timer(50, e -> {
+                        // 진행 상태 업데이트
+                        progress2.value += 1.0f / 100; // 예: 100단계로 나눠 이동
+
+                        if (progress2.value > 1.0f) {
+                            progress2.value = 1.0f;
+                        }
+
+        		    enemyEffectPositionX = (int) (startX2 - (targetX2 - startX2) * progress2.value);
+      
+                        repaint(); // 이펙트 이동 상태 그리기
+
+                        // 목표 지점 도달 시 타이머 중지
+                        if (progress2.value >= 1.0f) {
+                            ((Timer) e.getSource()).stop(); // 이동 타이머 중지
+                            enemyEffectTimer.stop(); // 프레임 타이머 중지
+                        }
+                    });
+
+                    // 이펙트 종료 타이머
+                    new Timer(enemyEffectDuration, e -> {
+                    	enemyEffectTimer.stop();
+                    	enemyEffectMovementTimer2.stop();
+                        ((Timer) e.getSource()).stop();
+                    }).start();
+
+                    // 타이머 시작
+                    enemyEffectTimer.start();
+                    enemyEffectMovementTimer2.start();
         			
         			break;
         		}
@@ -2583,15 +2717,17 @@ public class PlayingGameScreen extends JPanel {
             		if (myMotions != null) {
         		        BufferedImage currentImage = myMotions[myCurrentFrame];
         		        BufferedImage currentEffectImage = myEffects[myCurrentEffectFrame];
-        		        if(gameState.getClientNumber() == 1 && myCharacter.getCurrentX() <= enemyCharacter.getCurrentX()) {
-        		        	g.drawImage(currentImage, myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
-        		        	g.drawImage(currentEffectImage,  myEffectPositionX, myCharacter.getCurrentY(), null);
-        		        }else if(gameState.getClientNumber() == 2 && myCharacter.getCurrentX() <= enemyCharacter.getCurrentX()) {
-        		        	g.drawImage(currentImage, myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
-        		        	g.drawImage(currentEffectImage,  myEffectPositionX, myCharacter.getCurrentY(), null);
+        		        
+        		        // 캐릭터 방향 확인
+        		        boolean facingRight = isFacingRight();
+        		        
+        		        // 내 캐릭터 모션 그리기
+        		        if (facingRight) {
+        		            g.drawImage(currentImage, myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
+        		            g.drawImage(currentEffectImage, myEffectPositionX, myCharacter.getCurrentY(), null);
         		        } else {
-        		        	g.drawImage(flipHorizontally(currentEffectImage), myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
-        		        	g.drawImage(currentEffectImage,  myEffectPositionX, myCharacter.getCurrentY(), null);
+        		            g.drawImage(flipHorizontally(currentImage), myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
+        		            g.drawImage(currentEffectImage, myEffectPositionX, myCharacter.getCurrentY(), null);
         		        }
             		}
         			break;
@@ -2744,25 +2880,39 @@ public class PlayingGameScreen extends JPanel {
         		case "Galactic Burst":
             		if (myMotions != null) {
         		        BufferedImage currentImage = myMotions[myCurrentFrame];
-        		        if(gameState.getClientNumber() == 1 && myCharacter.getCurrentX() >= enemyCharacter.getCurrentX()) {
-        		        	g.drawImage(flipHorizontally(currentImage), myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
-      
-        		        }else if(gameState.getClientNumber() == 2 && myCharacter.getCurrentX() >= enemyCharacter.getCurrentX()){
-        		        	g.drawImage(flipHorizontally(currentImage), myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
-        		        }else {
-        		        	g.drawImage(currentImage, myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
+        		        BufferedImage currentEffectImage = myEffects[myCurrentEffectFrame];
+        		        
+        		        // 캐릭터 방향 확인
+        		        boolean facingRight = isFacingRight();
+        		        
+        		        // 내 캐릭터 모션 그리기
+        		        if (facingRight) {
+        		            g.drawImage(currentImage, myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
+        		            g.drawImage(currentEffectImage, myCharacter.getCurrentX() + 150, 355, null);
+        		            g.drawImage(currentEffectImage, myCharacter.getCurrentX() + 300, 355, null);
+        		            g.drawImage(currentEffectImage, myCharacter.getCurrentX() + 450, 355, null);
+        		        } else {
+        		            g.drawImage(flipHorizontally(currentImage), myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
+        		            g.drawImage(currentEffectImage, myCharacter.getCurrentX() + 150, 355, null);
+        		            g.drawImage(currentEffectImage, myCharacter.getCurrentX() + 300, 355, null);
+        		            g.drawImage(currentEffectImage, myCharacter.getCurrentX() + 450, 355, null);
         		        }
         			}
         		case "Phoenix Breath":
             		if (myMotions != null) {
         		        BufferedImage currentImage = myMotions[myCurrentFrame];
-        		        if(gameState.getClientNumber() == 1 && myCharacter.getCurrentX() >= enemyCharacter.getCurrentX()) {
-        		        	g.drawImage(flipHorizontally(currentImage), myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
-      
-        		        }else if(gameState.getClientNumber() == 2 && myCharacter.getCurrentX() >= enemyCharacter.getCurrentX()){
-        		        	g.drawImage(flipHorizontally(currentImage), myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
-        		        }else {
-        		        	g.drawImage(currentImage, myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
+        		        BufferedImage currentEffectImage = myEffects[myCurrentEffectFrame];
+        		        
+        		        // 캐릭터 방향 확인
+        		        boolean facingRight = isFacingRight();
+        		        
+        		        // 내 캐릭터 모션 그리기
+        		        if (facingRight) {
+        		            g.drawImage(currentImage, myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
+        		            g.drawImage(currentEffectImage, myEffectPositionX, myCharacter.getCurrentY(), null);
+        		        } else {
+        		            g.drawImage(flipHorizontally(currentImage), myCharacter.getCurrentX(), myCharacter.getCurrentY(), null);
+        		            g.drawImage(currentEffectImage, myEffectPositionX, myCharacter.getCurrentY(), null);
         		        }
         			}
         			break;
@@ -2828,13 +2978,13 @@ public class PlayingGameScreen extends JPanel {
         		case "Sword Slash":
         			if (myMotions != null) {
         		        BufferedImage currentImage = myMotions[myCurrentFrame];
-        		        g.drawImage(currentImage, myCharacter.getCurrentX()- 150, myCharacter.getCurrentY()- 50, null);
+        		        g.drawImage(currentImage, myCharacter.getCurrentX()- 150, myCharacter.getCurrentY(), null);
         			}
         			break;
         		case "Stretch Punch":
         			if (myMotions != null) {
         		        BufferedImage currentImage = myMotions[myCurrentFrame];
-        		        g.drawImage(currentImage, myCharacter.getCurrentX()- 200, myCharacter.getCurrentY()- 50, null);
+        		        g.drawImage(currentImage, myCharacter.getCurrentX()- 200, myCharacter.getCurrentY(), null);
         			}
         			break;
         			
@@ -2917,15 +3067,16 @@ public class PlayingGameScreen extends JPanel {
             		if (enemyMotions != null) {
         		        BufferedImage currentImage = enemyMotions[enemyCurrentFrame];
         		        BufferedImage currentEffectImage = enemyEffects[enemyCurrentEffectFrame];
-        		        if(gameState.getClientNumber() == 1 && myCharacter.getCurrentX() <= enemyCharacter.getCurrentX()) {
-        		        	g.drawImage(flipHorizontally(currentImage), enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
-        		        	g.drawImage(currentEffectImage, enemyEffectPositionX, enemyCharacter.getCurrentY(), null);
-        		        }else if(gameState.getClientNumber() == 2 && myCharacter.getCurrentX() <= enemyCharacter.getCurrentX()) {
-        		        	g.drawImage(flipHorizontally(currentImage), enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
-        		        	g.drawImage(currentEffectImage, enemyEffectPositionX, enemyCharacter.getCurrentY(), null);
+        		     // 캐릭터 방향 확인
+        		        boolean facingRight = isFacingRight();
+        		        
+        		        // 내 캐릭터 모션 그리기
+        		        if (facingRight) {
+        		            g.drawImage(flipHorizontally(currentImage), enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
+        		            g.drawImage(currentEffectImage, enemyEffectPositionX, enemyCharacter.getCurrentY(), null);
         		        } else {
-            			g.drawImage(currentImage, enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
-            			g.drawImage(currentEffectImage, enemyEffectPositionX, enemyCharacter.getCurrentY(), null);
+        		            g.drawImage(currentImage, enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
+        		            g.drawImage(currentEffectImage, enemyEffectPositionX, enemyCharacter.getCurrentY(), null);
         		        }
             		}
         			break;
@@ -3074,23 +3225,37 @@ public class PlayingGameScreen extends JPanel {
         		case "Galactic Burst":
             		if (enemyMotions != null) {
         		        BufferedImage currentImage = enemyMotions[enemyCurrentFrame];
-        		        if(gameState.getClientNumber() == 1 && myCharacter.getCurrentX() <= enemyCharacter.getCurrentX()) {
-        		        	g.drawImage(flipHorizontally(currentImage), enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
-        		        }else if(gameState.getClientNumber() == 2 && myCharacter.getCurrentX() <= enemyCharacter.getCurrentX()) {
-        		        	g.drawImage(flipHorizontally(currentImage), enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
+        		        BufferedImage currentEffectImage = enemyEffects[enemyCurrentEffectFrame];
+        		        // 캐릭터 방향 확인
+        		        boolean facingRight = isFacingRight();
+        		        
+        		        // 내 캐릭터 모션 그리기
+        		        if (facingRight) {
+        		            g.drawImage(flipHorizontally(currentImage), enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
+        		            g.drawImage(currentEffectImage, enemyCharacter.getCurrentX() - 150, 355, null);
+        		            g.drawImage(currentEffectImage, enemyCharacter.getCurrentX() - 300, 355, null);
+        		            g.drawImage(currentEffectImage, enemyCharacter.getCurrentX() - 450, 355, null);
         		        } else {
-            			g.drawImage(currentImage, enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
+        		            g.drawImage(currentImage, enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
+        		            g.drawImage(currentEffectImage, enemyCharacter.getCurrentX() - 150, 355, null);
+        		            g.drawImage(currentEffectImage, enemyCharacter.getCurrentX() - 300, 355, null);
+        		            g.drawImage(currentEffectImage, enemyCharacter.getCurrentX() - 450, 355, null);
         		        }
             		}
         		case "Phoenix Breath":
             		if (enemyMotions != null) {
         		        BufferedImage currentImage = enemyMotions[enemyCurrentFrame];
-        		        if(gameState.getClientNumber() == 1 && myCharacter.getCurrentX() <= enemyCharacter.getCurrentX()) {
-        		        	g.drawImage(flipHorizontally(currentImage), enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
-        		        }else if(gameState.getClientNumber() == 2 && myCharacter.getCurrentX() <= enemyCharacter.getCurrentX()) {
-        		        	g.drawImage(flipHorizontally(currentImage), enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
+        		        BufferedImage currentEffectImage = enemyEffects[enemyCurrentEffectFrame];
+        		        // 캐릭터 방향 확인
+        		        boolean facingRight = isFacingRight();
+        		        
+        		        // 내 캐릭터 모션 그리기
+        		        if (facingRight) {
+        		            g.drawImage(flipHorizontally(currentImage), enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
+        		            g.drawImage(currentEffectImage, enemyEffectPositionX, enemyCharacter.getCurrentY(), null);
         		        } else {
-            			g.drawImage(currentImage, enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
+        		            g.drawImage(currentImage, enemyCharacter.getCurrentX(), enemyCharacter.getCurrentY(), null);
+        		            g.drawImage(currentEffectImage, enemyEffectPositionX, enemyCharacter.getCurrentY(), null);
         		        }
             		}
         			break;
@@ -3475,6 +3640,9 @@ public class PlayingGameScreen extends JPanel {
             int x = xOffset + j * cellWidth;
             g2d.drawLine(x, yOffset, x, yOffset + gridHeight);
         }
+    }
+    private boolean isFacingRight() {
+        return myCharacter.getCurrentX() < enemyCharacter.getCurrentX();
     }
     
     private static BufferedImage flipHorizontally(BufferedImage image) {

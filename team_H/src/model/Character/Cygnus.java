@@ -33,7 +33,7 @@ public class Cygnus extends Character {
         
         try {
             sprite = ImageIO.read(new File("res/character/Cygnus.png"));
-            sprite = TransformColorToTransparency(sprite, new Color(43, 28, 125));
+            sprite = TransformColorToTransparency(sprite, new Color(251, 37, 11));
             if (sprite == null) {
                  System.err.println("sprite가 초기화되지 않았습니다. initCardMotions를 실행할 수 없습니다.");
                  return;
@@ -47,6 +47,7 @@ public class Cygnus extends Character {
          
          initCardImage();
          initMotions();
+         initSkillEffect();
          initCardSounds();
     }
     
@@ -132,25 +133,28 @@ public class Cygnus extends Character {
        motions = new HashMap<>();
        BufferedImage[] tempArr = new BufferedImage[8];
        for (int i = 0; i < 8; i++) {
-          tempArr[i] = resizeImage(sprite.getSubimage(i * 85, 7,85,118), character_size, character_size, true);
+          tempArr[i] = resizeImage(sprite.getSubimage(i * 146, 11,146,204), character_size, character_size, true);
        }
        for (int i = 0; i < 8; i++) {
            tempArr[i] = flipHorizontally(tempArr[i]);
         }
        motions.put("IDLE", tempArr.clone());
        
-       motions.put("HIT", null);
-       
-       tempArr = new BufferedImage[29];
-       for (int i = 0; i < 29; i++) {
-          tempArr[i] = resizeImage(sprite.getSubimage(i * 152, 5206, 152,182), character_size, character_size, true);
+       tempArr = new BufferedImage[22];
+       for (int i = 0; i < 22; i++) {
+           tempArr[i] = resizeImage(sprite.getSubimage(i * 152, 2858,152,225), character_size, character_size, true);
        }
-       motions.put("DEAD", tempArr.clone());
+       for (int i = 0; i < 22; i++) {
+           tempArr[i] = flipHorizontally(tempArr[i]);
+        }
+       motions.put("HIT", tempArr.clone());
+       
+       motions.put("DEAD", null);
        motions.put("GUARD", null);
        
        tempArr = new BufferedImage[8];
        for (int i = 0; i < 8; i++) {
-           tempArr[i] = resizeImage(sprite.getSubimage(i * 85, 131,85,118), character_size, character_size, true);
+           tempArr[i] = resizeImage(sprite.getSubimage(i * 146, 226,146,204), character_size, character_size, true);
        }
        for (int i = 0; i < 8; i++) {
            tempArr[i] = flipHorizontally(tempArr[i]);
@@ -159,7 +163,7 @@ public class Cygnus extends Character {
        
        tempArr = new BufferedImage[8];
        for (int i = 0; i < 8; i++) {
-           tempArr[i] = resizeImage(sprite.getSubimage(i * 85, 131,85,118), character_size, character_size, true);
+           tempArr[i] = resizeImage(sprite.getSubimage(i * 146, 226,146,204), character_size, character_size, true);
        }
        for (int i = 0; i < 8; i++) {
            tempArr[i] = flipHorizontally(tempArr[i]);
@@ -168,7 +172,7 @@ public class Cygnus extends Character {
        
        tempArr = new BufferedImage[8];
        for (int i = 0; i < 8; i++) {
-          tempArr[i] = resizeImage(sprite.getSubimage(i * 85, 131,85,118), character_size, character_size, true);
+          tempArr[i] = resizeImage(sprite.getSubimage(i * 146, 226,146,204), character_size, character_size, true);
        }
        motions.put("Move Left", tempArr.clone());
        
@@ -179,7 +183,7 @@ public class Cygnus extends Character {
        
        tempArr = new BufferedImage[29];
        for (int i = 0; i < 29; i++) {
-          tempArr[i] = resizeImage(sprite.getSubimage(i * 154,225,154,154), 200, 200, true);
+          tempArr[i] = resizeImage(sprite.getSubimage(i * 266,442,266,266), 200, 200, true);
        }
        for (int i = 0; i < 29; i++) {
            tempArr[i] = flipHorizontally(tempArr[i]);
@@ -188,7 +192,7 @@ public class Cygnus extends Character {
        
        tempArr = new BufferedImage[21];
        for (int i = 0; i < 21; i++) {
-          tempArr[i] = resizeImage(sprite.getSubimage(i * 329,1222,329,198), 200, 200, true);
+          tempArr[i] = resizeImage(sprite.getSubimage(i * 570,2188,570,343), 200, 200, true);
        }
        for (int i = 0; i < 21; i++) {
            tempArr[i] = flipHorizontally(tempArr[i]);
@@ -197,6 +201,27 @@ public class Cygnus extends Character {
        
        
     }
+    
+    @Override
+    public void initSkillEffect() {
+ 	  skillEffect = new HashMap<>();
+       BufferedImage[] tempArr = new BufferedImage[39];
+       for (int i = 0; i < 39; i++) {
+     	  tempArr[i] = resizeImage(sprite.getSubimage(i * 302, 988,302,558), 200, 200, true);
+       }
+       skillEffect.put("Galactic Burst Effect", tempArr.clone()); 
+       
+       tempArr = new BufferedImage[8];
+       for (int i = 0; i < 8; i++) {
+     	  tempArr[i] = resizeImage(sprite.getSubimage(i * 167,1567,167,81), 150, 150, true);
+       }
+       for (int i = 0; i < 8; i++) {
+           tempArr[i] = flipHorizontally(tempArr[i]);
+        }
+       skillEffect.put("Phoenix Breath Effect", tempArr.clone());
+       
+    }
+    
     
     
    protected BufferedImage TransformColorToTransparency(BufferedImage image, Color c1) {
@@ -267,25 +292,5 @@ public class Cygnus extends Character {
 
        return newImage;
    }
-
-
-
-   @Override
-   public void initSkillEffect() {
-	  skillEffect = new HashMap<>();
-      BufferedImage[] tempArr = new BufferedImage[39];
-      for (int i = 0; i < 39; i++) {
-    	  tempArr[i] = resizeImage(sprite.getSubimage(i * 175, 570,175,322), 150, 150, true);
-      }
-      skillEffect.put("Galactic Burst Effect", tempArr.clone());
-      
-      tempArr = new BufferedImage[8];
-      for (int i = 0; i < 8; i++) {
-    	  tempArr[i] = resizeImage(sprite.getSubimage(i * 96,1632,96,48), 150, 150, true);
-      }
-      skillEffect.put("Phoenix Breath Effect", tempArr.clone());
-      
-   }
-   
    
 }
